@@ -26,4 +26,10 @@ public class UserBo {
 	public int updateAvatar(int userID , String avatar) {
 		return userDao.updateAvatar(userID, avatar);
 	}
+	public int updatePhotoCover(int userID , String photoCover) {
+		return userDao.updatePhotoCover(userID, photoCover);
+	}
+	public ArrayList<User> getUserIsNotFriend(int userID) {
+		return userDao.getUserIsNotFriend(userID);
+	}
 }

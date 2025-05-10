@@ -1,6 +1,7 @@
 package UserController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import Constand.FriendshipStatus;
+import FriendshipModal.Friendship;
+import FriendshipModal.FriendshipBo;
+import UserModal.User;
+import UserModal.UserBo;
 
 /**
  * Servlet implementation class FriendController
@@ -30,7 +37,15 @@ public class FriendController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		FriendshipStatus Status = new FriendshipStatus();
+		UserBo userBo = new UserBo();
 		session.setAttribute("homeActive", "friend");
+		FriendshipBo friendshipBo = new FriendshipBo(); 
+		User currentUser = (User)session.getAttribute("User");
+		ArrayList<Friendship> dsFriendship = friendshipBo.getFriendshipByStatusAndReceiverID(currentUser.getUserID(), Status.PENDING);
+		session.setAttribute("dsFriendshipSender", dsFriendship);
+		ArrayList<User> dsIsNotFriend = userBo.getUserIsNotFriend(currentUser.getUserID());
+		session.setAttribute("dsIsNotFriend", dsIsNotFriend);
 		RequestDispatcher rd = request.getRequestDispatcher("Friends.jsp");
 		rd.forward(request, response);
 	}

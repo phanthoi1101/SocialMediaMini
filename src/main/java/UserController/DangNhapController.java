@@ -59,7 +59,6 @@ public class DangNhapController extends HttpServlet {
 		}
 
 	}
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

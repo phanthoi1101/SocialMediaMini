@@ -9,6 +9,13 @@ public class User {
 	private String PasswordHash;
 	private String FullName;
 	private String Avatar;
+	private String PhotoCover;
+	public String getPhotoCover() {
+		return PhotoCover;
+	}
+	public void setPhotoCover(String photoCover) {
+		PhotoCover = photoCover;
+	}
 	private Date CreatedAt;
 	public String getUsername() {
 		return Username;
@@ -53,7 +60,7 @@ public class User {
 		CreatedAt = createdAt;
 	}
 	public User(int userID, String username, String email, String passwordHash, String fullName, String avatar,
-			Date createdAt) {
+			String photoCover, Date createdAt) {
 		super();
 		UserID = userID;
 		Username = username;
@@ -61,12 +68,13 @@ public class User {
 		PasswordHash = passwordHash;
 		FullName = fullName;
 		Avatar = avatar;
+		PhotoCover = photoCover;
 		CreatedAt = createdAt;
 	}
 	public User() {
 		super();
-		UserID = 0;
 		// TODO Auto-generated constructor stub
 	}
+	
 
 }

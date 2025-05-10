@@ -33,7 +33,7 @@
                 <div class="col-3">
                     <div class="sidebar">
                         <a href="ProfileController" class="sidebar-item">
-                            <div class="me-2 mt-3">
+                            <div class="me-2">
                                 <img src="<%=currentUser.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
                             </div>
                             <span><%=currentUser.getUsername() %></span>

@@ -7,7 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
 	<meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Profile</title>
@@ -31,12 +30,12 @@
     <div class="content-container">
     	<div class="profile-header">
         <div class="cover-photo">
-        <img alt="" src="https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/10/tai-anh-phong-canh-dep-24.jpg" style="object-fit: cover;width: 100%;height: 100%;">
-        <form id="uploadForm" action="UploadFileController" method="post" enctype="multipart/form-data">
-			        <div class="add-cover-photo composer-photocover">
-			             <i class="bi bi-camera"></i> Thêm ảnh bìa
-			        </div>
-			        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
+	        <img alt="" src="<%=currentUser.getPhotoCover() %>" style="object-fit: cover;width: 100%;height: 100%;">
+	        <form id="uploadFormPhotoCover" action="UploadPhotoCoverController" method="post" enctype="multipart/form-data">
+		        <div class="add-cover-photo composer-photocover">
+		             <i class="bi bi-camera"></i> Thêm ảnh bìa
+		        </div>
+		        <input type="file" id="photocoverInput" name="photoCover" accept="image/*" style="display: none;">
 		</form>
         </div>
         <div class="profile-info">
@@ -44,7 +43,7 @@
                 <div class="profile-picture">
                 <img alt="" src="<%=currentUser.getAvatar()%>" style="width: 100%;object-fit: cover;height: 100%;">
                 </div>
-                <form id="uploadForm" action="UploadFileController" method="post" enctype="multipart/form-data">
+                <form id="uploadFormAvatar" action="UploadFileController" method="post" enctype="multipart/form-data">
 			        <div class="add-profile-photo composer-avatar">
 			             <i class="bi bi-camera-fill"></i>
 			        </div>
@@ -89,7 +88,6 @@
                 <div class="composer-action photo">
                     <i class="bi bi-image"></i> Ảnh
                 </div>
-
             </div>
         </div>
 
@@ -170,16 +168,40 @@
     
     <!-- Custom JavaScript for View Switching -->
     <script>
+    //HomeActive
+    function homeActive(id){
+		const icons = document.querySelectorAll('.nav-icon');
+		icons.forEach(function (icon) {
+			icon.classList.remove('active');
+		});
+		 // Thêm class 'active' vào thẻ có id được click
+	    const activeElement = document.getElementById(id);
+	    if (activeElement) {
+	      activeElement.classList.add('active');
+	    }
+	    if(id==="home"){
+	    	window.location.href = "HomePageController";
+	    }
+	    if(id==="friend"){
+	    	window.location.href = "FriendController";
+	    }
+	    
+	}
     // Khi click vào biểu tượng, kích hoạt input file
     document.querySelector('.composer-avatar').addEventListener('click', function() {
         document.getElementById('avatarInput').click();
     });
-    document.querySelector('.composer-photocover').addEventListener('click', function() {
-        document.getElementById('avatarInput').click();
-    });
     // Tự động submit form khi chọn file
     document.getElementById('avatarInput').addEventListener('change', function() {
-        document.getElementById('uploadForm').submit();
+        document.getElementById('uploadFormAvatar').submit();
+    });
+	/////////Ảnh bìa
+    document.querySelector('.composer-photocover').addEventListener('click', function() {
+        document.getElementById('photocoverInput').click();
+    });
+    // Tự động submit form khi chọn file
+    document.getElementById('photocoverInput').addEventListener('change', function() {
+        document.getElementById('uploadFormPhotoCover').submit();
     });
     function comment(postId) {
 	    $.ajax({
@@ -288,7 +310,7 @@
                 }
             }
         });
-    }s
+    }
     </script>
 </body>
 </html>

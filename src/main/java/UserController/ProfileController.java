@@ -38,6 +38,7 @@ public class ProfileController extends HttpServlet {
 		ArrayList<Post_User> dsPost_User = new ArrayList<Post_User>();
 		dsPost_User = post_UserBo.getPost_UserByUserId(1);
 		session.setAttribute("dsPost_UserById", dsPost_User);
+		session.setAttribute("homeActive", "");
 		RequestDispatcher rd = request.getRequestDispatcher("Profile.jsp");
 		rd.forward(request, response);
 	}

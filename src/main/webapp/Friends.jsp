@@ -1,3 +1,7 @@
+<%@page import="UserModal.UserBo"%>
+<%@page import="UserModal.User"%>
+<%@page import="FriendshipModal.Friendship"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,14 +11,36 @@
 <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Friend</title>
-        <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap 5 Bundle JS (bao gồm cả Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
         <link rel="stylesheet" type="text/css" href="Layouts/Friends.css">
+        <style >
+        	.dropdown-toggle::after {
+				    content: none; /* Hoặc không cần khai báo content */
+			}
+        </style>
 </head>
 <body>
-	<%@ include file="Layouts/FacebookHeader.jsp"%>
+<%
+UserBo userBo = new UserBo();
+User currentUser = (User)session.getAttribute("User");
+ArrayList<Friendship> dsFriendshipSender = (ArrayList<Friendship>)session.getAttribute("dsFriendshipSender");
+int sizeLstFriendSender = 0;	
+if(dsFriendshipSender !=null && !dsFriendshipSender.isEmpty()){
+		sizeLstFriendSender = dsFriendshipSender.size();
+	}
+ArrayList<User> lstIsNotFriend = (ArrayList<User>)session.getAttribute("dsIsNotFriend");
+int sizeLstIsNotFriend = 0;
+if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
+	sizeLstIsNotFriend = lstIsNotFriend.size();
+}
+%>
+    
+    <%@ include file="Layouts/FacebookHeader.jsp" %>
 	
 	<!-- Main Container -->
     <div class="fb-container">
@@ -89,33 +115,71 @@
                 <a href="#" class="fb-content-link">Xem tất cả</a>
             </div>
             
-            <div class="fb-requests-grid">
                 <!-- Friend Request 1 -->
-                <%for(int i = 0 ; i < 15 ; i++){ %>
-                <div class="fb-request-card">
-                    <img src="https://anhnail.com/wp-content/uploads/2024/10/Hinh-gai-xinh-k8-cute.jpg?height=200&width=200" alt="Phan Đình Quốc" class="fb-request-img">
-                    <div class="fb-request-info">
-                        <div class="fb-request-name">Phan Đình Quốc</div>
-                        <div class="fb-request-mutual">
-                            <div class="fb-request-mutual-icon">
-                                <i class="bi bi-people-fill"></i>
-                            </div>
-                            4 bạn chung
-                        </div>
-                        <div class="fb-request-actions">
-                            <button class="fb-btn fb-btn-primary">Xác nhận</button>
-                            <button class="fb-btn fb-btn-secondary">Xóa</button>
-                        </div>
-                    </div>
-                </div>
+                <%if(sizeLstFriendSender==0){ %>
+                	<div class="text-center text-danger"><h5>Không có yêu cầu kết bạn</h6></div>
+                <%}else{ %>
+                <div class="fb-requests-grid">
+	                <%for(int i = 0 ; i < sizeLstFriendSender ; i++){ 
+	                	User user = userBo.getUserById(dsFriendshipSender.get(i).getSenderID());
+	                %>
+	                <div class="fb-request-card">
+	                    <img src="<%=user.getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
+	                    <div class="fb-request-info">
+	                        <div class="fb-request-name"><%=user.getUsername()%></div>
+	                        <div class="fb-request-mutual">
+	                            <div class="fb-request-mutual-icon">
+	                                <i class="bi bi-people-fill"></i>
+	                            </div>
+	                            4 bạn chung
+	                        </div>
+	                        <div class="fb-request-actions">
+	                            <button class="fb-btn fb-btn-primary">Xác nhận</button>
+	                            <button class="fb-btn fb-btn-secondary">Xóa</button>
+	                        </div>
+	                    </div>
+	                </div>
+	                <%} %>
+	                            </div>
                 <%} %>
 
+			<hr>
+			<div class="fb-content-header">
+                <h3 class="fb-content-title">Những người bạn có thể quen</h3>
             </div>
+            
+                <!-- Friend Request 1 -->
+                <%if(sizeLstIsNotFriend==0){ %>
+                	<div class="text-center text-danger"><h5>Không có yêu cầu kết bạn</h6></div>
+                <%}else{ %>
+                <div class="fb-requests-grid">
+	                <%for(int i = 0 ; i < sizeLstIsNotFriend ; i++){ 
+	                %>
+	                <div class="fb-request-card">
+	                    <img src="<%=lstIsNotFriend.get(i).getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
+	                    <div class="fb-request-info">
+	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getUsername()%></div>
+	                        <div class="fb-request-mutual">
+	                            <div class="fb-request-mutual-icon">
+	                                <i class="bi bi-people-fill"></i>
+	                            </div>
+	                            4 bạn chung
+	                        </div>
+	                        <div class="fb-request-actions">
+	                            <button class="fb-btn fb-btn-primary">Thêm bạn bè</button>
+	                            <button class="fb-btn fb-btn-secondary">Gỡ</button>
+	                        </div>
+	                    </div>
+	                </div>
+	                <%} %>
+	                            </div>
+                <%} %>
         </div>
     </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script >
   //Home active
 	function homeActive(id){
