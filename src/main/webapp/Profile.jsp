@@ -1,0 +1,294 @@
+<%@page import="UserModal.User"%>
+<%@page import="LikeModal.Like"%>
+<%@page import="Post_UserModal.Post_User"%>
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Profile</title>
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+        <link rel="stylesheet" type="text/css" href="Layouts/Profile.css">
+</head>
+<body>
+
+	<%ArrayList<Post_User> dsPost_User = (ArrayList<Post_User>)session.getAttribute("dsPost_UserById"); 
+	ArrayList<Like> dsLike = (ArrayList<Like>)session.getAttribute("dsLike");
+	int index = dsPost_User.size();
+	User currentUser = (User)session.getAttribute("User");
+	%>
+	    <!-- Navbar -->
+    <%@ include file="Layouts/FacebookHeader.jsp" %>
+
+    <!-- Profile Header -->
+    <div class="content-container">
+    	<div class="profile-header">
+        <div class="cover-photo">
+        <img alt="" src="https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/10/tai-anh-phong-canh-dep-24.jpg" style="object-fit: cover;width: 100%;height: 100%;">
+        <form id="uploadForm" action="UploadFileController" method="post" enctype="multipart/form-data">
+			        <div class="add-cover-photo composer-photocover">
+			             <i class="bi bi-camera"></i> Thêm ảnh bìa
+			        </div>
+			        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
+		</form>
+        </div>
+        <div class="profile-info">
+            <div class="profile-picture-container">
+                <div class="profile-picture">
+                <img alt="" src="<%=currentUser.getAvatar()%>" style="width: 100%;object-fit: cover;height: 100%;">
+                </div>
+                <form id="uploadForm" action="UploadFileController" method="post" enctype="multipart/form-data">
+			        <div class="add-profile-photo composer-avatar">
+			             <i class="bi bi-camera-fill"></i>
+			        </div>
+			        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
+			    </form>
+            </div>
+            <div class="profile-name-info">
+                <h1 class="profile-name"><%=currentUser.getUsername() %></h1>
+                <div class="profile-friends">239 người bạn</div>
+            </div>
+            <div class="profile-actions">
+                <button class="action-button secondary">
+                    <i class="bi bi-pencil"></i> Chỉnh sửa trang cá nhân
+                </button>
+                <button class="action-button secondary">
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+            </div>
+        </div>
+        <div class="profile-navigation">
+            <div class="nav-item active">Bài viết</div>
+            <div class="nav-item">Bạn bè</div>
+            <div class="nav-item">Ảnh</div>
+            <div class="nav-item nav-more">
+                <i class="bi bi-three-dots"></i>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-container">
+        <!-- Post Composer -->
+        <div class="card">
+            <div class="post-composer">
+                <div class="composer-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div class="composer-input">Bạn đang nghĩ gì?</div>
+            </div>
+            <div class="composer-actions">
+                <div class="composer-action photo">
+                    <i class="bi bi-image"></i> Ảnh
+                </div>
+
+            </div>
+        </div>
+
+        <!-- List các bài post -->
+                <div class="">
+                    <div class=""><!-- class feed -->
+                        <!-- Post -->
+                        <%for(int i = 0 ; i < index ; i++){ %>
+                            <div class="post" data-post-id="<%= dsPost_User.get(i).getPostID() %>">
+                            <div class="post-header">
+                                <img src="<%=dsPost_User.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
+                                <div class="post-info">
+                                    <h6 class="post-author"><%=dsPost_User.get(i).getUsername() %></h6>
+                                    <p class="post-time">43 phút · <i class="bi bi-globe"></i></p>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Lưu bài viết</a></li>
+                                        <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li>
+                                        <li><a class="dropdown-item" href="#">Báo cáo</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <div class="post-text">
+                                    <p><%=dsPost_User.get(i).getContent() %></p>
+                                </div>
+                                <img src="<%=dsPost_User.get(i).getImage() %>" class="post-image" alt="<%=dsPost_User.get(i).getImage()%>">
+                            </div>
+                            <div class="post-reactions">
+                                <div>
+                                	<span id="likeCount_<%=dsPost_User.get(i).getPostID()%>"><%=dsPost_User.get(i).getLikeCount() %></span><i class="bi bi-hand-thumbs-up-fill text-primary"></i>
+                                    <i class="bi bi-emoji-heart-eyes-fill text-warning"></i>
+                                </div>
+                            </div>
+                            <div class="post-actions">
+                            <%String checklike = "default";
+                            for(int j = 0 ; j < dsLike.size();j++){
+                            	if(dsPost_User.get(i).getPostID()==dsLike.get(j).getPostID()){
+                            		if(dsLike.get(j).getUserID()==1){
+                            			checklike = "liked";%>
+                            		<%}
+                            	}
+                           }%>         
+                                <div class="post-action">
+                                <button style="border: none;outline: none;background: none;" id="likeButton_<%= dsPost_User.get(i).getPostID() %>" 
+							        class="<%= checklike %>" 
+							        onclick="likePost(<%= dsPost_User.get(i).getPostID() %>, 1)"><i class="bi bi-hand-thumbs-up"></i>Like</button>
+                                </div>
+                                
+                                <div class="post-action">
+                                 <button style="border: none;outline: none;background: none;" 
+								        onclick="comment(<%=dsPost_User.get(i).getPostID()%>)">
+								    <i class="bi bi-chat"></i>Bình luận
+								</button>
+                                </div>
+                                <div class="post-action">
+                                    <i class="bi bi-share"></i>
+                                    Chia sẻ
+                                </div>
+                            </div>
+                        </div>
+                        <%} %>
+                    </div>
+                </div>
+
+            </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <%@ include file="Layouts/ModelComment.jsp" %>
+    
+        <!-- Bootstrap JS Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Custom JavaScript for View Switching -->
+    <script>
+    // Khi click vào biểu tượng, kích hoạt input file
+    document.querySelector('.composer-avatar').addEventListener('click', function() {
+        document.getElementById('avatarInput').click();
+    });
+    document.querySelector('.composer-photocover').addEventListener('click', function() {
+        document.getElementById('avatarInput').click();
+    });
+    // Tự động submit form khi chọn file
+    document.getElementById('avatarInput').addEventListener('change', function() {
+        document.getElementById('uploadForm').submit();
+    });
+    function comment(postId) {
+	    $.ajax({
+	        url: "CommentController",
+	        type: "POST",
+	        data: { postId: postId },
+	        dataType: "json", // Xác định server trả về JSON
+	        success: function(response) {
+	            if (response.error) {
+	                console.log("Lỗi: " + response.error);
+	                return;
+	            }
+	            console.log("Dữ liệu nhận từ server:", response);
+				$(".username").text(response.postUser.username);
+				$(".content").text(response.postUser.content);
+				$(".likecount").text(response.postUser.likeCount);
+				$(".image").attr("src", response.postUser.image);
+				$(".avatar").attr("src", response.postUser.avatar);
+				displayComment(response.comment);
+	            $("#modalcomment").addClass("show d-block");
+	            
+	        },
+	        error: function(xhr) {
+	            console.log("Lỗi khi gửi AJAX:", xhr.responseText);
+	        }
+	    });}
+	function displayComment(comments) {
+	    var commentsContainer = $('#commentsContainer');
+	    commentsContainer.empty();
+	    var commentHTML = "";
+
+	    comments.forEach(function(comment) {
+	        if (comment.parentID === 0) {
+	            console.log(comment.username);
+	            commentHTML += 
+	                '<div class="comment">' +
+	                    '<div class="comment-avatar">' +
+	                        '<img src="' + comment.avatar + '" style="width: 40px;height: 40px" class="post-avatar">' +
+	                    '</div>' +
+	                    '<div class="comment-content">' +
+	                        '<div class="comment-bubble">' +
+	                            '<div class="comment-author">' + comment.username + '</div>' +
+	                            '<p class="comment-text">' + comment.content + '</p>' +
+	                        '</div>' +
+	                        '<div class="comment-actions">' +
+	                            '<span class="comment-action">Thích</span>' +
+	                            '<span class="comment-action">Phản hồi</span>' +
+	                            '<span class="comment-time">thời gian</span>' +
+	                            
+	                        '</div>';
+	            for (var i = comments.length - 1; i >= 0; i--) {
+	                var cmt = comments[i];
+	                console.log("comment cha" + comment.commentID);
+	                console.log(cmt.parentID);
+	                if (cmt.parentID == comment.commentID) {
+	                	console.log("hello")
+	                    commentHTML += 
+	                        '<div class="reply-section">' +
+	                            '<div class="reply">' +
+	                                '<div class="reply-avatar">' +
+	                                    '<img src="' + cmt.avatar + '" style="width: 40px;height: 40px" class="post-avatar">' +
+	                                '</div>' +
+	                                '<div class="reply-content">' +
+	                                    '<div class="reply-bubble">' +
+	                                        '<div class="reply-author">' + cmt.username + '</div>' +
+	                                        '<p class="reply-text">' + cmt.content + '</p>' +
+	                                    '</div>' +
+	                                    '<div class="reply-actions">' +
+	                                        '<span class="comment-action">Thích</span>' +
+	                                        '<span class="comment-action">Phản hồi</span>' +
+	                                        '<span class="comment-time">1 ngày</span>' +
+	                                    '</div>' +
+	                                '</div>' +
+	                            '</div>' +
+	                        '</div>';
+	                }
+	            }        
+		    	   commentHTML += '</div>' +
+	                '</div>';
+	        }
+
+	    });
+	    commentsContainer.append(commentHTML);
+	}
+
+
+	function closemodal(){
+		$("#modalcomment").removeClass("show d-block");
+	}
+    // Hàm xử lý Like/Unlike
+    function likePost(postId, userId) {
+    	console.log("Post ID: " + postId + ", User ID: " + userId);
+        $.ajax({
+            url: "LikeController",
+            type: "POST",
+            data: { postId: postId, userId: userId },
+            success: function(response) {
+                // Cập nhật số lượng Like
+                $("#likeCount_" + postId).text(response.likeCount);
+
+                // Thay đổi màu nút Like
+                if (response.liked) {
+                    $("#likeButton_" + postId).addClass("liked").removeClass("default");
+                } else {
+                    $("#likeButton_" + postId).addClass("default").removeClass("liked");
+                }
+            }
+        });
+    }s
+    </script>
+</body>
+</html>

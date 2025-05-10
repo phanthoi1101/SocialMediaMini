@@ -1,0 +1,63 @@
+package UserController;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
+
+import DangNhapModal.DangNhapBo;
+import LikeModal.Like;
+import LikeModal.LikeBo;
+import Post_UserModal.Post_User;
+import Post_UserModal.Post_UserBo;
+import PostsModal.Posts;
+import PostsModal.PostsBo;
+
+/**
+ * Servlet implementation class HomePageController
+ */
+@WebServlet("/HomePageController")
+public class HomePageController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public HomePageController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		ArrayList<Post_User> dsPost_User = new ArrayList<Post_User>();
+		ArrayList<Like> dsLike = new ArrayList<Like>();
+		LikeBo likeBo = new LikeBo();
+		dsLike = likeBo.getLike();
+		session.setAttribute("dsLike", dsLike);
+		Post_UserBo post_userBo = new Post_UserBo();
+		dsPost_User = post_userBo.getPost_User();
+		session.setAttribute("dsPost_User", dsPost_User);
+		session.setAttribute("homeActive", "home");
+		RequestDispatcher rd = request.getRequestDispatcher("HomePage.jsp");
+		rd.forward(request, response);      
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
