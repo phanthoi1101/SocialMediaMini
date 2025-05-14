@@ -34,6 +34,7 @@ public class ProfileController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		session.setAttribute("ProfileActive", "article");
 		Post_UserBo post_UserBo = new Post_UserBo();
 		ArrayList<Post_User> dsPost_User = new ArrayList<Post_User>();
 		dsPost_User = post_UserBo.getPost_UserByUserId(1);

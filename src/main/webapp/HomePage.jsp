@@ -22,7 +22,10 @@
         User currentUser = (User)session.getAttribute("User");
         ArrayList<Post_User> dsPost_User = (ArrayList<Post_User>)session.getAttribute("dsPost_User"); 
         ArrayList<Like> dsLike = (ArrayList<Like>)session.getAttribute("dsLike");
-        int index = dsPost_User.size();
+        int index = 0;
+        if(session.getAttribute("dsLike")!=null){
+        	index = dsPost_User.size();
+        }
         %>
         <!-- Facebook Header -->
 		<%@ include file="Layouts/FacebookHeader.jsp" %>
@@ -56,7 +59,10 @@
     
                 <!-- List các bài post -->
                 <div class="col-6">
-                    <div class="feed">
+                    <%if(index==0){ %>
+                    <div class="text-center text-danger"><h4>Không có bài viết được hiển thị</h4></div>
+                    <%}else{ %>
+                    	<div class="feed">
                         <!-- Post -->
                         <%for(int i = 0 ; i < index ; i++){ %>
                             <div class="post" data-post-id="<%= dsPost_User.get(i).getPostID() %>">
@@ -64,34 +70,45 @@
                                 <img src="<%=dsPost_User.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
                                 <div class="post-info">
                                     <h6 class="post-author"><%=dsPost_User.get(i).getUsername() %></h6>
-                                    <p class="post-time">43 phút · <i class="bi bi-globe"></i></p>
+                                    <p class="post-time"><%=dsPost_User.get(i).getTimePost() %></p>
                                 </div>
-
+								<div class="dropdown">
+                                    <button class="btn" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li>
+                                        <li><a class="dropdown-item" href="#">Báo cáo</a></li>
+                                    </ul>
+                                </div>
                             </div>
                             <div class="post-content">
                                 <div class="post-text">
                                     <p><%=dsPost_User.get(i).getContent() %></p>
                                 </div>
+                                <%if(dsPost_User.get(i).getImage()!=null){ %>
                                 <img src="<%=dsPost_User.get(i).getImage() %>" class="post-image" alt="<%=dsPost_User.get(i).getImage()%>">
+                                <%} %>
                             </div>
                             <div class="post-reactions">
                                 <div>
-                                	<span id="likeCount_<%=dsPost_User.get(i).getPostID()%>"><%=dsPost_User.get(i).getLikeCount() %></span><i class="bi bi-hand-thumbs-up-fill text-primary"></i>
+                                	<span id="likeCount_<%=dsPost_User.get(i).getPostID()%>"><%=dsPost_User.get(i).getLikeCount() %></span> <i class="bi bi-hand-thumbs-up-fill text-primary"></i>
                                 </div>
                             </div>
                             <div class="post-actions">
                             <%String checklike = "default";
                             for(int j = 0 ; j < dsLike.size();j++){
                             	if(dsPost_User.get(i).getPostID()==dsLike.get(j).getPostID()){
-                            		if(dsLike.get(j).getUserID()==1){
+                            		if(dsLike.get(j).getUserID()==currentUser.getUserID()){
                             			checklike = "liked";%>
                             		<%}
                             	}
                            }%>         
                                 <div class="post-action">
-                                <button style="border: none;outline: none;background: none;" id="likeButton_<%= dsPost_User.get(i).getPostID() %>" 
-							        class="<%= checklike %>" 
-							        onclick="likePost(<%= dsPost_User.get(i).getPostID() %>, 1)"><i class="bi bi-hand-thumbs-up"></i>Like</button>
+                                <!-- id = likeButton_postID -->
+                                <button style="border: none;outline: none;background: none;" id="likeButton_<%=dsPost_User.get(i).getPostID()%>" 
+							        class="<%= checklike%>" 
+							        onclick="likePost(<%= dsPost_User.get(i).getPostID() %>, <%= currentUser.getUserID()%>)"><i class="bi bi-hand-thumbs-up"></i>Like</button>
                                 </div>
                                 <div class="post-action">
                                  <button style="border: none;outline: none;background: none;" 
@@ -107,6 +124,7 @@
                         </div>
                         <%} %>
                     </div>
+                    <%} %>
                 </div>
     
                 <div class="col-3">
@@ -288,9 +306,8 @@
 	    	                        '</div>' +
 	    	                        '<div class="comment-actions">' +
 	    	                            '<span class="comment-action">Phản hồi</span>' +
-	    	                            '<span class="comment-time">thời gian</span>' +
-	    	                            
-	    	                        '</div>';
+	    	                            '<span class="comment-time">thời gian</span>' +	    	                           
+	    	                 '</div>';
 	    	            /*for (var i = comments.length - 1; i >= 0; i--) {
 	    	                var cmt = comments[i];
 	    	                console.log("comment cha" + comment.commentID);

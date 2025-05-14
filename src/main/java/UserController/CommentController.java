@@ -49,6 +49,7 @@ public class CommentController extends HttpServlet {
             // Lấy dữ liệu bài viết từ database (Giả sử có class Post_UserBo)
             Post_UserBo post_UserBo = new Post_UserBo();
             Post_User post_User = post_UserBo.get1Post_User(postId);
+            System.out.println(post_User.getFullName());
             //lấy dữ liệu comment từ database
             CommentContainBo cmtBo = new CommentContainBo();
             ArrayList<CommentContain> dsCommentContain = cmtBo.getCommentByPostId(postId);

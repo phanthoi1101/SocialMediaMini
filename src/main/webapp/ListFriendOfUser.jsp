@@ -1,3 +1,5 @@
+<%@page import="UserModal.UserBo"%>
+<%@page import="FriendshipModal.Friendship"%>
 <%@page import="PostsModal.Posts"%>
 <%@page import="UserModal.User"%>
 <%@page import="Post_UserModal.Post_User"%>
@@ -14,7 +16,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
-        <link rel="stylesheet" type="text/css" href="Layouts/ListPicture.css">
+        <link rel="stylesheet" type="text/css" href="Layouts/ListFriendOfUser.css">
         <style>
         .dropdown-toggle::after{
         content:none;}
@@ -22,10 +24,11 @@
 </head>
 <body> 
 	<%User currentUser = (User)session.getAttribute("User");
-	ArrayList<Posts> dsPostByUserId = (ArrayList<Posts>)session.getAttribute("dsPostByUserId");
+	UserBo userBo = new UserBo();
+	ArrayList<Friendship> dsFriendshipByUserId = (ArrayList<Friendship>)session.getAttribute("dsFriendshipById");
 	int index = 0;
-	if(session.getAttribute("dsPostByUserId")!=null){
-		index = dsPostByUserId.size();
+	if(session.getAttribute("dsFriendshipById")!=null){
+		index= dsFriendshipByUserId.size();
 	}
 	%>
 	    <!-- Navbar -->
@@ -120,53 +123,59 @@
         </div>
     </div>
     </div>
-    
-    <!-- Content Ảnh của user -->
-        <div class="photo-container">
-        <div class="photo-header">
-            <h2>Ảnh</h2>
-            <div class="photo-tabs">
+	<!-- Danh sách ban; -->
+	<div class="friends-container">
+        <div class="friends-header">
+            <h1 class="friends-title">Bạn bè</h1>
+            
+            <div class="friends-actions">
+                <div class="search-bar">
+                    <span class="search-icon">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" placeholder="Tìm kiếm">
+                </div>
+                
+                <a href="#" class="action-link">Lời mời kết bạn</a>
+                <a href="#" class="action-link">Tìm bạn bè</a>
+                
+                <button class="more-btn">
+                    <i class="bi bi-three-dots"></i>
+                </button>
             </div>
+        </div>
+        
+        <div class="friends-tabs">
         </div>
         <%if(index==0){ %>
-        	<div class="photo-gird text-center text-danger">
-        		<h3>Không có ảnh trong ambum</h3>
-        	</div>
+        	<div class="text-center text-danger"><h3>Không có danh sách bạn bè!</h3></div>
         <%}else{ %>
-        <div class="photo-grid">
-        	<%for(int i = 0 ; i < index ; i ++){ %>
-        	<!-- Row 1 -->
-            <div class="photo-item" data-photo-id="<%=i+1%>">
-                <img src="<%=dsPostByUserId.get(i).getImage() %>?height=180&width=180" alt="Ảnh <%=i+1%>">
+        <div class="friends-list">
+         <%for(int i =0 ; i < index ; i++){ 
+        	 User user = new User();
+         	if(dsFriendshipByUserId.get(i).getSenderID()==currentUser.getUserID()){
+         		user = userBo.getUserById(dsFriendshipByUserId.get(i).getReceiverID());
+         	}else{
+         		user = userBo.getUserById(dsFriendshipByUserId.get(i).getSenderID());
+         	}
+         %>
+         <div class="friend-item">
+                <div class="friend-avatar">
+                    <img src="<%=user.getAvatar()%>?height=60&width=60" alt="<%=user.getUsername()%>">
+                </div>
+                <div class="friend-info">
+                    <div class="friend-name"><%=user.getUsername()%></div>
+                    <div class="friend-mutual">35 bạn chung</div>
+                </div>
+                <div class="friend-actions">
+                    <button class="more-btn">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                </div>
             </div>
-        	<%} %>
-            
-            
-        </div>
+         <%} %>
         <%} %>
-    </div>
-
         
-    
-    <!-- Photo Modal -->
-    <div class="modal fade photo-modal" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="photoModalLabel">Ảnh của Phan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img src="/placeholder.svg" alt="Ảnh đã chọn" class="photo-modal-img" id="modalImage">
-                    <button class="photo-nav-btn photo-prev" id="prevPhoto">
-                        <i class="bi bi-chevron-left"></i>
-                    </button>
-                    <button class="photo-nav-btn photo-next" id="nextPhoto">
-                        <i class="bi bi-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
     
         <!-- Bootstrap JS Bundle with Popper -->
@@ -208,47 +217,6 @@
         document.getElementById('photocoverInput').addEventListener('change', function() {
             document.getElementById('uploadFormPhotoCover').submit();
         });
-        
-        
-        //Content xử lý ảnh của user
-        document.addEventListener('DOMContentLoaded', function () {
-    const photoItems = Array.from(document.querySelectorAll('.photo-item'));
-    const photoModal = new bootstrap.Modal(document.getElementById('photoModal'));
-    const modalImage = document.getElementById('modalImage');
-    const prevButton = document.getElementById('prevPhoto');
-    const nextButton = document.getElementById('nextPhoto');
-
-    let currentIndex = 0;
-
-    // Khi click vào ảnh, mở modal và hiển thị ảnh tương ứng
-    photoItems.forEach((item, index) => {
-        item.addEventListener('click', function () {
-            currentIndex = index;
-            updateModalImage();
-            photoModal.show();
-        });
-    });
-
-    // Hàm cập nhật ảnh trong modal
-    function updateModalImage() {
-        const selectedItem = photoItems[currentIndex];
-        const img = selectedItem.querySelector('img');
-        modalImage.src = img.src;
-        modalImage.alt = img.alt;
-    }
-
-    // Nút prev
-    prevButton.addEventListener('click', function () {
-        currentIndex = (currentIndex - 1 + photoItems.length) % photoItems.length;
-        updateModalImage();
-    });
-
-    // Nút next
-    nextButton.addEventListener('click', function () {
-        currentIndex = (currentIndex + 1) % photoItems.length;
-        updateModalImage();
-    });
-});
-        </script>
+ </script>
 </body>
 </html>

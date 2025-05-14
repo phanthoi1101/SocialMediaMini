@@ -41,9 +41,11 @@ public class HomePageController extends HttpServlet {
 		HttpSession session = request.getSession();
 		ArrayList<Post_User> dsPost_User = new ArrayList<Post_User>();
 		ArrayList<Like> dsLike = new ArrayList<Like>();
+		//Lấy toàn bộ danh sách like
 		LikeBo likeBo = new LikeBo();
 		dsLike = likeBo.getLike();
 		session.setAttribute("dsLike", dsLike);
+		//Lấy danh sách post_User
 		Post_UserBo post_userBo = new Post_UserBo();
 		dsPost_User = post_userBo.getPost_User();
 		session.setAttribute("dsPost_User", dsPost_User);

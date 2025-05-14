@@ -238,169 +238,189 @@
             overflow: hidden;
             border: none;
         }
-        /*Hiển thị ảnh của người dùng*/
-        .photo-container {
+
+        /*Hiển thị danh sách bạn bè*/
+               .friends-container {
             max-width: 940px;
             margin: 20px auto;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            padding: 20px;
+            padding: 16px;
         }
         
-        .photo-header {
-            margin-bottom: 20px;
+        .friends-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
         
-        .photo-header h2 {
+        .friends-title {
             font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 16px;
+            margin: 0;
         }
         
-        .photo-tabs {
+        .friends-actions {
             display: flex;
-            border-bottom: 1px solid var(--fb-border);
-            margin-bottom: 16px;
-        }
-        
-        .photo-tab {
-            padding: 12px 16px;
-            font-weight: 600;
-            color: var(--fb-text);
-            cursor: pointer;
-            position: relative;
-            margin-right: 8px;
-        }
-        
-        .photo-tab.active {
-            color: var(--fb-blue);
-        }
-        
-        .photo-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background-color: var(--fb-blue);
-            border-radius: 1px 1px 0 0;
-        }
-        
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            align-items: center;
             gap: 8px;
         }
         
-        .photo-item {
-            aspect-ratio: 1;
-            overflow: hidden;
-            border-radius: 8px;
+        .search-bar {
             position: relative;
-            cursor: pointer;
+            width: 240px;
         }
         
-        .photo-item img {
+        .search-bar input {
+            background-color: var(--fb-bg);
+            border-radius: 50px;
+            border: none;
+            padding: 8px 16px 8px 36px;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--fb-text);
+        }
+        
+        .action-link {
+            color: var(--fb-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .action-link:hover {
+            background-color: var(--fb-hover);
+        }
+        
+        .more-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--fb-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #050505;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .more-btn:hover {
+            background-color: var(--fb-border);
+        }
+        
+        .friends-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--fb-border);
+            margin-bottom: 16px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .friends-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Edge */
+        }
+        
+        
+        /* Two-column layout for friends list */
+        .friends-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .friend-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .friend-item:hover {
+            background-color: var(--fb-hover);
+        }
+        
+        .friend-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 12px;
+            background-color: #d8dadf;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .friend-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
         
-        .photo-item:hover img {
-            transform: scale(1.05);
+        .friend-avatar i {
+            font-size: 2rem;
+            color: #90949c;
         }
         
-        /* Photo Modal Styles */
-        .photo-modal .modal-content {
-            background-color: transparent;
-            border: none;
+        .friend-info {
+            flex: 1;
+            min-width: 0; /* Allows text to truncate properly */
         }
         
-        .photo-modal .modal-header {
-            border: none;
-            padding: 1rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 8px 8px 0 0;
-        }
-        
-        .photo-modal .modal-title {
-            color: white;
+        .friend-name {
             font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
-        .photo-modal .btn-close {
-            filter: invert(1) grayscale(100%) brightness(200%);
+        .friend-mutual {
+            color: var(--fb-text);
+            font-size: 0.8rem;
         }
         
-        .photo-modal .modal-body {
-            padding: 0;
-            background-color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0 0 8px 8px;
-        }
-        
-        .photo-modal-img {
-            max-width: 100%;
-            max-height: 80vh;
-            object-fit: contain;
-        }
-        
-        .photo-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(255, 255, 255, 0.3);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .photo-nav-btn:hover {
-            background-color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .photo-prev {
-            left: 10px;
-        }
-        
-        .photo-next {
-            right: 10px;
+        .friend-actions {
+            margin-left: 8px;
+            flex-shrink: 0;
         }
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .photo-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            .friends-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
             }
             
-            .photo-nav-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 1rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .photo-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            .friends-actions {
+                width: 100%;
+                justify-content: space-between;
             }
             
-            .photo-tab {
-                padding: 8px 12px;
-                font-size: 0.9rem;
+            .search-bar {
+                width: 100%;
+            }
+            
+            .friends-list {
+                grid-template-columns: 1fr; /* Single column on mobile */
             }
         }

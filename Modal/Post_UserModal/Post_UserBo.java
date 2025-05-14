@@ -14,4 +14,5 @@ public class Post_UserBo {
 	public ArrayList<Post_User> getPost_UserByUserId(int userID) {
 		return post_userDao.getPost_UserByUserID(userID);
 	}
+	
 }

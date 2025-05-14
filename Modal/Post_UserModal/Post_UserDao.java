@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import KetNoiModal.KetNoi;
+import UtilModal.TimeAgoUtil;
 
 public class Post_UserDao {
+	TimeAgoUtil timeago = new TimeAgoUtil();
 	ArrayList<Post_User> ds = new ArrayList<Post_User>();
 	Post_User post_user = new Post_User();
 	public ArrayList<Post_User> getPost_User(){
@@ -15,8 +17,9 @@ public class Post_UserDao {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
 			String sql = "select Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,User_Post.Content,Image,User_Post.CreatedAt,COUNT(LikeID) as LikeCount\r\n"
-					+ "from User_Post inner join Likes on Likes.PostID=User_Post.PostID \r\n"
-					+ "group by Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,Content,Image,User_Post.CreatedAt";
+					+ "					from User_Post left join Likes on Likes.PostID=User_Post.PostID \r\n"
+					+ "					group by Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,Content,Image,User_Post.CreatedAt\r\n"
+					+ "					order by CreatedAt desc\r\n";
 			PreparedStatement cmd = kn.cn.prepareStatement(sql);
 			ResultSet rs = cmd.executeQuery();
 			while(rs.next()) {
@@ -29,7 +32,9 @@ public class Post_UserDao {
 				int userid = rs.getInt("UserID");
 				Date createdat = rs.getDate("CreatedAt");
 				int likeCount = rs.getInt("LikeCount");
-				ds.add(new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount));
+				java.sql.Timestamp date = rs.getTimestamp("CreatedAt");
+				String timepost = timeago.getTimeAgoUtil(date);
+				ds.add(new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount, timepost));
 			}
 			kn.cn.close();
 			rs.close();
@@ -41,11 +46,13 @@ public class Post_UserDao {
 		}
 	}
 	public Post_User get1Post_User(int postID) {
+		System.out.println("get post user by id" + postID);
+		Post_User post_user = null;
 		try {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
 			String sql = "select Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,User_Post.Content,Image,User_Post.CreatedAt,COUNT(LikeID) as LikeCount\r\n"
-					+ "					from User_Post inner join Likes on Likes.PostID=User_Post.PostID\r\n"
+					+ "					from User_Post left join Likes on Likes.PostID=User_Post.PostID\r\n"
 					+ "					where User_Post.PostID = ?\r\n"
 					+ "					group by Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,Content,Image,User_Post.CreatedAt";
 			PreparedStatement cmd = kn.cn.prepareStatement(sql);
@@ -61,7 +68,10 @@ public class Post_UserDao {
 				int userid = rs.getInt("UserID");
 				Date createdat = rs.getDate("CreatedAt");
 				int likeCount = rs.getInt("LikeCount");
-				post_user = new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount);
+				java.sql.Timestamp date = rs.getTimestamp("CreatedAt");
+				String timepost = timeago.getTimeAgoUtil(date);
+				System.out.println("hello ở get user by postid");
+				post_user = new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount, timepost);
 			}
 			kn.cn.close();
 			rs.close();
@@ -75,6 +85,7 @@ public class Post_UserDao {
 	}
 	public ArrayList<Post_User> getPost_UserByUserID(int userID){
 		try {
+			Post_User post_User = null;
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
 			String sql = "select Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,User_Post.Content,Image,User_Post.CreatedAt,COUNT(LikeID) as LikeCount\r\n"
@@ -94,7 +105,9 @@ public class Post_UserDao {
 				int userid = rs.getInt("UserID");
 				Date createdat = rs.getDate("CreatedAt");
 				int likeCount = rs.getInt("LikeCount");
-				ds.add(new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount));
+				java.sql.Timestamp date = rs.getTimestamp("CreatedAt");
+				String timepost = timeago.getTimeAgoUtil(date);
+				post_User = new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount, timepost);
 			}
 			kn.cn.close();
 			rs.close();

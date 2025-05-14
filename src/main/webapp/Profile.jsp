@@ -64,16 +64,18 @@
             </div>
         </div>
         <div class="profile-navigation">
-            <div class="nav-item active">Bài viết</div>
-            <div class="nav-item">Bạn bè</div>
-            <div class="nav-item">Ảnh</div>
+            <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
+            <button name="baiViet" style="all: unset;  cursor: pointer;"><div class="nav-item active">Bài viết</div></button>
+            <button name="banBe" style="all: unset;  cursor: pointer;"><div class="nav-item">Bạn bè</div></button>
+            <button name="anh" style="all: unset;  cursor: pointer;"><div class="nav-item">Anh</div></button>
+            </form>
             <div class="nav-item nav-more">
                 <i class="bi bi-three-dots"></i>
             </div>
         </div>
     </div>
     </div>
-
+    
     <!-- Main Content -->
     <div class="content-container">
         <!-- Post Composer -->
@@ -93,7 +95,10 @@
 
         <!-- List các bài post -->
                 <div class="">
-                    <div class=""><!-- class feed -->
+                    <%if(index==0){ %>
+                    <div class="text-center text-danger"><h4>Không có bài viết được hiển thị</h4></div>
+                    <%}else{ %>
+                    	<div class="">
                         <!-- Post -->
                         <%for(int i = 0 ; i < index ; i++){ %>
                             <div class="post" data-post-id="<%= dsPost_User.get(i).getPostID() %>">
@@ -101,14 +106,13 @@
                                 <img src="<%=dsPost_User.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
                                 <div class="post-info">
                                     <h6 class="post-author"><%=dsPost_User.get(i).getUsername() %></h6>
-                                    <p class="post-time">43 phút · <i class="bi bi-globe"></i></p>
+                                    <p class="post-time"><%=dsPost_User.get(i).getTimePost() %></p>
                                 </div>
-                                <div class="dropdown">
+								<div class="dropdown">
                                     <button class="btn" type="button" data-bs-toggle="dropdown">
                                         <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Lưu bài viết</a></li>
                                         <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li>
                                         <li><a class="dropdown-item" href="#">Báo cáo</a></li>
                                     </ul>
@@ -122,8 +126,7 @@
                             </div>
                             <div class="post-reactions">
                                 <div>
-                                	<span id="likeCount_<%=dsPost_User.get(i).getPostID()%>"><%=dsPost_User.get(i).getLikeCount() %></span><i class="bi bi-hand-thumbs-up-fill text-primary"></i>
-                                    <i class="bi bi-emoji-heart-eyes-fill text-warning"></i>
+                                	<span id="likeCount_<%=dsPost_User.get(i).getPostID()%>"><%=dsPost_User.get(i).getLikeCount() %></span> <i class="bi bi-hand-thumbs-up-fill text-primary"></i>
                                 </div>
                             </div>
                             <div class="post-actions">
@@ -140,7 +143,6 @@
 							        class="<%= checklike %>" 
 							        onclick="likePost(<%= dsPost_User.get(i).getPostID() %>, 1)"><i class="bi bi-hand-thumbs-up"></i>Like</button>
                                 </div>
-                                
                                 <div class="post-action">
                                  <button style="border: none;outline: none;background: none;" 
 								        onclick="comment(<%=dsPost_User.get(i).getPostID()%>)">
@@ -155,6 +157,7 @@
                         </div>
                         <%} %>
                     </div>
+                    <%} %>
                 </div>
 
             </div>

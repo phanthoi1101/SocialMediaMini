@@ -11,4 +11,7 @@ public ArrayList<Friendship> getFriendshipByStatusAndSenderID(int senderID, int 
 public ArrayList<Friendship> getFriendshipByStatusAndReceiverID(int ReceiverId, int status){
 	return friendshipDao.getFriendshipByStatusAndReceiveID(ReceiverId, status);
 }
+public ArrayList<Friendship> getFriendshipByUserId(int userID){
+	return friendshipDao.getFriendshipByUserId(userID);
+}
 }

@@ -1,6 +1,5 @@
 package Post_UserModal;
 
-import java.lang.reflect.Array;
 import java.sql.Date;
 import java.util.List;
 
@@ -14,7 +13,31 @@ public class Post_User {
 	private String Image;
 	private Date CreatedAt;
 	private int LikeCount;
+	private String timePost;
 	private List<Integer> likedUsers;
+
+	
+	public Post_User(int userID, int postID, String username, String fullName, String avatar, String content,
+			String image, Date createdAt, int likeCount, String timePost) {
+		super();
+		UserID = userID;
+		PostID = postID;
+		Username = username;
+		FullName = fullName;
+		Avatar = avatar;
+		Content = content;
+		Image = image;
+		CreatedAt = createdAt;
+		LikeCount = likeCount;
+		this.timePost = timePost;
+	}
+	public String getTimePost() {
+		return timePost;
+	}
+	public void setTimePost(String timePost) {
+		this.timePost = timePost;
+	}
+
 	public int getLikeCount() {
 		return LikeCount;
 	}

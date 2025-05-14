@@ -50,7 +50,7 @@ if(session.getAttribute("postId")!=null){
                     <!-- Post Images -->
                     <div class="post-images">
                         <div class="post-image">
-                            <img class="image" src="" alt="">
+                            <img class="image" src="" style="width: 100%;height: 100%; object-fit: cover;">
                         </div>
                     </div>
                     

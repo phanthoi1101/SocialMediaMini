@@ -11,6 +11,7 @@
             background-color: var(--fb-bg);
             font-family: Helvetica, Arial, sans-serif;
         }
+        /*Profile Navigation*/
         /*Avartar*/
         
         /*Nút like butotn*/
@@ -235,7 +236,7 @@
         .nav-more {
             margin-left: auto;
         }
-        
+        /*Nav content container*/
         .content-container {
             max-width: 940px;
             margin: 0 auto;

@@ -8,4 +8,7 @@ public class PostsBo {
 	public ArrayList<Posts> getPost(){
 		return pDao.getPost();
 	}
+	public ArrayList<Posts> getPostByUserID(int userID){
+		return pDao.getPostByUserID(userID);
+	}
 }

@@ -92,18 +92,6 @@
             margin: 0;
         }
         
-        .fb-sidebar-settings {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--fb-hover);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #050505;
-            cursor: pointer;
-        }
-        
         .fb-sidebar-menu {
             list-style: none;
             padding: 0;

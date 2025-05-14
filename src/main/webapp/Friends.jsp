@@ -48,9 +48,6 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
         <div class="fb-sidebar">
             <div class="fb-sidebar-title">
                 <h2>Bạn bè</h2>
-                <div class="fb-sidebar-settings">
-                    <i class="bi bi-gear-fill"></i>
-                </div>
             </div>
             
             <ul class="fb-sidebar-menu">

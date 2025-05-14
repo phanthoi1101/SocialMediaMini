@@ -6,10 +6,10 @@
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-3 d-flex align-items-center">
-                        <i class="bi bi-facebook text-primary fs-1 me-2"></i>
+                    	<img style="width: 50px; height: 50px" src="images/logo.avif" class="fs-1 me-2 text-primary">
                         <div class="position-relative">
-                            <i class="bi bi-search position-absolute" style="left: 10px; top: 10px; color: #65676b;"></i>
-                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm trên Facebook">
+                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng">
+                       		<i class="bi bi-search position-absolute" style="left: 10px; top: 10px; color: #65676b;"></i>
                         </div>
                     </div>
                     <div id="homeParent" class="col-6 d-flex justify-content-center">

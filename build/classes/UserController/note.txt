@@ -5,8 +5,14 @@ Session.setAttribute("User") --> use is loging in system
 session.getattribute("homeActive") --> this session save class that need active
 session.setAttribute("dsFriendshipSender", dsFriendship); --> Lst people who send friend invitation
 session.setAttribute("dsIsNotFriend", dsIsNotFriend); --> List Friends that are not maked friend;
+session.setAttribute("ProfileActive", "article"); --> Set active Profile
+session.setAttribute("dsFriendshipById", dsFriendshipById); --> Select Lst Friendship By UserID
 
 
 bình luận : lúc nhấn vào phản hồi --> tạo 1 biến lưu lại cái phản hồi đó 
 	gửi vào hàm add comment 1 3 tham số parent, useid, postid
 	gọi hàm displaycomment
+
+-- Báo cáo : tạo bảng -> Người dùng gửi báo cáo + content --> Lưu vào cơ sở dữ liệu--> Admin vào xem bài viết nào có báo cáo để xoá
+-- Xoá bài viết khỏi trang chủ người dùng: --> Người dùng kich vào xoá bài viết -> hệ thống sẽ lưu dữ liệu vào entity black list để khi get bài viết ra sẽ - trong blacklist đó 
+--> black list lưu id người dùng, bài post muốn ẩn
