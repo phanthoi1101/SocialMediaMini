@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import Post_UserModal.Post_User;
 import Post_UserModal.Post_UserBo;
+import UserModal.User;
 
 /**
  * Servlet implementation class ProfileController
@@ -37,7 +38,12 @@ public class ProfileController extends HttpServlet {
 		session.setAttribute("ProfileActive", "article");
 		Post_UserBo post_UserBo = new Post_UserBo();
 		ArrayList<Post_User> dsPost_User = new ArrayList<Post_User>();
-		dsPost_User = post_UserBo.getPost_UserByUserId(1);
+		User user = (User)session.getAttribute("User");
+		System.out.println(user.getUserID());
+		dsPost_User = post_UserBo.getPost_UserByUserId(user.getUserID());
+		for(Post_User x : dsPost_User) {
+			System.out.println(x.getContent());
+		}
 		session.setAttribute("dsPost_UserById", dsPost_User);
 		session.setAttribute("homeActive", "");
 		RequestDispatcher rd = request.getRequestDispatcher("Profile.jsp");

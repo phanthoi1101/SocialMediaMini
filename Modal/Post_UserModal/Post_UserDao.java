@@ -70,7 +70,6 @@ public class Post_UserDao {
 				int likeCount = rs.getInt("LikeCount");
 				java.sql.Timestamp date = rs.getTimestamp("CreatedAt");
 				String timepost = timeago.getTimeAgoUtil(date);
-				System.out.println("hello ở get user by postid");
 				post_user = new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount, timepost);
 			}
 			kn.cn.close();
@@ -107,7 +106,7 @@ public class Post_UserDao {
 				int likeCount = rs.getInt("LikeCount");
 				java.sql.Timestamp date = rs.getTimestamp("CreatedAt");
 				String timepost = timeago.getTimeAgoUtil(date);
-				post_User = new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount, timepost);
+				ds.add(new Post_User(userid, postid, username, fullname, avatar, content, image, createdat, likeCount, timepost));
 			}
 			kn.cn.close();
 			rs.close();

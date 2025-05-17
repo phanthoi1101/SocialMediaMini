@@ -45,16 +45,15 @@ public class CommentController extends HttpServlet {
         try {
             // Lấy postId từ request
             int postId = Integer.parseInt(request.getParameter("postId"));
+            System.out.println("bài viết comment" + postId);
             session.setAttribute("postId", postId);
-            // Lấy dữ liệu bài viết từ database (Giả sử có class Post_UserBo)
+            // Lấy dữ liệu bài viết từ database
             Post_UserBo post_UserBo = new Post_UserBo();
             Post_User post_User = post_UserBo.get1Post_User(postId);
-            System.out.println(post_User.getFullName());
             //lấy dữ liệu comment từ database
             CommentContainBo cmtBo = new CommentContainBo();
             ArrayList<CommentContain> dsCommentContain = cmtBo.getCommentByPostId(postId);
             PostWithComment postWithComment = new PostWithComment(post_User, dsCommentContain);
-            
             if (post_User == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write("{\"error\": \"Post not found\"}");

@@ -39,7 +39,7 @@
                             <div class="me-2">
                                 <img src="<%=currentUser.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
                             </div>
-                            <span><%=currentUser.getUsername() %></span>
+                            <span><%=currentUser.getFullName() %></span>
                         </a>
                         <a href="FriendController" class="sidebar-item">
                             <div class="sidebar-icon blue">
@@ -69,7 +69,7 @@
                             <div class="post-header">
                                 <img src="<%=dsPost_User.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
                                 <div class="post-info">
-                                    <h6 class="post-author"><%=dsPost_User.get(i).getUsername() %></h6>
+                                    <h6 class="post-author"><%=dsPost_User.get(i).getFullName() %></h6>
                                     <p class="post-time"><%=dsPost_User.get(i).getTimePost() %></p>
                                 </div>
 								<div class="dropdown">
@@ -209,6 +209,8 @@
 	    	}
 	    	//Mở modal bình luận bài viết
 	    	function comment(postId) {
+	    		console.log(postId);
+	    		document.getElementById("postId").value =postId;
 	    		const modal = document.getElementById('modalcomment');
 				  //modal.style.display = 'block'; // hoặc classList.add('show') tùy cách bạn hiển thị
 				  setTimeout(() => {
@@ -240,6 +242,7 @@
 	    	    });}
 	    	//Add thêm bình luận
 	    	 function addcomment(postId, userId) {
+	    		postId = document.getElementById("postId").value;
 	    	    // Lấy nội dung trong textarea gần nhất với nút gửi
 	    	    const button = event.target.closest('button'); // Lấy button đang được bấm
 	    	    const container = button.closest('.comment-input-container'); // Lấy container cha

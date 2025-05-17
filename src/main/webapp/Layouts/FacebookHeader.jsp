@@ -14,7 +14,7 @@
                     </div>
                     <div id="homeParent" class="col-6 d-flex justify-content-center">
                         <div id="home" class="nav-icon <%= "home".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-house-door-fill"></i></div>
-                        <div class="nav-icon"><i class="bi bi-play-btn" onclick="homeActive(this.id)"></i></div>
+                        <div class="nav-icon"></div>
                         <div id="friend" class="nav-icon <%= "friend".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
                     </div>
                     <div class="col-3 d-flex justify-content-end align-items-center">

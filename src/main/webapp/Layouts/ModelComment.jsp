@@ -7,9 +7,6 @@ if(session.getAttribute("postId")!=null){
 	postIdCurrent = (int)session.getAttribute("postId");
 }
 %>
-
-	
-
     	<div id="modalcomment" class="modal modal-backdrop show" data-bs-backdrop="true" tabindex="-1" style="--bs-backdrop-opacity: 1;
                background-color: rgba(0, 0, 0, 0.5);">
         <div class="modal-dialog">
@@ -19,6 +16,7 @@ if(session.getAttribute("postId")!=null){
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closemodal()"></button>
                 </div>
                 <div class="modal-body p-0">
+                <input id="postId" type="hidden" value=""/>
                     <!-- Post Header -->
                     <div class="post-header">
                         <div class="post-avatar">
@@ -81,7 +79,7 @@ if(session.getAttribute("postId")!=null){
                         <div class="comment-input-container">
                             <textarea class="comment-input" placeholder="Viết bình luận..." ></textarea>
                             <div class="comment-input-actions">
-                             <button style="border: none;outline: none;background: none;" onclick="addcomment(<%=postIdCurrent%>,<%=currentUser.getUserID()%>)">
+                             <button style="border: none;outline: none;background: none;" onclick="addcomment(<%=session.getAttribute("postId")%>,<%=currentUser.getUserID()%>)">
                                 <div class="input-action"><i class="bi bi-send"></i></div>
                              </button>
                             </div>

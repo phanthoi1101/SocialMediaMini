@@ -18,9 +18,12 @@
 </head>
 <body>
 
-	<%ArrayList<Post_User> dsPost_User = (ArrayList<Post_User>)session.getAttribute("dsPost_UserById"); 
+	<%ArrayList<Post_User> dsPost_UserById = (ArrayList<Post_User>)session.getAttribute("dsPost_UserById"); 
 	ArrayList<Like> dsLike = (ArrayList<Like>)session.getAttribute("dsLike");
-	int index = dsPost_User.size();
+	int index = 0;
+	if(session.getAttribute("dsPost_UserById")!=null){
+		index = dsPost_UserById.size();
+	}
 	User currentUser = (User)session.getAttribute("User");
 	%>
 	    <!-- Navbar -->
@@ -51,7 +54,7 @@
 			    </form>
             </div>
             <div class="profile-name-info">
-                <h1 class="profile-name"><%=currentUser.getUsername() %></h1>
+                <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
                 <div class="profile-friends">239 người bạn</div>
             </div>
             <div class="profile-actions">
@@ -101,12 +104,12 @@
                     	<div class="">
                         <!-- Post -->
                         <%for(int i = 0 ; i < index ; i++){ %>
-                            <div class="post" data-post-id="<%= dsPost_User.get(i).getPostID() %>">
+                            <div class="post" data-post-id="<%= dsPost_UserById.get(i).getPostID() %>">
                             <div class="post-header">
-                                <img src="<%=dsPost_User.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
+                                <img src="<%=dsPost_UserById.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
                                 <div class="post-info">
-                                    <h6 class="post-author"><%=dsPost_User.get(i).getUsername() %></h6>
-                                    <p class="post-time"><%=dsPost_User.get(i).getTimePost() %></p>
+                                    <h6 class="post-author"><%=dsPost_UserById.get(i).getFullName() %></h6>
+                                    <p class="post-time"><%=dsPost_UserById.get(i).getTimePost() %></p>
                                 </div>
 								<div class="dropdown">
                                     <button class="btn" type="button" data-bs-toggle="dropdown">
@@ -120,32 +123,32 @@
                             </div>
                             <div class="post-content">
                                 <div class="post-text">
-                                    <p><%=dsPost_User.get(i).getContent() %></p>
+                                    <p><%=dsPost_UserById.get(i).getContent() %></p>
                                 </div>
-                                <img src="<%=dsPost_User.get(i).getImage() %>" class="post-image" alt="<%=dsPost_User.get(i).getImage()%>">
+                                <img src="<%=dsPost_UserById.get(i).getImage() %>" class="post-image" alt="<%=dsPost_UserById.get(i).getImage()%>">
                             </div>
                             <div class="post-reactions">
                                 <div>
-                                	<span id="likeCount_<%=dsPost_User.get(i).getPostID()%>"><%=dsPost_User.get(i).getLikeCount() %></span> <i class="bi bi-hand-thumbs-up-fill text-primary"></i>
+                                	<span id="likeCount_<%=dsPost_UserById.get(i).getPostID()%>"><%=dsPost_UserById.get(i).getLikeCount() %></span> <i class="bi bi-hand-thumbs-up-fill text-primary"></i>
                                 </div>
                             </div>
                             <div class="post-actions">
                             <%String checklike = "default";
                             for(int j = 0 ; j < dsLike.size();j++){
-                            	if(dsPost_User.get(i).getPostID()==dsLike.get(j).getPostID()){
+                            	if(dsPost_UserById.get(i).getPostID()==dsLike.get(j).getPostID()){
                             		if(dsLike.get(j).getUserID()==1){
                             			checklike = "liked";%>
                             		<%}
                             	}
                            }%>         
                                 <div class="post-action">
-                                <button style="border: none;outline: none;background: none;" id="likeButton_<%= dsPost_User.get(i).getPostID() %>" 
+                                <button style="border: none;outline: none;background: none;" id="likeButton_<%= dsPost_UserById.get(i).getPostID() %>" 
 							        class="<%= checklike %>" 
-							        onclick="likePost(<%= dsPost_User.get(i).getPostID() %>, 1)"><i class="bi bi-hand-thumbs-up"></i>Like</button>
+							        onclick="likePost(<%= dsPost_UserById.get(i).getPostID() %>, 1)"><i class="bi bi-hand-thumbs-up"></i>Like</button>
                                 </div>
                                 <div class="post-action">
                                  <button style="border: none;outline: none;background: none;" 
-								        onclick="comment(<%=dsPost_User.get(i).getPostID()%>)">
+								        onclick="comment(<%=dsPost_UserById.get(i).getPostID()%>)">
 								    <i class="bi bi-chat"></i>Bình luận
 								</button>
                                 </div>
@@ -207,6 +210,12 @@
         document.getElementById('uploadFormPhotoCover').submit();
     });
     function comment(postId) {
+    	document.getElementById("postId").value =postId;
+		const modal = document.getElementById('modalcomment');
+		  //modal.style.display = 'block'; // hoặc classList.add('show') tùy cách bạn hiển thị
+		  setTimeout(() => {
+		    modal.querySelector('.comment-input').focus();
+		  }, 100);
 	    $.ajax({
 	        url: "CommentController",
 	        type: "POST",
@@ -231,6 +240,55 @@
 	            console.log("Lỗi khi gửi AJAX:", xhr.responseText);
 	        }
 	    });}
+  //Add thêm bình luận
+	 function addcomment(postId, userId) {
+		postId = document.getElementById("postId").value;
+	    // Lấy nội dung trong textarea gần nhất với nút gửi
+	    const button = event.target.closest('button'); // Lấy button đang được bấm
+	    const container = button.closest('.comment-input-container'); // Lấy container cha
+	    const textarea = container.querySelector('.comment-input'); // Tìm textarea trong đó
+	    const content = textarea.value.trim(); // Lấy nội dung bình luận
+		console.log(button);
+	    console.log("contain cha "+ container);
+	    if (content === "") {
+	        alert("Vui lòng nhập bình luận.");
+	        return;
+	    }
+
+	    // Gửi bình luận bằng AJAX hoặc xử lý theo cách bạn muốn
+	    console.log("Đang gửi bình luận:", content);
+	    console.log("Post ID:", postId, "User ID:", userId);
+
+	    // Ví dụ: Gửi bình luận đến server
+	    $.ajax({
+	        url: "AddCommentController",
+	        type: "POST",
+	        data: {
+	            postId: postId,
+	            userId: userId,
+	            content: content
+	        },
+	        success: function(response) {
+	            textarea.value = ""; // Xóa nội dung sau khi gửi
+	            if (response.error) {
+	                console.log("Lỗi: " + response.error);
+	                return;
+	            }
+	            console.log("Dữ liệu nhận từ server:", response);
+				$(".username").text(response.postUser.username);
+				$(".content").text(response.postUser.content);
+				$(".likecount").text(response.postUser.likeCount);
+				$(".image").attr("src", response.postUser.image);
+				$(".avatar").attr("src", response.postUser.avatar);
+				displayComment(response.comment);
+				console.log()
+	            $("#modalcomment").addClass("show d-block");
+	        },
+	        error: function(xhr) {
+	            console.log("Lỗi khi gửi bình luận:", xhr.responseText);
+	        }
+	    });
+	} 
 	function displayComment(comments) {
 	    var commentsContainer = $('#commentsContainer');
 	    commentsContainer.empty();
