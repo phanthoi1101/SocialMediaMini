@@ -32,4 +32,5 @@ public class UserBo {
 	public ArrayList<User> getUserIsNotFriend(int userID) {
 		return userDao.getUserIsNotFriend(userID);
 	}
+
 }

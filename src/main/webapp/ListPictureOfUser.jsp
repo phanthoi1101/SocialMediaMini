@@ -15,6 +15,7 @@
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
         <link rel="stylesheet" type="text/css" href="Layouts/ListPicture.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
         .dropdown-toggle::after{
         content:none;}
@@ -36,13 +37,24 @@
                     <div class="col-3 d-flex align-items-center">
                         <i class="bi bi-facebook text-primary fs-1 me-2"></i>
                         <div class="position-relative">
-                            <i class="bi bi-search position-absolute" style="left: 10px; top: 10px; color: #65676b;"></i>
-                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm trên Facebook">
+                            <form action="SearchUser" method="get">
+                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng" name="searchUser">
+                            <button type="submit" style="position: absolute;top: 50%;right: 10px;
+																				  transform: translateY(-50%);
+																				  background: none;
+																				  border: none;
+																				  padding: 0;
+																				  margin: 0;
+																				  cursor: pointer;
+																				  color: #333; /* hoặc text-primary */">
+				                <i class="fas fa-search"></i> <!-- Font Awesome icon -->
+				            </button>
+                            </form>
                         </div>
                     </div>
                     <div id="homeParent" class="col-6 d-flex justify-content-center">
                         <div id="home" class="nav-icon <%= "home".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-house-door-fill"></i></div>
-                        <div class="nav-icon"><i class="bi bi-play-btn" onclick="homeActive(this.id)"></i></div>
+                        <div class="nav-icon"></div>
                         <div id="friend" class="nav-icon <%= "friend".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
                     </div>
                     <div class="col-3 d-flex justify-content-end align-items-center">

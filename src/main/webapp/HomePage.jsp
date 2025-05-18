@@ -15,6 +15,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="Layouts/Homepage.css">
     </head>
     <body>
@@ -209,7 +210,6 @@
 	    	}
 	    	//Mở modal bình luận bài viết
 	    	function comment(postId) {
-	    		console.log(postId);
 	    		document.getElementById("postId").value =postId;
 	    		const modal = document.getElementById('modalcomment');
 				  //modal.style.display = 'block'; // hoặc classList.add('show') tùy cách bạn hiển thị

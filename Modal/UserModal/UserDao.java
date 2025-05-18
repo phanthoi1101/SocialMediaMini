@@ -37,6 +37,7 @@ public class UserDao {
 			return null;
 		}
 	}
+	
 	public User getUserById(int userId){
 		try {
 			User user = new User();

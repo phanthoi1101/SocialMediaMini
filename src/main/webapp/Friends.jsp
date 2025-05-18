@@ -18,6 +18,7 @@
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
         <link rel="stylesheet" type="text/css" href="Layouts/Friends.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style >
         	.dropdown-toggle::after {
 				    content: none; /* Hoặc không cần khai báo content */

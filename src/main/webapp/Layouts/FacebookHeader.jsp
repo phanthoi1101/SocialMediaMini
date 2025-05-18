@@ -8,8 +8,19 @@
                     <div class="col-3 d-flex align-items-center">
                     	<img style="width: 50px; height: 50px" src="images/logo.avif" class="fs-1 me-2 text-primary">
                         <div class="position-relative">
-                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng">
-                       		<i class="bi bi-search position-absolute" style="left: 10px; top: 10px; color: #65676b;"></i>
+                            <form action="SearchUser" method="get">
+                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng" name="searchUser">
+                            <button type="submit" style="position: absolute;top: 50%;right: 10px;
+																				  transform: translateY(-50%);
+																				  background: none;
+																				  border: none;
+																				  padding: 0;
+																				  margin: 0;
+																				  cursor: pointer;
+																				  color: #333; /* hoặc text-primary */">
+				                <i class="fas fa-search"></i> <!-- Font Awesome icon -->
+				            </button>
+                            </form>
                         </div>
                     </div>
                     <div id="homeParent" class="col-6 d-flex justify-content-center">
