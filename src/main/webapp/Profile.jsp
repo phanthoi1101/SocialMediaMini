@@ -56,7 +56,6 @@
             </div>
             <div class="profile-name-info">
                 <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
-                <div class="profile-friends">239 người bạn</div>
             </div>
             <div class="profile-actions">
                 <button class="action-button secondary">
@@ -91,9 +90,9 @@
                 <div class="composer-input">Bạn đang nghĩ gì?</div>
             </div>
             <div class="composer-actions">
-                <div class="composer-action photo">
-                    <i class="bi bi-image"></i> Ảnh
-                </div>
+                    <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
+                    	<button class="composer-action photo" name="anh" style="all: unset;  cursor: pointer;"><i class="bi bi-image"></i> Ảnh</button>
+                    </form>
             </div>
         </div>
 

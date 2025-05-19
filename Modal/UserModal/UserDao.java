@@ -157,10 +157,16 @@ public class UserDao {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
 			String sql = "select * from Users\r\n"
-					+ "where UserID not in (select UserID1 from Friendships where UserID2 = ?) and UserID != ?";
+					+ "		where UserID not in (select UserID1 from Friendships \r\n"
+					+ "		where (UserID2 = ? and Status = 1) or (UserID2=? and status=0)\r\n"
+					+ "		union \r\n"
+					+ "		select UserID2 from Friendships where UserID1=? and status=1\r\n"
+					+ "		) and UserID !=?";
 			PreparedStatement cmd = kn.cn.prepareStatement(sql);
 			cmd.setInt(1, UserId);
 			cmd.setInt(2, UserId);
+			cmd.setInt(3, UserId);
+			cmd.setInt(4, UserId);
 			ResultSet rs = cmd.executeQuery();
 			while(rs.next()) {
 				int userid = rs.getInt("UserID");

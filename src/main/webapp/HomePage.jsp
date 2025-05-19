@@ -1,7 +1,9 @@
 <!-- <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%> -->
     <!DOCTYPE html>
-    <%@page import="UserModal.User"%>
+    <%@page import="UserModal.UserBo"%>
+<%@page import="FriendshipModal.Friendship"%>
+<%@page import="UserModal.User"%>
 <%@page import="LikeModal.Like"%>
 <%@page import="Post_UserModal.Post_User"%>
     <%@page import="PostsModal.Posts"%>
@@ -127,7 +129,13 @@
                     </div>
                     <%} %>
                 </div>
-    
+    	<!-- Friended -->
+    	<%ArrayList<Friendship> dsFriendship = (ArrayList<Friendship>)session.getAttribute("dsFriendshipByUserId"); 
+    		int n = 0;
+    		if(session.getAttribute("dsFriendshipByUserId")!=null){
+    			n = dsFriendship.size();
+    		}
+    	%>
                 <div class="col-3">
                     <div class="right-sidebar">
                         <div>
@@ -138,33 +146,25 @@
                                     <i class="bi bi-three-dots"></i>
                                 </div>
                             </div>
-                            <div class="contact-item">
-                                <div class="contact-avatar">PT</div>
-                                <div>Phan Đình Trịnh</div>
-                               
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-avatar">ĐS</div>
-                                <div>Đinh Sơn</div>
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-avatar">PT</div>
-                                <div>Phan Đình Trịnh</div>
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-avatar">ĐS</div>
-                                <div>Đinh Sơn</div>
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-avatar">PT</div>
-                                <div>Phan Đình Trịnh</div>
-                               
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-avatar">ĐS</div>
-                                <div>Đinh Sơn</div>
-                            </div>
-                            
+                           <%if(n!=0){
+                        	   UserBo userbo = new UserBo();
+                        	   for(int i = 0 ; i < n ; i++){
+                        		   if(currentUser.getUserID()==dsFriendship.get(i).getReceiverID()){
+                        			   User user = userbo.getUserById(dsFriendship.get(i).getSenderID());
+                        	   %>   
+                        	   <div class="contact-item">
+                                <img src="<%=user.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
+                                <div><%=user.getFullName() %></div> 
+                            </div> 
+                        	   <%}else{ 
+                        	   User user = userbo.getUserById(dsFriendship.get(i).getReceiverID());%>
+                        	    <div class="contact-item">
+	                                <img src="<%=user.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
+	                                <div><%=user.getFullName() %></div> 
+                            	</div> 
+                           <%} 
+                        		}
+                           }%>
                         </div>
                     </div>
                 </div>

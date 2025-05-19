@@ -6,6 +6,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+
+import FriendshipModal.FriendshipBo;
 public class TimeAgoUtil {
     public String getTimeAgoUtil(Timestamp createdAt) {
         Instant createdInstant = createdAt.toInstant();

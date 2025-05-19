@@ -14,4 +14,27 @@ public ArrayList<Friendship> getFriendshipByStatusAndReceiverID(int ReceiverId, 
 public ArrayList<Friendship> getFriendshipByUserId(int userID){
 	return friendshipDao.getFriendshipByUserId(userID);
 }
+public ArrayList<Friendship> getFriendshipByUserId_Search(int userID, String Search){
+	return friendshipDao.getFriendshipByUserId_Search(userID, Search);
+}
+public int UpdateFriendshipBySender_Receiver(int userId1, int userId2, int status) {
+	return friendshipDao.UpdateFriendshipBySender_Receiver(userId1, userId2, status);
+}
+public int DeleteFriendshipBySender_Receiver(int userId1, int userId2) {
+	return friendshipDao.DeleteFriendshipBySender_Receiver(userId1, userId2);
+}
+public int CreateFriendshipBySender_Receiver(int userId1, int userId2, int status) {
+	return friendshipDao.CreateFriendshipBySender_Receiver(userId1, userId2, status);
+}
+public boolean checkFriendShip(int currentUserId,int receiver) {
+	ArrayList<Friendship> lstFriendship = new ArrayList<Friendship>();
+	System.out.println("người gửi "+currentUserId+" Nguwowif nhận :"+receiver);
+	lstFriendship = friendshipDao.getFriendshipByStatusAndReceiveID(receiver, 0);
+	System.out.println("độ dài của nớ nớ nớ"+lstFriendship.size());
+	for(Friendship f : lstFriendship) {
+		if(f.getSenderID()==currentUserId)
+			return true;
+	}
+	return false;
+}
 }

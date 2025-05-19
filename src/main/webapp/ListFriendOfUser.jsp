@@ -38,7 +38,7 @@
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-3 d-flex align-items-center">
-                        <i class="bi bi-facebook text-primary fs-1 me-2"></i>
+                       <img style="width: 50px; height: 50px" src="images/logo.avif" class="fs-1 me-2 text-primary">
                         <div class="position-relative">
                             <form action="SearchUser" method="get">
                             <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng" name="searchUser">
@@ -72,7 +72,7 @@
                             <i class="bi bi-person-circle"></i>
                         </div>	
 						    <ul class="dropdown-menu">
-						      <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
+						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
 						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>
@@ -106,8 +106,7 @@
 			    </form>
             </div>
             <div class="profile-name-info">
-                <h1 class="profile-name"><%=currentUser.getUsername() %></h1>
-                <div class="profile-friends">239 người bạn</div>
+                <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
             </div>
             <div class="profile-actions">
                 <button class="action-button secondary">
@@ -142,10 +141,19 @@
             
             <div class="friends-actions">
                 <div class="search-bar">
-                    <span class="search-icon">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" placeholder="Tìm kiếm">
+                    <form action="ProfileNavigation" method="get">
+                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm" name="SearchFriend">
+                            <button type="submit" style="position: absolute;top: 50%;right: 10px;
+																				  transform: translateY(-50%);
+																				  background: none;
+																				  border: none;
+																				  padding: 0;
+																				  margin: 0;
+																				  cursor: pointer;
+																				  color: #333; /* hoặc text-primary */">
+				                <i class="fas fa-search"></i> <!-- Font Awesome icon -->
+				            </button>
+                            </form>
                 </div>
                 
                 <a href="#" class="action-link">Lời mời kết bạn</a>
@@ -173,10 +181,10 @@
          %>
          <div class="friend-item">
                 <div class="friend-avatar">
-                    <img src="<%=user.getAvatar()%>?height=60&width=60" alt="<%=user.getUsername()%>">
+                    <img src="<%=user.getAvatar()%>?height=60&width=60" alt="<%=user.getFullName()%>">
                 </div>
                 <div class="friend-info">
-                    <div class="friend-name"><%=user.getUsername()%></div>
+                    <div class="friend-name"><%=user.getFullName()%></div>
                     <div class="friend-mutual">35 bạn chung</div>
                 </div>
                 <div class="friend-actions">

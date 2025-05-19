@@ -38,9 +38,9 @@ public class SearchUserController extends HttpServlet {
 		HttpSession session = request.getSession();
 		User currentUser = (User)session.getAttribute("User");
 		int userId = currentUser.getUserID();
-		String searchUser = request.getParameter("searchUser");
-		ArrayList<SearchUser> ds_User = new ArrayList<SearchUser>();
 		SearchUserBo userBo = new SearchUserBo();
+		ArrayList<SearchUser> ds_User = new ArrayList<SearchUser>();
+		String searchUser = request.getParameter("searchUser");
 		ds_User=userBo.getUserBySearch(userId, searchUser);
 		session.setAttribute("UserBySeach", ds_User);
 		RequestDispatcher rd = request.getRequestDispatcher("SearchUser.jsp");

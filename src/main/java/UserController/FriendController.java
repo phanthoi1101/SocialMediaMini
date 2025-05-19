@@ -39,9 +39,33 @@ public class FriendController extends HttpServlet {
 		HttpSession session = request.getSession();
 		FriendshipStatus Status = new FriendshipStatus();
 		UserBo userBo = new UserBo();
-		session.setAttribute("homeActive", "friend");
-		FriendshipBo friendshipBo = new FriendshipBo(); 
+		FriendshipBo friendshipBo = new FriendshipBo();
 		User currentUser = (User)session.getAttribute("User");
+		if(request.getParameter("xacnhan")!=null) {
+			int userId = Integer.parseInt(request.getParameter("userId"));
+			int currentUserId = currentUser.getUserID();
+			friendshipBo.UpdateFriendshipBySender_Receiver(currentUserId, userId, Status.ACCEPTED);
+			System.out.println("Thêm bạn thành công !");
+		}
+		if(request.getParameter("xoa")!=null) {
+			int userId = Integer.parseInt(request.getParameter("userId"));//8
+			int currentUserId = currentUser.getUserID();//1
+			friendshipBo.DeleteFriendshipBySender_Receiver(currentUserId, userId);
+			System.out.println("Xoá bạn thành công !");
+		}
+		if(request.getParameter("thembanbe")!=null) {
+			int userId = Integer.parseInt(request.getParameter("userId"));
+			int currentUserId = currentUser.getUserID();
+			friendshipBo.CreateFriendshipBySender_Receiver(currentUserId, userId,Status.PENDING);
+			System.out.println("Thêm bạn thành công !");
+		}
+		if(request.getParameter("huyyeucau")!=null) {
+			int userId = Integer.parseInt(request.getParameter("userId"));
+			int currentUserId = currentUser.getUserID();
+			friendshipBo.DeleteFriendshipBySender_Receiver(currentUserId, userId);
+			System.out.println("Huỷ yêu cầu thành công");
+		}
+		session.setAttribute("homeActive", "friend"); 
 		ArrayList<Friendship> dsFriendship = friendshipBo.getFriendshipByStatusAndReceiverID(currentUser.getUserID(), Status.PENDING);
 		session.setAttribute("dsFriendshipSender", dsFriendship);
 		ArrayList<User> dsIsNotFriend = userBo.getUserIsNotFriend(currentUser.getUserID());

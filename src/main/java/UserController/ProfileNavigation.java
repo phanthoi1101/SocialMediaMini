@@ -54,6 +54,15 @@ public class ProfileNavigation extends HttpServlet {
 			rd.forward(request, response);
 			return;
 		}
+		if(request.getParameter("SearchFriend")!=null) {
+			String searchFriend = request.getParameter("SearchFriend");
+			session.setAttribute("ProfileActive", "friend");
+			dsFriendshipById = friendshipBo.getFriendshipByUserId_Search(currentUser.getUserID(), searchFriend);
+			session.setAttribute("dsFriendshipById", dsFriendshipById);
+			RequestDispatcher rd = request.getRequestDispatcher("ListFriendOfUser.jsp");
+			rd.forward(request, response);
+			return;
+		}
 		if(request.getParameter("anh")!=null) {
 			session.setAttribute("ProfileActive", "photo");
 			dsPostByUserID = postBo.getPostByUserID(currentUser.getUserID());

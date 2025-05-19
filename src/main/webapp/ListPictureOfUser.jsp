@@ -35,7 +35,7 @@
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-3 d-flex align-items-center">
-                        <i class="bi bi-facebook text-primary fs-1 me-2"></i>
+                        <img style="width: 50px; height: 50px" src="images/logo.avif" class="fs-1 me-2 text-primary">
                         <div class="position-relative">
                             <form action="SearchUser" method="get">
                             <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng" name="searchUser">
@@ -69,7 +69,7 @@
                             <i class="bi bi-person-circle"></i>
                         </div>	
 						    <ul class="dropdown-menu">
-						      <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
+						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
 						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>
@@ -103,7 +103,7 @@
 			    </form>
             </div>
             <div class="profile-name-info">
-                <h1 class="profile-name"><%=currentUser.getUsername() %></h1>
+                <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
                 <div class="profile-friends">239 người bạn</div>
             </div>
             <div class="profile-actions">
@@ -165,7 +165,6 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="photoModalLabel">Ảnh của Phan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

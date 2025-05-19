@@ -1,3 +1,4 @@
+<%@page import="FriendshipModal.FriendshipBo"%>
 <%@page import="UserModal.UserBo"%>
 <%@page import="UserModal.User"%>
 <%@page import="FriendshipModal.Friendship"%>
@@ -28,6 +29,7 @@
 <body>
 <%
 UserBo userBo = new UserBo();
+FriendshipBo frdshipBo = new FriendshipBo();
 User currentUser = (User)session.getAttribute("User");
 ArrayList<Friendship> dsFriendshipSender = (ArrayList<Friendship>)session.getAttribute("dsFriendshipSender");
 int sizeLstFriendSender = 0;	
@@ -124,7 +126,7 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
 	                <div class="fb-request-card">
 	                    <img src="<%=user.getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
 	                    <div class="fb-request-info">
-	                        <div class="fb-request-name"><%=user.getUsername()%></div>
+	                        <div class="fb-request-name"><%=user.getFullName()%></div>
 	                        <div class="fb-request-mutual">
 	                            <div class="fb-request-mutual-icon">
 	                                <i class="bi bi-people-fill"></i>
@@ -132,8 +134,11 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
 	                            4 bạn chung
 	                        </div>
 	                        <div class="fb-request-actions">
-	                            <button class="fb-btn fb-btn-primary">Xác nhận</button>
-	                            <button class="fb-btn fb-btn-secondary">Xóa</button>
+	                            <form action="FriendController" method="get" style="all: unset;display: contents;">
+	                            	<input type="hidden" name="userId" value="<%=user.getUserID()%>">
+	                            	<button class="fb-btn fb-btn-primary" name="xacnhan">Xác nhận</button>
+	                            	<button class="fb-btn fb-btn-secondary" name="xoa">Xóa</button>	
+	                            </form>
 	                        </div>
 	                    </div>
 	                </div>
@@ -152,24 +157,44 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
                 <%}else{ %>
                 <div class="fb-requests-grid">
 	                <%for(int i = 0 ; i < sizeLstIsNotFriend ; i++){ 
-	                %>
-	                <div class="fb-request-card">
+	                	if(frdshipBo.checkFriendShip(currentUser.getUserID(), lstIsNotFriend.get(i).getUserID())){%>
+	                		<div class="fb-request-card">
 	                    <img src="<%=lstIsNotFriend.get(i).getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
 	                    <div class="fb-request-info">
-	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getUsername()%></div>
+	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getFullName()%></div>
 	                        <div class="fb-request-mutual">
 	                            <div class="fb-request-mutual-icon">
 	                                <i class="bi bi-people-fill"></i>
 	                            </div>
-	                            4 bạn chung
 	                        </div>
 	                        <div class="fb-request-actions">
-	                            <button class="fb-btn fb-btn-primary">Thêm bạn bè</button>
-	                            <button class="fb-btn fb-btn-secondary">Gỡ</button>
+	                            <form action="FriendController" method="get" style="all: unset;display: contents;">
+	                            	<input type="hidden" name="userId" value="<%=lstIsNotFriend.get(i).getUserID()%>">
+	                            	<button class="fb-btn fb-btn-default" name="huyyeucau">Huỷ yêu cầu</button>	
+	                            </form>
 	                        </div>
 	                    </div>
 	                </div>
-	                <%} %>
+	                	<%}else{%>
+	                <div class="fb-request-card">
+	                    <img src="<%=lstIsNotFriend.get(i).getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
+	                    <div class="fb-request-info">
+	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getFullName()%></div>
+	                        <div class="fb-request-mutual">
+	                            <div class="fb-request-mutual-icon">
+	                                <i class="bi bi-people-fill"></i>
+	                            </div>
+	                        </div>
+	                        <div class="fb-request-actions">
+	                            <form action="FriendController" method="get" style="all: unset;display: contents;">
+	                            	<input type="hidden" name="userId" value="<%=lstIsNotFriend.get(i).getUserID()%>">
+	                            	<button class="fb-btn fb-btn-primary" name="thembanbe">Thêm bạn bè</button>	
+	                            </form>
+	                        </div>
+	                    </div>
+	                </div>
+	                <%}
+	                	}%>
 	                            </div>
                 <%} %>
         </div>
