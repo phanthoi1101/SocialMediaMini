@@ -1,0 +1,165 @@
+@charset "UTF-8";
+:root {
+                --fb-blue: #1877f2;
+                --fb-bg: #f0f2f5;
+                --fb-hover: #e4e6e9;
+                --fb-text: #65676b;
+            }
+body {
+      background-color: #f0f2f5;
+      height: 100vh;
+    }
+
+    .chat-container {
+      height: 90vh;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 30%;
+      background-color: #fff;
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+    }
+
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #e5ddd5;
+    }
+
+    .chat-header {
+      padding: 1rem;
+      background-color: #fff;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      clear: both;
+    }
+
+    .message.sent {
+      background-color: #dcf8c6;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .message.received {
+      background-color: #fff;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .chat-input {
+      border-top: 1px solid #ccc;
+      background-color: #fff;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      border: none;
+      outline: none;
+    }
+
+    .chat-input button {
+      border: none;
+      background-color: transparent;
+      color: #007bff;
+      font-size: 1.4rem;
+    }
+
+    .contact-item {
+      padding: 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      transition: background 0.2s;
+    }
+
+    .contact-item:hover {
+      background-color: #f1f1f1;
+    }
+
+    .contact-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .contact-name {
+      font-weight: 500;
+    }
+    
+    
+    /* Facebook header */
+            .fb-header {
+                background-color: white;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                padding: 8px 16px;
+            }
+            
+            .fb-logo {
+                color: var(--fb-blue);
+                font-size: 40px;
+            }
+            
+            .search-input {
+                background-color: var(--fb-bg);
+                border-radius: 50px;
+                padding: 8px 16px;
+                width: 240px;
+                border: none;
+            }
+            
+            .nav-icon {
+                color: #65676b;
+                font-size: 20px;
+                padding: 10px 40px;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .nav-icon.active {
+                color: var(--fb-blue);
+                border-bottom: 3px solid var(--fb-blue);
+            }
+            
+            .profile-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #ddd;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+        .profile-header {
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+        }

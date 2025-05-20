@@ -38,7 +38,7 @@
                 <!-- Left Sidebar -->
                 <div class="col-3">
                     <div class="sidebar">
-                        <a href="ProfileController" class="sidebar-item">
+                        <a href="ProfileController?id=<%=currentUser.getUserID() %>" class="sidebar-item">
                             <div class="me-2">
                                 <img src="<%=currentUser.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
                             </div>
@@ -70,10 +70,12 @@
                         <%for(int i = 0 ; i < index ; i++){ %>
                             <div class="post" data-post-id="<%= dsPost_User.get(i).getPostID() %>">
                             <div class="post-header">
-                                <img src="<%=dsPost_User.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
+                                <a href="ProfileController?id=<%=dsPost_User.get(i).getUserID()%>"><img src="<%=dsPost_User.get(i).getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar"></a>
                                 <div class="post-info">
-                                    <h6 class="post-author"><%=dsPost_User.get(i).getFullName() %></h6>
-                                    <p class="post-time"><%=dsPost_User.get(i).getTimePost() %></p>
+	                                <a style="all:unset;cursor:pointer;" href="ProfileController?id=<%=dsPost_User.get(i).getUserID()%>">
+	                                   	<h6 class="post-author"><%=dsPost_User.get(i).getFullName() %></h6>
+	                                   	<p class="post-time"><%=dsPost_User.get(i).getTimePost() %></p>
+	                                </a>
                                 </div>
 								<div class="dropdown">
                                     <button class="btn" type="button" data-bs-toggle="dropdown">
@@ -109,7 +111,7 @@
                            }%>         
                                 <div class="post-action">
                                 <!-- id = likeButton_postID -->
-                                <button style="border: none;outline: none;background: none;" id="likeButton_<%=dsPost_User.get(i).getPostID()%>" 
+                     	           <button style="border: none;outline: none;background: none;" id="likeButton_<%=dsPost_User.get(i).getPostID()%>" 
 							        class="<%= checklike%>" 
 							        onclick="likePost(<%= dsPost_User.get(i).getPostID() %>, <%= currentUser.getUserID()%>)"><i class="bi bi-hand-thumbs-up"></i>Like</button>
                                 </div>
@@ -140,11 +142,11 @@
                     <div class="right-sidebar">
                         <div>
                             <div class="contacts-header">
-                                <h5 class="section-title">Chat với bạn bè</h5>
-                                <div class="contacts-actions">
-                                    <i class="bi bi-search"></i>
-                                    <i class="bi bi-three-dots"></i>
-                                </div>
+                                <h5 class="section-title">Chat</h5>
+                                <form action="HomePageController" method="get">
+                                	<input type="text" name="searchfriend" placeholder="Tìm kiếm"/>
+                                	<button style="border: none;" class="text-primary" type="submit" name="timkiem"><i class="fas fa-search"></i></button>
+                                </form>
                             </div>
                            <%if(n!=0){
                         	   UserBo userbo = new UserBo();
@@ -164,7 +166,11 @@
                             	</div> 
                            <%} 
                         		}
-                           }%>
+                           }else{%>
+                           <div class="text-center text-danger mt-4">
+                           		<h5>Không tìm thấy người dùng</h5>
+                           </div>
+                           <%} %>
                         </div>
                     </div>
                 </div>

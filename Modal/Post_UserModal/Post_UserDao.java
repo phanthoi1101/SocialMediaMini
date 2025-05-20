@@ -46,7 +46,6 @@ public class Post_UserDao {
 		}
 	}
 	public Post_User get1Post_User(int postID) {
-		System.out.println("get post user by id" + postID);
 		Post_User post_user = null;
 		try {
 			KetNoi kn = new KetNoi();
@@ -88,9 +87,10 @@ public class Post_UserDao {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
 			String sql = "select Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,User_Post.Content,Image,User_Post.CreatedAt,COUNT(LikeID) as LikeCount\r\n"
-					+ "					from User_Post inner join Likes on Likes.PostID=User_Post.PostID\r\n"
+					+ "					from User_Post left join Likes on Likes.PostID=User_Post.PostID\r\n"
 					+ "					where User_Post.UserID = ?\r\n"
-					+ "					group by Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,Content,Image,User_Post.CreatedAt";
+					+ "					group by Username,FullName,Avatar,User_Post.PostID,User_Post.UserID,Content,Image,User_Post.CreatedAt"
+					+ "					order by CreatedAt desc";
 			PreparedStatement cmd = kn.cn.prepareStatement(sql);
 			cmd.setInt(1, userID);
 			ResultSet rs = cmd.executeQuery();

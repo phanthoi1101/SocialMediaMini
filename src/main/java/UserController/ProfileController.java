@@ -11,9 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import LikeModal.Like;
+import LikeModal.LikeBo;
 import Post_UserModal.Post_User;
 import Post_UserModal.Post_UserBo;
 import UserModal.User;
+import UserModal.UserBo;
 
 /**
  * Servlet implementation class ProfileController
@@ -35,19 +38,29 @@ public class ProfileController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		ArrayList<Like> dsLike = new ArrayList<Like>();
+		LikeBo likeBo = new LikeBo();
+		UserBo userbo = new UserBo();
+		dsLike = likeBo.getLike();
+		session.setAttribute("dsLike", dsLike);
 		session.setAttribute("ProfileActive", "article");
 		Post_UserBo post_UserBo = new Post_UserBo();
 		ArrayList<Post_User> dsPost_User = new ArrayList<Post_User>();
 		User user = (User)session.getAttribute("User");
-		System.out.println(user.getUserID());
-		dsPost_User = post_UserBo.getPost_UserByUserId(user.getUserID());
-		for(Post_User x : dsPost_User) {
-			System.out.println(x.getContent());
-		}
+		int id = Integer.parseInt(request.getParameter("id"));
+		dsPost_User = post_UserBo.getPost_UserByUserId(id);
 		session.setAttribute("dsPost_UserById", dsPost_User);
 		session.setAttribute("homeActive", "");
-		RequestDispatcher rd = request.getRequestDispatcher("Profile.jsp");
-		rd.forward(request, response);
+		if(user.getUserID()==id) {
+			RequestDispatcher rd = request.getRequestDispatcher("Profile.jsp");
+			rd.forward(request, response);
+		}else {
+			User userFriend = userbo.getUserById(id);
+			request.setAttribute("UserFriend", userFriend);
+			RequestDispatcher rd = request.getRequestDispatcher("ProfileFriend.jsp");
+			rd.forward(request, response);
+		}
+		
 	}
 
 	/**

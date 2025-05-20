@@ -25,6 +25,7 @@
 	if(session.getAttribute("dsPost_UserById")!=null){
 		index = dsPost_UserById.size();
 	}
+	User userFriend = (User)request.getAttribute("UserFriend");
 	User currentUser = (User)session.getAttribute("User");
 	%>
 	    <!-- Navbar -->
@@ -34,28 +35,16 @@
     <div class="content-container">
     	<div class="profile-header">
         <div class="cover-photo">
-	        <img alt="" src="<%=currentUser.getPhotoCover() %>" style="object-fit: cover;width: 100%;height: 100%;">
-	        <form id="uploadFormPhotoCover" action="UploadPhotoCoverController" method="post" enctype="multipart/form-data">
-		        <div class="add-cover-photo composer-photocover">
-		             <i class="bi bi-camera"></i> Thêm ảnh bìa
-		        </div>
-		        <input type="file" id="photocoverInput" name="photoCover" accept="image/*" style="display: none;">
-		</form>
+	        <img alt="" src="<%=userFriend.getPhotoCover() %>" style="object-fit: cover;width: 100%;height: 100%;">
         </div>
         <div class="profile-info">
             <div class="profile-picture-container">
                 <div class="profile-picture">
-                <img alt="" src="<%=currentUser.getAvatar()%>" style="width: 100%;object-fit: cover;height: 100%;">
+                <img alt="" src="<%=userFriend.getAvatar()%>" style="width: 100%;object-fit: cover;height: 100%;">
                 </div>
-                <form id="uploadFormAvatar" action="UploadFileController" method="post" enctype="multipart/form-data">
-			        <div class="add-profile-photo composer-avatar">
-			             <i class="bi bi-camera-fill"></i>
-			        </div>
-			        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
-			    </form>
             </div>
             <div class="profile-name-info">
-                <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
+                <h1 class="profile-name"><%=userFriend.getFullName() %></h1>
             </div>
             <div class="profile-actions">
                 <button class="action-button secondary">
@@ -68,9 +57,10 @@
         </div>
         <div class="profile-navigation">
             <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
-            <button name="baiViet" style="all: unset;  cursor: pointer;"><div class="nav-item active">Bài viết</div></button>
-            <button name="banBe" style="all: unset;  cursor: pointer;"><div class="nav-item">Bạn bè</div></button>
-            <button name="anh" style="all: unset;  cursor: pointer;"><div class="nav-item">Anh</div></button>
+            <input type="hidden" name="profileUserId" value="<%=userFriend.getUserID()%>"/>
+            <button name="baiVietFriend" style="all: unset;  cursor: pointer;"><div class="nav-item active">Bài viết</div></button>
+            <button name="banBeFriend" style="all: unset;  cursor: pointer;"><div class="nav-item">Bạn bè</div></button>
+            <button name="anhFriend" style="all: unset;  cursor: pointer;"><div class="nav-item">Anh</div></button>
             </form>
             <div class="nav-item nav-more">
                 <i class="bi bi-three-dots"></i>
@@ -81,21 +71,6 @@
     
     <!-- Main Content -->
     <div class="content-container">
-        <!-- Post Composer -->
-        <div class="card">
-            <div class="post-composer">
-                <div class="composer-avatar">
-                    <i class="bi bi-person-fill"></i>
-                </div>
-                <div class="composer-input">Bạn đang nghĩ gì?</div>
-            </div>
-            <div class="composer-actions">
-                    <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
-                    	<button class="composer-action photo" name="anh" style="all: unset;  cursor: pointer;"><i class="bi bi-image"></i> Ảnh</button>
-                    </form>
-            </div>
-        </div>
-
         <!-- List các bài post -->
                 <div class="">
                     <%if(index==0){ %>

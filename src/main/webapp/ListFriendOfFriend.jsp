@@ -25,6 +25,7 @@
 </head>
 <body> 
 	<%User currentUser = (User)session.getAttribute("User");
+	User userFriend = (User)request.getAttribute("userFriend");
 	UserBo userBo = new UserBo();
 	ArrayList<Friendship> dsFriendshipByUserId = (ArrayList<Friendship>)session.getAttribute("dsFriendshipById");
 	int index = 0;
@@ -42,7 +43,7 @@
                         <div class="position-relative">
                             <form action="SearchUser" method="get">
                             <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng" name="searchUser">
-                            <button name="sumitSearchUser" type="submit" style="position: absolute;top: 50%;right: 10px;
+                            <button type="submit" style="position: absolute;top: 50%;right: 10px;
 																				  transform: translateY(-50%);
 																				  background: none;
 																				  border: none;
@@ -85,28 +86,17 @@
     <div class="content-container">
     	<div class="profile-header">
         <div class="cover-photo">
-	        <img alt="" src="<%=currentUser.getPhotoCover() %>" style="object-fit: cover;width: 100%;height: 100%;">
-	        <form id="uploadFormPhotoCover" action="UploadPhotoCoverController" method="post" enctype="multipart/form-data">
-		        <div class="add-cover-photo composer-photocover">
-		             <i class="bi bi-camera"></i> Thêm ảnh bìa
-		        </div>
-		        <input type="file" id="photocoverInput" name="photoCover" accept="image/*" style="display: none;">
-		</form>
+	        <img alt="" src="<%=userFriend.getPhotoCover() %>" style="object-fit: cover;width: 100%;height: 100%;">
         </div>
         <div class="profile-info">
             <div class="profile-picture-container">
                 <div class="profile-picture">
-                <img alt="" src="<%=currentUser.getAvatar()%>" style="width: 100%;object-fit: cover;height: 100%;">
+                <img alt="" src="<%=userFriend.getAvatar()%>" style="width: 100%;object-fit: cover;height: 100%;">
                 </div>
-                <form id="uploadFormAvatar" action="UploadFileController" method="post" enctype="multipart/form-data">
-			        <div class="add-profile-photo composer-avatar">
-			             <i class="bi bi-camera-fill"></i>
-			        </div>
-			        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
-			    </form>
+
             </div>
             <div class="profile-name-info">
-                <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
+                <h1 class="profile-name"><%=userFriend.getFullName() %></h1>
             </div>
             <div class="profile-actions">
                 <button class="action-button secondary">
@@ -124,9 +114,10 @@
         %>
         <div class="profile-navigation">
             <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
-            <button name="baiViet" style="all: unset;  cursor: pointer;"><div class="nav-item <%= ProfileActive=="article" ? "active" : ""%>">Bài viết</div></button>
-            <button name="banBe" style="all: unset;  cursor: pointer;"><div class="nav-item <%= ProfileActive=="friend" ? "active" : ""%>">Bạn bè</div></button>
-            <button name="anh" style="all: unset;  cursor: pointer;"><div class="nav-item <%= ProfileActive=="photo" ? "active" : ""%>">Anh</div></button>
+            <input type="hidden" name="profileUserId" value="<%=userFriend.getUserID()%>"/>
+            <button name="baiVietFriend" style="all: unset;  cursor: pointer;"><div class="nav-item ">Bài viết</div></button>
+            <button name="banBeFriend" style="all: unset;  cursor: pointer;"><div class="nav-item active">Bạn bè</div></button>
+            <button name="anhFriend" style="all: unset;  cursor: pointer;"><div class="nav-item ">Anh</div></button>
             </form>
             <div class="nav-item nav-more">
                 <i class="bi bi-three-dots"></i>
@@ -138,12 +129,12 @@
 	<div class="friends-container">
         <div class="friends-header">
             <h1 class="friends-title">Bạn bè</h1>
-            
             <div class="friends-actions">
                 <div class="search-bar">
                     <form action="ProfileNavigation" method="get">
-                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm" name="SearchFriend">
-                            <button type="submit" style="position: absolute;top: 50%;right: 10px;
+                     	<input type="hidden" name="id" value="<%=userFriend.getUserID()%>">
+                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm" name="SearchFriendFriend">
+                            <button  type="submit" style="position: absolute;top: 50%;right: 10px;
 																				  transform: translateY(-50%);
 																				  background: none;
 																				  border: none;
@@ -151,13 +142,12 @@
 																				  margin: 0;
 																				  cursor: pointer;
 																				  color: #333; /* hoặc text-primary */">
-				                <i class="fas fa-search"></i> <!-- Font Awesome icon -->
+				                <i class="fas fa-search"></i>
 				            </button>
                             </form>
                 </div>
                 
-                <a href="#" class="action-link">Lời mời kết bạn</a>
-                <a href="#" class="action-link">Tìm bạn bè</a>
+                <div class="mx-4 px-4"></div>
                 
                 <button class="more-btn">
                     <i class="bi bi-three-dots"></i>
@@ -173,7 +163,7 @@
         <div class="friends-list">
          <%for(int i =0 ; i < index ; i++){ 
         	 User user = new User();
-         	if(dsFriendshipByUserId.get(i).getSenderID()==currentUser.getUserID()){
+         	if(dsFriendshipByUserId.get(i).getSenderID()==userFriend.getUserID()){
          		user = userBo.getUserById(dsFriendshipByUserId.get(i).getReceiverID());
          	}else{
          		user = userBo.getUserById(dsFriendshipByUserId.get(i).getSenderID());
@@ -185,7 +175,6 @@
                 </div>
                 <div class="friend-info">
                     <div class="friend-name"><%=user.getFullName()%></div>
-                    <div class="friend-mutual">35 bạn chung</div>
                 </div>
                 <div class="friend-actions">
                     <button class="more-btn">

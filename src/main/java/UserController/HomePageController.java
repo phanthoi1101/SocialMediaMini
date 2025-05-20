@@ -59,6 +59,12 @@ public class HomePageController extends HttpServlet {
 		//ds bạn bè của user
 		dsFriendshipByUserId = frdBo.getFriendshipByUserId(currentUser.getUserID());
 		session.setAttribute("dsFriendshipByUserId", dsFriendshipByUserId);
+		if(request.getParameter("timkiem")!=null) {
+			ArrayList<Friendship> dsFriendshipByUserId_Search = new ArrayList<Friendship>();
+			String search = request.getParameter("searchfriend");
+			dsFriendshipByUserId_Search = frdBo.getFriendshipByUserId_Search(currentUser.getUserID(),search );
+			session.setAttribute("dsFriendshipByUserId", dsFriendshipByUserId_Search);
+		}
 		RequestDispatcher rd = request.getRequestDispatcher("HomePage.jsp");
 		rd.forward(request, response);      
 	}

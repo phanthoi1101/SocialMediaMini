@@ -152,8 +152,6 @@
                 <img src="<%=dsPostByUserId.get(i).getImage() %>?height=180&width=180" alt="Ảnh <%=i+1%>">
             </div>
         	<%} %>
-            
-            
         </div>
         <%} %>
     </div>

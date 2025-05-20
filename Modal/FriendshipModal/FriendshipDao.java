@@ -86,6 +86,7 @@ public class FriendshipDao {
 		}
 	}
 	public ArrayList<Friendship> getFriendshipByUserId_Search(int UserId,String Search){
+		ArrayList<Friendship> list = new ArrayList<Friendship>();
 		try {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
@@ -106,11 +107,11 @@ public class FriendshipDao {
 				int ReceiverID = rs.getInt("UserID2");
 				int status = 1;
 				Date CreatedAt = rs.getDate("CreatedAt");
-				ds.add(new Friendship(FriendshipID, senderId,ReceiverID , status, CreatedAt));		
+				list.add(new Friendship(FriendshipID, senderId,ReceiverID , status, CreatedAt));		
 			}
 			kn.cn.close();
 			rs.close();
-			return ds;
+			return list;
 		} catch (Exception e) {
 			System.out.println("Wrong get Friendship by UserId	Search"+ e.getMessage());
 			e.printStackTrace();
