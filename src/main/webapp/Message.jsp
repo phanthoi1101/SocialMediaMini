@@ -1,3 +1,7 @@
+<%@page import="RoomModal.Room"%>
+<%@page import="RoomModal.RoomBo"%>
+<%@page import="RoomDetailModal.RoomDetail"%>
+<%@page import="RoomDetailModal.RoomDetailBo"%>
 <%@page import="UserModal.UserBo"%>
 <%@page import="UserModal.User"%>
 <%@page import="FriendshipModal.Friendship"%>
@@ -19,20 +23,45 @@
 </head>
 <body>
 	<%
+	String check = (String)request.getAttribute("check");
 	UserBo userbo = new UserBo();
+	RoomDetailBo rdBo = new RoomDetailBo();
+	RoomBo rBo = new RoomBo();
 	User currentUser = (User)session.getAttribute("User");
-	User user = (User)session.getAttribute("userFriend");
-	int roomId = (int)session.getAttribute("roomId");
-	ArrayList<Friendship> dsFriendshipIsFriend = (ArrayList<Friendship>)session.getAttribute("dsFriendshipIsFriend");
-	ArrayList<Message> dsMessage = (ArrayList<Message>)session.getAttribute("dsMessage"); 
-	int indexUser = 0;
-	if(session.getAttribute("dsFriendshipIsFriend")!=null){
-		indexUser = dsFriendshipIsFriend.size();
+	User user = new User();
+	if(session.getAttribute("userFriend")!=null){
+		user = (User)session.getAttribute("userFriend");
 	}
+	Room room = new Room();
+	if(session.getAttribute("room")!=null){
+		room = (Room)session.getAttribute("room");
+	}
+	int roomId=0;
+	if(session.getAttribute("roomId")!=null){
+		roomId = (int)session.getAttribute("roomId");
+	}
+	
+	ArrayList<Message> dsMessage = (ArrayList<Message>)session.getAttribute("dsMessage"); 
+	
 	int indexMess = 0;
 	if(session.getAttribute("dsMessage")!=null){
 		indexMess = dsMessage.size();
 	}
+	
+	ArrayList<Integer> dsRoomId = (ArrayList<Integer>)session.getAttribute("dsRoomId");
+	int indexroomId = 0;
+	if(session.getAttribute("dsRoomId")!=null){
+		indexroomId = dsRoomId.size();
+	}
+	
+	
+	
+	
+//	ArrayList<Friendship> dsFriendshipIsFriend = (ArrayList<Friendship>)session.getAttribute("dsFriendshipIsFriend");
+//	int indexUser = 0;
+//	if(session.getAttribute("dsFriendshipIsFriend")!=null){
+//		indexUser = dsFriendshipIsFriend.size();
+//}
 	%>
  	<%String homeActive = (String)session.getAttribute("homeActive"); %>
         <!-- Facebook Header -->
@@ -84,87 +113,107 @@
                 </div>
             </div>
 		
-	<div class="container py-4">
-  <div class="chat-container shadow">
-    
+<div class="container py-4">
+  <div class="chat-container shadow"> 
     <!-- Sidebar - User List -->
     <div class="sidebar">
       <div class="p-3 border-bottom">
-        <h5>Chats</h5>
+        <h5>Chat with</h5>
       </div>
-      <%if(indexUser==0){ %>
-      <%}else{ 
-      	for(int i = 0 ; i < indexUser ; i++){
-      		 if(currentUser.getUserID()== dsFriendshipIsFriend.get(i).getReceiverID()){
-  			   User x = userbo.getUserById(dsFriendshipIsFriend.get(i).getSenderID());
-      	%>
-	      	<div class="contact-item d-flex align-items-center">
-		        <img src="<%=x.getAvatar() %>?img=2" alt="User 2">
-		        <div class="contact-name"><%=x.getFullName() %></div>
-      		</div>
-      <%}else{
-    	  User x = userbo.getUserById(dsFriendshipIsFriend.get(i).getReceiverID());
-      %>
-      	<div class="contact-item d-flex align-items-center">
-		        <img src="<%=x.getAvatar() %>?img=2" alt="User 2">
-		        <div class="contact-name"><%=x.getFullName() %></div>
-      		</div>
-      <%} %>
-      	<%} 
-      }%>
+    	<%if(indexroomId==0){ %>
+    	<%}else{ 
+    		for(int i = 0 ; i < indexroomId ; i++){
+    			Room roomm = rBo.getRoomByRoomID(dsRoomId.get(i));
+    			if(roomm.isIsGroup()){%>
+    				<a style="text-decoration: none;color: inherit;" href="MessageController?roomId=<%=roomm.getRoomId()%>">
+    				<div class="contact-item d-flex align-items-center">
+			        	<img src="https://ui-avatars.com/api/?name=G&background=6f42c1&color=fff&bold=true" alt="Avatar" class="rounded-circle" width="40" height="40">
+			        	<div class="contact-name"><%=roomm.getRoomName() %></div>
+      				</div></a>
+    			<%}else{
+    				RoomDetail rd = rdBo.getRoomDetailByUserID_RoomID(dsRoomId.get(i), currentUser.getUserID());
+    				User u = userbo.getUserById(rd.getUserID());
+    			%>
+    			<a style="text-decoration: none;color: inherit;" href="MessageController?id=<%=u.getUserID()%>"><div class="contact-item d-flex align-items-center">
+				       <img src="<%=u.getAvatar() %>?img=2" alt="User 2">
+				       <div class="contact-name"><%=u.getFullName() %></div>
+		      	</div></a>
+    			<%
+    			}
+    	%>
+    	<%}
+    		} %>
+    	
     </div>
 
     <!-- Chat Area -->
     <div class="chat-main">
-      <div class="chat-header">
+      <%if(check=="room"){ %>
+	      <div class="chat-header">
+	        <img src="https://ui-avatars.com/api/?name=G&background=6f42c1&color=fff&bold=true" alt="Avatar" class="rounded-circle" width="40" height="40">
+	        <strong><%=room.getRoomName() %></strong>
+	      </div>
+      <%}else if(check=="userFriend") {%>
+      	<div class="chat-header">
         <img src="<%=user.getAvatar() %>?img=1" width="40" height="40" class="rounded-circle">
         <strong><%=user.getFullName() %></strong>
       </div>
+      <%} %>
       <div class="chat-messages" id="mess">
         <%if(indexMess==0){ %>
         <%}else{ 
         	for(int i = 0 ; i < indexMess ; i++){
         	%>
-        	<div style="display: flex; flex-direction: column;">
+        	<div  style="display: flex; flex-direction: column;">
         	<%	if(dsMessage.get(i).getSenderID()==currentUser.getUserID()){
         %>
 	        <div class="message sent" style="display:flex; justify-content: flex-end;">
-	      		<p><%=dsMessage.get(i).getContent() %></p>
+	      
+	      		<p style="text-align: justify;"><%=dsMessage.get(i).getContent() %></p>
+	    
 	        </div>
         <%}else{ %>
 	         <div class="message received" style="display:flex; justify-content: flex-start;">
-	          <%=dsMessage.get(i).getContent() %>
+	           <p style="text-align: justify;"> <%=dsMessage.get(i).getContent() %></p>
 	        </div>
         <%}%>
-        		</div>
+        </div>
         	<%	}
         	} %>
       </div>
 
+      <%if(check=="message"){ %>
+      <%}else{ %>
       <div class="chat-input">
-        <input type="text" placeholder="Type a message..." id="messageText">
+        <input type="text" placeholder="Type a message..." id="messageText" autofocus="autofocus">
         <i class="bi bi-send-fill" onclick="sendMessage();" value="Send" ></i>
       </div>
+      <%} %>
     </div>
+    
   </div>
 </div>
-
+ 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+window.onload = function() {
+	  var messElement = document.getElementById("mess");
+	  messElement.scrollTop = messElement.scrollHeight;
+	};
     var roomId = "<%=roomId%>";
     var websocket = new WebSocket("ws://localhost:8080/SocialMedia/chatroomServerEndpoint/" + roomId);
     websocket.onmessage = function processMessage(message) {
+    	
     	const messElement = document.getElementById("mess");
       var jsonData = JSON.parse(message.data);
       if (jsonData.message != null)
         if(jsonData.userId===<%=currentUser.getUserID()%>){
-        	messElement.insertAdjacentHTML("beforeend", "<div class=\"message sent\">" + jsonData.message + "</div>");
-          	console.log("hello"+`<div class="message sent">${jsonData.message} ${jsonData.userId}</div>`);
+        	messElement.insertAdjacentHTML("beforeend", "<div  style=\"display: flex; flex-direction: column;\"> <div class=\"message sent\" style=\"display:flex; justify-content: flex-end;\"> <p style=\"text-align: justify;\">" + jsonData.message + "</p> </div> </div>");
         }else{
-        	messElement.insertAdjacentHTML("beforeend", "<div class=\"message received\">" + jsonData.message + "</div>");
-          	console.log("hello"+`<div class="message sent">${jsonData.message} ${jsonData.userId}</div>`);
+        	messElement.insertAdjacentHTML("beforeend", "<div  style=\"display: flex; flex-direction: column;\"><div class=\"message received\" style=\"display:flex; justify-content: flex-start;\"> <p style=\"text-align: justify;\">" + jsonData.message + "</p> </div> </div>");
         }
+      messElement.scrollTop = messElement.scrollHeight;
     };
     function sendMessage() {
     var messageText = document.getElementById("messageText");

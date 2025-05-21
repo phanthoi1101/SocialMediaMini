@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
    <%String homeActive = (String)session.getAttribute("homeActive"); %>
         <div class="fb-header">
             <div class="container-fluid">
@@ -41,7 +40,7 @@
                         </div>	
 				
 						    <ul class="dropdown-menu">
-						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
+						      <li><a class="dropdown-item" href="ProfileController?id=<%=currentUser.getUserID()%>">Trang cá nhân</a></li>
 						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>

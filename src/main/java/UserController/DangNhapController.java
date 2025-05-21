@@ -20,8 +20,7 @@ import UserModal.User;
  */
 @WebServlet("/DangNhapController")
 public class DangNhapController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+	private static final long serialVersionUID = 1L; 
     /**
      * @see HttpServlet#HttpServlet()
      */

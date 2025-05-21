@@ -50,7 +50,7 @@
                             </div>
                             <span>Bạn bè</span>
                         </a>
-                        <a href="FriendController" class="sidebar-item">
+                        <a href="MessageController?message=1" class="sidebar-item">
                             <div class="sidebar-icon blue">
                                 <i class="bi bi-chat-dots-fill"></i>
                             </div>

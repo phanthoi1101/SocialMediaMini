@@ -15,6 +15,8 @@ import FriendshipModal.Friendship;
 import FriendshipModal.FriendshipBo;
 import MessageModal.Message;
 import MessageModal.MessageBo;
+import RoomDetailModal.RoomDetailBo;
+import RoomModal.Room;
 import RoomModal.RoomBo;
 import UserModal.User;
 import UserModal.UserBo;
@@ -39,24 +41,56 @@ public class MessageController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		int receiver = Integer.parseInt(request.getParameter("id"));
-		User currentUser = (User)session.getAttribute("User");
 		MessageBo messageBo = new MessageBo();
 		RoomBo roomBo = new RoomBo();
 		UserBo userBo = new UserBo();
+		RoomBo rBo = new RoomBo();
+		User currentUser = (User)session.getAttribute("User");
 		FriendshipBo frdship = new FriendshipBo();
 		ArrayList<Friendship> dsUserIsFriend = new ArrayList<Friendship>();
-		User user = userBo.getUserById(receiver);
-		session.setAttribute("userFriend", user);
-		dsUserIsFriend = frdship.getFriendshipByUserId(currentUser.getUserID());
-		session.setAttribute("dsFriendshipIsFriend", dsUserIsFriend);
 		ArrayList<Message> dsMessage = new ArrayList<Message>();
-		int roomid = roomBo.getRoomId(currentUser.getUserID(), receiver);
-		session.setAttribute("roomId", roomid);
-		dsMessage = messageBo.getMessageByRoomId(roomid);
-		session.setAttribute("dsMessage", dsMessage);
-		RequestDispatcher rd = request.getRequestDispatcher("Message.jsp");
-		rd.forward(request, response);
+		
+		if(request.getParameter("id")!=null) {
+			int receiver = Integer.parseInt(request.getParameter("id"));
+			ArrayList<Integer> dsRoomId = rBo.getRoomIdByUserID(currentUser.getUserID());
+			session.setAttribute("dsRoomId", dsRoomId);
+			//Khác biệt
+			User user = userBo.getUserById(receiver);
+			session.setAttribute("userFriend", user);
+			//Danh sách tim nhắn theo room id
+			int roomid = roomBo.getRoomId(currentUser.getUserID(), receiver);
+			session.setAttribute("roomId", roomid);
+			dsMessage = messageBo.getMessageByRoomId(roomid);
+			session.setAttribute("dsMessage", dsMessage);
+			request.setAttribute("check","userFriend");
+			RequestDispatcher rd = request.getRequestDispatcher("Message.jsp");
+			rd.forward(request, response);
+			return;
+		}
+		if(request.getParameter("roomId")!=null) {
+			ArrayList<Integer> dsRoomId = rBo.getRoomIdByUserID(currentUser.getUserID());
+			session.setAttribute("dsRoomId", dsRoomId);
+			int roomId = Integer.parseInt(request.getParameter("roomId"));
+			Room room = roomBo.getRoomByRoomID(roomId);
+			session.setAttribute("room", room);
+			session.setAttribute("roomId", roomId);
+			dsMessage = messageBo.getMessageByRoomId(roomId);
+			session.setAttribute("dsMessage", dsMessage);
+			request.setAttribute("check","room");
+			RequestDispatcher rd = request.getRequestDispatcher("Message.jsp");
+			rd.forward(request, response);
+			return;
+		}
+		if(request.getParameter("message")!=null) {
+			ArrayList<Integer> dsRoomId = rBo.getRoomIdByUserID(currentUser.getUserID());
+			session.setAttribute("dsRoomId", dsRoomId);
+			request.setAttribute("check","message");
+			session.setAttribute("dsMessage", null);
+			RequestDispatcher rd = request.getRequestDispatcher("Message.jsp");
+			rd.forward(request, response);
+			return;
+		}
+		
 	}
 
 	/**

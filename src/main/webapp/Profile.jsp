@@ -54,8 +54,37 @@
 			        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
 			    </form>
             </div>
-            <div class="profile-name-info">
+            <div class="profile-name-info" style="display: ruby;">
                 <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
+				
+		<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changeUsernameModal">
+		  <i class="bi bi-pencil-fill fs-6 mx-2" style="cursor: pointer; color: #6c757d;"></i>
+		</button>
+		
+		<!-- Modal -->
+		<div id="changeUsernameModal" class="modal fade" tabindex="-1" aria-labelledby="changeUsernameLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <form action="ChangeUsernameController" method="post">
+		        <div class="modal-header">
+		          <h5 class="modal-title" id="changeUsernameLabel">Đổi tên người dùng</h5>
+		          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+		        </div>
+		        <div class="modal-body">
+		          <div class="mb-3">
+		            <label for="inputNewUsername" class="form-label">Tên người dùng mới</label>
+		            <input type="text" class="form-control" id="inputNewUsername" name="newUsername" required />
+		          </div>
+		        </div>
+		        <div class="modal-footer">
+		          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+		          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+		        </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+		<!-- Đóng modal -->
             </div>
             <div class="profile-actions">
                 <button class="action-button secondary">
@@ -72,9 +101,7 @@
             <button name="banBe" style="all: unset;  cursor: pointer;"><div class="nav-item">Bạn bè</div></button>
             <button name="anh" style="all: unset;  cursor: pointer;"><div class="nav-item">Anh</div></button>
             </form>
-            <div class="nav-item nav-more">
-                <i class="bi bi-three-dots"></i>
-            </div>
+            
         </div>
     </div>
     </div>
@@ -116,8 +143,7 @@
                                         <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li>
-                                        <li><a class="dropdown-item" href="#">Báo cáo</a></li>
+                                        <li><a class="dropdown-item" href="#">Xoá bài viết</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -167,10 +193,10 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <%@ include file="Layouts/ModelComment.jsp" %>
-    
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!-- Bootstrap JS Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     
     <!-- Custom JavaScript for View Switching -->
     <script>
