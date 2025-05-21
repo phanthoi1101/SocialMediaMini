@@ -1,3 +1,8 @@
+<%@page import="UserModal.UserBo"%>
+<%@page import="UserModal.User"%>
+<%@page import="FriendshipModal.Friendship"%>
+<%@page import="MessageModal.Message"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -13,6 +18,22 @@
         <link rel="stylesheet" type="text/css" href="Layouts/Message.css">
 </head>
 <body>
+	<%
+	UserBo userbo = new UserBo();
+	User currentUser = (User)session.getAttribute("User");
+	User user = (User)session.getAttribute("userFriend");
+	int roomId = (int)session.getAttribute("roomId");
+	ArrayList<Friendship> dsFriendshipIsFriend = (ArrayList<Friendship>)session.getAttribute("dsFriendshipIsFriend");
+	ArrayList<Message> dsMessage = (ArrayList<Message>)session.getAttribute("dsMessage"); 
+	int indexUser = 0;
+	if(session.getAttribute("dsFriendshipIsFriend")!=null){
+		indexUser = dsFriendshipIsFriend.size();
+	}
+	int indexMess = 0;
+	if(session.getAttribute("dsMessage")!=null){
+		indexMess = dsMessage.size();
+	}
+	%>
  	<%String homeActive = (String)session.getAttribute("homeActive"); %>
         <!-- Facebook Header -->
 		<div class="fb-header">
@@ -71,122 +92,58 @@
       <div class="p-3 border-bottom">
         <h5>Chats</h5>
       </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=1" alt="User 1">
-        <div class="contact-name">Alice</div>
-      </div>
-      <div class="contact-item d-flex align-items-center">
-        <img src="https://i.pravatar.cc/100?img=2" alt="User 2">
-        <div class="contact-name">Bob</div>
-      </div>
-      <!-- Add more contacts as needed -->
+      <%if(indexUser==0){ %>
+      <%}else{ 
+      	for(int i = 0 ; i < indexUser ; i++){
+      		 if(currentUser.getUserID()== dsFriendshipIsFriend.get(i).getReceiverID()){
+  			   User x = userbo.getUserById(dsFriendshipIsFriend.get(i).getSenderID());
+      	%>
+	      	<div class="contact-item d-flex align-items-center">
+		        <img src="<%=x.getAvatar() %>?img=2" alt="User 2">
+		        <div class="contact-name"><%=x.getFullName() %></div>
+      		</div>
+      <%}else{
+    	  User x = userbo.getUserById(dsFriendshipIsFriend.get(i).getReceiverID());
+      %>
+      	<div class="contact-item d-flex align-items-center">
+		        <img src="<%=x.getAvatar() %>?img=2" alt="User 2">
+		        <div class="contact-name"><%=x.getFullName() %></div>
+      		</div>
+      <%} %>
+      	<%} 
+      }%>
     </div>
 
     <!-- Chat Area -->
     <div class="chat-main">
       <div class="chat-header">
-        <img src="https://i.pravatar.cc/100?img=1" width="40" height="40" class="rounded-circle">
-        <strong>Alice</strong>
+        <img src="<%=user.getAvatar() %>?img=1" width="40" height="40" class="rounded-circle">
+        <strong><%=user.getFullName() %></strong>
       </div>
-
-      <div class="chat-messages">
-        <div class="message received">
-          Hello! How are you?
-        </div>
-        <div class="message sent">
-          I'm good, thanks! You?
-        </div>
-        <div class="message received">
-          I'm fine too. What are you doing?
-        </div>
-        <div class="message sent">
-          Just working on a project.
-        </div>
-        <div class="message received">
-          Hello! How are you?
-        </div>
-        <div class="message sent">
-          I'm good, thanks! You?
-        </div>
-        <div class="message received">
-          I'm fine too. What are you doing?
-        </div>
-        <div class="message sent">
-          Just working on a project.
-        </div>
-        <div class="message received">
-          Hello! How are you?
-        </div>
-        <div class="message sent">
-          I'm good, thanks! You?
-        </div>
-        <div class="message received">
-          I'm fine too. What are you doing?
-        </div>
-        <div class="message sent">
-          Just working on a project.
-        </div>
+      <div class="chat-messages" id="mess">
+        <%if(indexMess==0){ %>
+        <%}else{ 
+        	for(int i = 0 ; i < indexMess ; i++){
+        	%>
+        	<div style="display: flex; flex-direction: column;">
+        	<%	if(dsMessage.get(i).getSenderID()==currentUser.getUserID()){
+        %>
+	        <div class="message sent" style="display:flex; justify-content: flex-end;">
+	      		<p><%=dsMessage.get(i).getContent() %></p>
+	        </div>
+        <%}else{ %>
+	         <div class="message received" style="display:flex; justify-content: flex-start;">
+	          <%=dsMessage.get(i).getContent() %>
+	        </div>
+        <%}%>
+        		</div>
+        	<%	}
+        	} %>
       </div>
 
       <div class="chat-input">
-        <input type="text" placeholder="Type a message...">
-        <button><i class="bi bi-send-fill"></i></button>
+        <input type="text" placeholder="Type a message..." id="messageText">
+        <i class="bi bi-send-fill" onclick="sendMessage();" value="Send" ></i>
       </div>
     </div>
   </div>
@@ -194,5 +151,27 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    var roomId = "<%=roomId%>";
+    var websocket = new WebSocket("ws://localhost:8080/SocialMedia/chatroomServerEndpoint/" + roomId);
+    websocket.onmessage = function processMessage(message) {
+    	const messElement = document.getElementById("mess");
+      var jsonData = JSON.parse(message.data);
+      if (jsonData.message != null)
+        if(jsonData.userId===<%=currentUser.getUserID()%>){
+        	messElement.insertAdjacentHTML("beforeend", "<div class=\"message sent\">" + jsonData.message + "</div>");
+          	console.log("hello"+`<div class="message sent">${jsonData.message} ${jsonData.userId}</div>`);
+        }else{
+        	messElement.insertAdjacentHTML("beforeend", "<div class=\"message received\">" + jsonData.message + "</div>");
+          	console.log("hello"+`<div class="message sent">${jsonData.message} ${jsonData.userId}</div>`);
+        }
+    };
+    function sendMessage() {
+    var messageText = document.getElementById("messageText");
+      console.log(messageText.value);
+      websocket.send(messageText.value);
+      messageText.value = "";
+    }
+  </script>
 </body>
 </html>

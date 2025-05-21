@@ -47,13 +47,15 @@ body {
       overflow-y: auto;
     }
 
-    .message {
-      margin-bottom: 15px;
-      max-width: 70%;
-      padding: 10px 15px;
-      border-radius: 15px;
-      clear: both;
-    }
+ .message {
+  display: inline-block;        /* chỉ chiếm không gian theo nội dung */
+  background-color: #f1f0f0;    /* màu nền nhẹ */
+  border-radius: 10px;          /* bo góc */
+  padding: 8px 12px;            /* padding vừa đủ */
+  margin: 5px 10px;             /* tạo khoảng cách giữa các tin */
+  word-wrap: break-word;        /* xuống dòng nếu từ quá dài */
+  max-width: 70%;               /* giới hạn chiều rộng nếu tin nhắn dài */
+}
 
     .message.sent {
       background-color: #dcf8c6;

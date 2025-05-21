@@ -154,16 +154,20 @@
                         		   if(currentUser.getUserID()==dsFriendship.get(i).getReceiverID()){
                         			   User user = userbo.getUserById(dsFriendship.get(i).getSenderID());
                         	   %>   
-                        	   <div class="contact-item">
-                                <img src="<%=user.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
-                                <div><%=user.getFullName() %></div> 
-                            </div> 
-                        	   <%}else{ 
-                        	   User user = userbo.getUserById(dsFriendship.get(i).getReceiverID());%>
-                        	    <div class="contact-item">
+                        	  <a style="text-decoration: none;color: inherit;" href="MessageController?id=<%=user.getUserID()%>">
+                        	  	 <div class="contact-item">
 	                                <img src="<%=user.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
 	                                <div><%=user.getFullName() %></div> 
                             	</div> 
+                        	  </a>
+                        	   <%}else{ 
+                        	   User user = userbo.getUserById(dsFriendship.get(i).getReceiverID());%>
+                        	    <a  style=" text-decoration: none;color: inherit;" href="MessageController?id=<%=user.getUserID()%>">
+                        	    	<div class="contact-item">
+	                                <img src="<%=user.getAvatar() %>" style="width: 40px;height: 40px" class="post-avatar">
+	                                <div><%=user.getFullName() %></div> 
+                            	</div>
+                        	    </a> 
                            <%} 
                         		}
                            }else{%>

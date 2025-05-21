@@ -8,6 +8,5 @@ public class KetNoi {
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		String url = "jdbc:sqlserver://DESKTOP-J4VRV6K:1433; databaseName=MiniSocialNetwork ; user=sa; password=12345; encrypt=true; trustServerCertificate=true"; 
 		cn = DriverManager.getConnection(url);
-		System.out.println("Đã kết nối");
 	}
 }
