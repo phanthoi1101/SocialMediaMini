@@ -116,6 +116,24 @@ public class UserDao {
 			
 		}
 	}
+	public int updateFullname(int userId, String Fullname) {
+		try {
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "update Users\r\n"
+					+ "set FullName = ?\r\n"
+					+ "where UserID=?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(2, userId);
+			cmd.setString(1, Fullname);
+			int x = cmd.executeUpdate();
+			return x;
+		} catch (Exception e) {
+			System.out.println("Update Fullname is error   "+e.getMessage());
+			e.printStackTrace();
+			return 0;
+		}
+	}
 	public int updateAvatar(int UserID, String avatar) {
 		try {
 			KetNoi kn = new KetNoi();

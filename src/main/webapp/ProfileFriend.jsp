@@ -46,14 +46,6 @@
             <div class="profile-name-info">
                 <h1 class="profile-name"><%=userFriend.getFullName() %></h1>
             </div>
-            <div class="profile-actions">
-                <button class="action-button secondary">
-                    <i class="bi bi-pencil"></i> Chỉnh sửa trang cá nhân
-                </button>
-                <button class="action-button secondary">
-                    <i class="bi bi-caret-down-fill"></i>
-                </button>
-            </div>
         </div>
         <div class="profile-navigation">
             <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
@@ -62,9 +54,6 @@
             <button name="banBeFriend" style="all: unset;  cursor: pointer;"><div class="nav-item">Bạn bè</div></button>
             <button name="anhFriend" style="all: unset;  cursor: pointer;"><div class="nav-item">Anh</div></button>
             </form>
-            <div class="nav-item nav-more">
-                <i class="bi bi-three-dots"></i>
-            </div>
         </div>
     </div>
     </div>
@@ -97,10 +86,14 @@
                                 </div>
                             </div>
                             <div class="post-content">
+                                <%if(dsPost_UserById.get(i).getContent()!=null){ %>
                                 <div class="post-text">
                                     <p><%=dsPost_UserById.get(i).getContent() %></p>
                                 </div>
+                                <%} %>
+                                <%if(dsPost_UserById.get(i).getImage()!=null){ %>
                                 <img src="<%=dsPost_UserById.get(i).getImage() %>" class="post-image" alt="<%=dsPost_UserById.get(i).getImage()%>">
+                                <%} %>
                             </div>
                             <div class="post-reactions">
                                 <div>

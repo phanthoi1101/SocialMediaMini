@@ -11,4 +11,7 @@ public class PostsBo {
 	public ArrayList<Posts> getPostByUserID(int userID){
 		return pDao.getPostByUserID(userID);
 	}
+	public int CreatePost(int userID , String Content , String Image) {
+		return pDao.CreatePost(Content, Image, userID);
+	}
 }

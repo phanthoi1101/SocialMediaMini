@@ -1,4 +1,4 @@
-<!-- <%@ page language="java" contentType="text/html; charset=UTF-8"
+	<!-- <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%> -->
     <!DOCTYPE html>
     <%@page import="UserModal.UserBo"%>
@@ -61,7 +61,55 @@
                 </div>
     
                 <!-- List các bài post -->
-                <div class="col-6">
+		           <div class="col-6">
+		             <div class="container mb-4">
+					    <button class="btn btn-light w-100 text-start rounded-pill px-3 py-2 border" data-bs-toggle="modal" data-bs-target="#fbPostModal">
+					      Thêm bài đăng mới?
+					    </button>
+					  </div>
+		 <!-- Modal Thêm mới bài đăng-->
+		  <div class="modal fade" id="fbPostModal" tabindex="-1" aria-labelledby="fbPostModalLabel" aria-hidden="true">
+		    <div class="modal-dialog modal-dialog-centered modal-lg">
+		      <div class="modal-content rounded-4">
+					
+		        <div class="modal-header border-0">
+		          <h5 class="modal-title mx-auto fw-bold" id="fbPostModalLabel">Tạo bài viết</h5>
+		          <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+			
+		        <form id="fbPostForm" enctype="multipart/form-data">
+		          <div class="modal-body pt-0">
+		
+		            <!-- Avatar + Tên người dùng -->
+		            <div class="d-flex align-items-center mb-3">
+		              <img src="<%=currentUser.getAvatar() %>" alt="avatar" class="rounded-circle me-2" width="40" height="40">
+		              <div>
+		                <strong><%=currentUser.getFullName() %></strong><br>
+		              </div>
+		            </div>
+		
+		            <!-- Nội dung bài post -->
+		            
+		            <div class="mb-3" id="content">
+		              <textarea class="form-control border-0" id="postContent" name="content" rows="5" placeholder="Bạn đang nghĩ gì?" style="resize: none; font-size: 1.2rem;"></textarea>
+		            </div>
+		
+		            <!-- Chọn ảnh -->
+		            <div class="mb-3">
+		              <label for="postImage" class="form-label fw-bold">Ảnh</label>
+		              <input class="form-control" type="file" id="postImage" name="image" accept="image/*">
+		            </div>
+		
+		          </div>
+		
+		          <div class="modal-footer border-0">
+		            <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill">Đăng</button>
+		          </div>
+		        </form>
+		
+		      </div>
+		    </div>
+	  	</div>
                     <%if(index==0){ %>
                     <div class="text-center text-danger"><h4>Không có bài viết được hiển thị</h4></div>
                     <%}else{ %>
@@ -88,9 +136,11 @@
                                 </div>
                             </div>
                             <div class="post-content">
+                                <%if(dsPost_User.get(i).getContent()!=null){ %>
                                 <div class="post-text">
                                     <p><%=dsPost_User.get(i).getContent() %></p>
                                 </div>
+                                <%} %>
                                 <%if(dsPost_User.get(i).getImage()!=null){ %>
                                 <img src="<%=dsPost_User.get(i).getImage() %>" class="post-image" alt="<%=dsPost_User.get(i).getImage()%>">
                                 <%} %>
@@ -187,6 +237,44 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     	<script>
+    	//Tạo bài đăng mới
+    document.getElementById("fbPostForm").addEventListener("submit", function(e) {
+	    e.preventDefault();
+	    const formData = new FormData(this);
+	    for (const [key, value] of formData.entries()) {
+	    	  console.log(`${key}:`, value);
+	    	}
+	    fetch('/SocialMedia/CreatePostController', {
+	      method: 'Post',
+	      body: formData
+	    })
+	    .then(res => res.json())
+	    .then(data => {
+	      console.log('Status:', data.status);
+	      console.log('Content:', data.content);
+	      console.log('Image:', data.image);
+	      this.reset();
+	      bootstrap.Modal.getInstance(document.getElementById('fbPostModal')).hide();
+	      alert("Thêm bài viết thành công");
+	      const backdrops = document.querySelectorAll('.modal-backdrop.fade.show');
+	      backdrops.forEach(element => element.remove());
+	      
+	    })
+	    .catch(err => {
+	    	const warning = document.createElement("div");
+	    	warning.className = "text-center text-danger";
+	    	warning.innerHTML = "<p>Vui lòng thêm nội dung hoặc ảnh</p>";
+
+	    	// Tìm thẻ #content
+	    	const contentDiv = document.getElementById("content");
+
+	    	// Thêm warning nằm trước content
+	    	contentDiv.parentNode.insertBefore(warning, contentDiv);
+		
+	    });
+  });
+    	
+    	
     	// Lấy đối tượng modal
 	    	/*function comment(postId){
 	    		console.log("postId" + postId);
@@ -243,7 +331,6 @@
 						$(".image").attr("src", response.postUser.image);
 						$(".avatar").attr("src", response.postUser.avatar);
 						displayComment(response.comment);
-						console.log()
 						$("#modalcomment").addClass("show d-block");
 	    	        },
 	    	        error: function(xhr) {

@@ -61,9 +61,11 @@
                         <div id="friend" class="nav-icon <%= "friend".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
                     </div>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div class="profile-icon me-2">
+                        <a style="all:none;cursor: pointer; color: #333;" href="MessageController?message=1">
+                            <div class="profile-icon me-2">
                             <i class="bi bi-messenger"></i>
-                        </div>
+                        	</div>
+                        </a>
                         <div class="me-2">
                            
                         </div>
@@ -108,14 +110,7 @@
             <div class="profile-name-info">
                 <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
             </div>
-            <div class="profile-actions">
-                <button class="action-button secondary">
-                    <i class="bi bi-pencil"></i> Chỉnh sửa trang cá nhân
-                </button>
-                <button class="action-button secondary">
-                    <i class="bi bi-caret-down-fill"></i>
-                </button>
-            </div>
+         
         </div>
         <%String ProfileActive = "";
         if(session.getAttribute("ProfileActive")!=null){
@@ -128,9 +123,7 @@
             <button name="banBe" style="all: unset;  cursor: pointer;"><div class="nav-item <%= ProfileActive=="friend" ? "active" : ""%>">Bạn bè</div></button>
             <button name="anh" style="all: unset;  cursor: pointer;"><div class="nav-item <%= ProfileActive=="photo" ? "active" : ""%>">Anh</div></button>
             </form>
-            <div class="nav-item nav-more">
-                <i class="bi bi-three-dots"></i>
-            </div>
+         
         </div>
     </div>
     </div>
@@ -156,12 +149,8 @@
                             </form>
                 </div>
                 
-                <a href="#" class="action-link">Lời mời kết bạn</a>
-                <a href="#" class="action-link">Tìm bạn bè</a>
                 
-                <button class="more-btn">
-                    <i class="bi bi-three-dots"></i>
-                </button>
+                <div class="mx-4"></div>
             </div>
         </div>
         

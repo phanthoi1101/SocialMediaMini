@@ -72,39 +72,6 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
                         <i class="bi bi-chevron-right"></i>
                     </div>
                 </li>
-                <li class="fb-sidebar-item">
-                    <div class="fb-sidebar-icon gray">
-                        <i class="bi bi-chat-left-text-fill"></i>
-                    </div>
-                    <div class="fb-sidebar-text">Gợi ý</div>
-                    <div class="fb-sidebar-arrow">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </li>
-                <li class="fb-sidebar-item">
-                    <div class="fb-sidebar-icon gray">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="fb-sidebar-text">Tất cả bạn bè</div>
-                    <div class="fb-sidebar-arrow">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </li>
-                <li class="fb-sidebar-item">
-                    <div class="fb-sidebar-icon gray">
-                        <i class="bi bi-gift-fill"></i>
-                    </div>
-                    <div class="fb-sidebar-text">Sinh nhật</div>
-                </li>
-                <li class="fb-sidebar-item">
-                    <div class="fb-sidebar-icon gray">
-                        <i class="bi bi-list-ul"></i>
-                    </div>
-                    <div class="fb-sidebar-text">Danh sách tùy chỉnh</div>
-                    <div class="fb-sidebar-arrow">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </li>
             </ul>
         </div>
         

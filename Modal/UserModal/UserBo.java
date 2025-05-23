@@ -23,6 +23,9 @@ public class UserBo {
 		}
 		return false;
 	}
+	public int updateFullname(int userId , String Fullname) {
+		return userDao.updateFullname(userId, Fullname);
+	}
 	public int updateAvatar(int userID , String avatar) {
 		return userDao.updateAvatar(userID, avatar);
 	}
@@ -33,4 +36,13 @@ public class UserBo {
 		return userDao.getUserIsNotFriend(userID);
 	}
 
+	
+	public boolean checkEmail(String email) {
+		ArrayList<User> dsUser =  userDao.getAllUser();
+		for(User u : dsUser) {
+			if(u.getEmail().equals(email))
+				return true;
+		}
+		return false;
+	}
 }

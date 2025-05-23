@@ -33,6 +33,30 @@ public class FriendshipDao {
 			return null;
 		}
 	}
+	public ArrayList<Friendship> getAllFriend(){
+		try {
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "select * from Friendships";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			ResultSet rs = cmd.executeQuery();
+			while(rs.next()) {
+				int FriendshipID = rs.getInt("FriendshipID");
+				int receiverID = rs.getInt("UserID2");
+				Date CreatedAt = rs.getDate("CreatedAt");
+				int senderID = rs.getInt("UserID1");
+				int status = rs.getInt("Status");
+				ds.add(new Friendship(FriendshipID, senderID, receiverID, status, CreatedAt));		
+			}
+			kn.cn.close();
+			rs.close();
+			return ds;
+		} catch (Exception e) {
+			System.out.println("Wrong get Friendship by Status and Sender ID	"+ e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
 	public ArrayList<Friendship> getFriendshipByStatusAndReceiveID(int ReceiverID,int status){
 		try {
 			ArrayList<Friendship> list = new ArrayList<Friendship>();
@@ -179,4 +203,5 @@ public class FriendshipDao {
 			return 0;
 		}
 		}
+	
 }

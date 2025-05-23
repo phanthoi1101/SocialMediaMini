@@ -8,6 +8,9 @@ FriendshipDao friendshipDao = new FriendshipDao();
 public ArrayList<Friendship> getFriendshipByStatusAndSenderID(int senderID, int status){
 	return friendshipDao.getFriendshipByStatus(senderID, status);
 }
+public ArrayList<Friendship> getAllFriendship(){
+	return friendshipDao.getAllFriend();
+}
 public ArrayList<Friendship> getFriendshipByStatusAndReceiverID(int ReceiverId, int status){
 	return friendshipDao.getFriendshipByStatusAndReceiveID(ReceiverId, status);
 }
@@ -34,6 +37,25 @@ public boolean checkFriendShip(int currentUserId,int receiver) {
 	for(Friendship f : lstFriendship) {
 		if(f.getSenderID()==currentUserId)
 			return true;
+	}
+	return false;
+}
+
+public boolean userSent(int senderId , int receiverId) {
+	ArrayList<Friendship> dsf = getAllFriendship();
+	for(Friendship f:dsf) {
+		if(senderId==f.getSenderID() && receiverId == f.getReceiverID() && f.getStatus()==0) {
+			return true;
+		}
+	}
+	return false;
+}
+public boolean IsSent(int senderId , int receiverId) {
+	ArrayList<Friendship> dsf = getAllFriendship();
+	for(Friendship f:dsf) {
+		if(senderId==f.getReceiverID() && receiverId == f.getSenderID() && f.getStatus()==0) {
+			return true;
+		}
 	}
 	return false;
 }

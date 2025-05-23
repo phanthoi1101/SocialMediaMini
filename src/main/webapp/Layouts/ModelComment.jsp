@@ -7,7 +7,7 @@ if(session.getAttribute("postId")!=null){
 	postIdCurrent = (int)session.getAttribute("postId");
 }
 %>
-    	<div id="modalcomment" class="modal modal-backdrop show" data-bs-backdrop="true" tabindex="-1" style="--bs-backdrop-opacity: 1;
+    	<div id="modalcomment" class="modal modal-backdrop " data-bs-backdrop="true" tabindex="-1" style="--bs-backdrop-opacity: 1;
                background-color: rgba(0, 0, 0, 0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -28,16 +28,7 @@ if(session.getAttribute("postId")!=null){
                                  <span class="dot">·</span> <i class="bi bi-globe"></i>
                             </div>
                         </div>
-                        <div class="dropdown">
-                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark me-2"></i> Lưu bài viết</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye-slash me-2"></i> Ẩn bài viết</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-flag me-2"></i> Báo cáo bài viết</a></li>
-                            </ul>
-                        </div>
+                        
                     </div>
                     
                     <!-- Post Content -->

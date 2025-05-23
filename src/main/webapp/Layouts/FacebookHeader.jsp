@@ -28,9 +28,12 @@
                         <div id="friend" class="nav-icon <%= "friend".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
                     </div>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div class="profile-icon me-2">
+                        <a style="all:none;cursor: pointer; color: #333;" href="MessageController?message=1">
+                            <div class="profile-icon me-2">
                             <i class="bi bi-messenger"></i>
-                        </div>
+                        	</div>
+                        </a>
+                        
                         <div class="me-2">
                            
                         </div>

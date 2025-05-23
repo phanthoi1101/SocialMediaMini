@@ -51,6 +51,11 @@
 		 	<%=checkUsername %>
 		</div>
 		<%} %>
+	<%if(request.getAttribute("checkE")!=null){ %>
+	<div class="alert alert-warning mt-4 text-center">
+		 	<%= request.getAttribute("checkE")%>
+	</div>
+	<%} %>
     <form action="DangKyController" method="post" > <!-- enctype="multipart/form-data" -->
       <div class="">
         <label for="fullname" class="form-label">Họ và tên</label>

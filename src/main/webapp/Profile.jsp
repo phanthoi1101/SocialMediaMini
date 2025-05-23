@@ -86,14 +86,7 @@
 		</div>
 		<!-- Đóng modal -->
             </div>
-            <div class="profile-actions">
-                <button class="action-button secondary">
-                    <i class="bi bi-pencil"></i> Chỉnh sửa trang cá nhân
-                </button>
-                <button class="action-button secondary">
-                    <i class="bi bi-caret-down-fill"></i>
-                </button>
-            </div>
+           
         </div>
         <div class="profile-navigation">
             <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
@@ -111,11 +104,54 @@
         <!-- Post Composer -->
         <div class="card">
             <div class="post-composer">
-                <div class="composer-avatar">
-                    <i class="bi bi-person-fill"></i>
-                </div>
-                <div class="composer-input">Bạn đang nghĩ gì?</div>
+                <div class="composer-input" data-bs-toggle="modal" data-bs-target="#fbPostModal">Thêm bài đăng mới?</div>
             </div>
+            <!-- modal đăng bài viết mới -->
+            <div class="modal fade" id="fbPostModal" tabindex="-1" aria-labelledby="fbPostModalLabel" aria-hidden="true">
+		    <div class="modal-dialog modal-dialog-centered modal-lg">
+		      <div class="modal-content rounded-4">
+					
+		        <div class="modal-header border-0">
+		          <h5 class="modal-title mx-auto fw-bold" id="fbPostModalLabel">Tạo bài viết</h5>
+		          <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+			
+		        <form id="fbPostForm" enctype="multipart/form-data">
+		          <div class="modal-body pt-0">
+		
+		            <!-- Avatar + Tên người dùng -->
+		            <div class="d-flex align-items-center mb-3">
+		              <img src="<%=currentUser.getAvatar() %>" alt="avatar" class="rounded-circle me-2" width="40" height="40">
+		              <div>
+		                <strong><%=currentUser.getFullName() %></strong><br>
+		              </div>
+		            </div>
+		
+		            <!-- Nội dung bài post -->
+		            
+		            <div class="mb-3" id="content">
+		              <textarea class="form-control border-0" id="postContent" name="content" rows="5" placeholder="Bạn đang nghĩ gì?" style="resize: none; font-size: 1.2rem;"></textarea>
+		            </div>
+		
+		            <!-- Chọn ảnh -->
+		            <div class="mb-3">
+		              <label for="postImage" class="form-label fw-bold">Ảnh</label>
+		              <input class="form-control" type="file" id="postImage" name="image" accept="image/*">
+		            </div>
+		
+		          </div>
+		
+		          <div class="modal-footer border-0">
+		            <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill">Đăng</button>
+		          </div>
+		        </form>
+		
+		      </div>
+		    </div>
+	  	</div>
+            
+            
+            
             <div class="composer-actions">
                     <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
                     	<button class="composer-action photo" name="anh" style="all: unset;  cursor: pointer;"><i class="bi bi-image"></i> Ảnh</button>
@@ -126,7 +162,7 @@
         <!-- List các bài post -->
                 <div class="">
                     <%if(index==0){ %>
-                    <div class="text-center text-danger"><h4>Không có bài viết được hiển thị</h4></div>
+                    
                     <%}else{ %>
                     	<div class="">
                         <!-- Post -->
@@ -148,10 +184,14 @@
                                 </div>
                             </div>
                             <div class="post-content">
+                                <%if(dsPost_UserById.get(i).getContent()!=null){ %>
                                 <div class="post-text">
                                     <p><%=dsPost_UserById.get(i).getContent() %></p>
                                 </div>
+                                <%} %>
+                                <%if(dsPost_UserById.get(i).getImage()!=null){ %>
                                 <img src="<%=dsPost_UserById.get(i).getImage() %>" class="post-image" alt="<%=dsPost_UserById.get(i).getImage()%>">
+                                <%} %>
                             </div>
                             <div class="post-reactions">
                                 <div>
@@ -200,6 +240,79 @@
     
     <!-- Custom JavaScript for View Switching -->
     <script>
+    
+ //Tạo bài đăng mới
+ document.getElementById("fbPostForm").addEventListener("submit", function(e) {
+	    e.preventDefault();
+	    const formData = new FormData(this);
+	    for (const [key, value] of formData.entries()) {
+	    	  console.log(`${key}:`, value);
+	    	}
+	    fetch('/SocialMedia/CreatePostController', {
+	      method: 'Post',
+	      body: formData
+	    })
+	    .then(res => res.json())
+	    .then(data => {
+	      console.log('Status:', data.status);
+	      console.log('Content:', data.content);
+	      console.log('Image:', data.image);
+	      this.reset();
+	      bootstrap.Modal.getInstance(document.getElementById('fbPostModal')).hide();
+	      alert("Thêm bài viết thành công");
+	      const backdrops = document.querySelectorAll('.modal-backdrop.fade.show');
+	      backdrops.forEach(element => element.remove());
+	      
+	    })
+	    .catch(err => {
+	    	const warning = document.createElement("div");
+	        warning.className = "text-center text-danger";
+	        warning.innerHTML = "<p>Vui lòng thêm nội dung hoặc ảnh</p>";
+
+	        const contentDiv = document.getElementById("content");
+	        if (contentDiv) {
+	            contentDiv.parentNode.insertBefore(warning, contentDiv);
+	        }
+	    });
+  });
+    
+ 
+    //Bắt sự kiện lưu thay đổi tên người dùng
+    document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('form[action="ChangeUsernameController"]');
+  const inputField = document.getElementById('inputNewUsername');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); // Ngăn gửi form ban đầu
+
+    const newUsername = inputField.value.trim();
+
+    // Xóa thông báo lỗi cũ (nếu có)
+    const oldError = document.querySelector('#username-error');
+    if (oldError) {
+      oldError.remove();
+    }
+
+    if (newUsername === "") {
+      // Tạo thẻ span báo lỗi
+      const error = document.createElement('span');
+      error.id = 'username-error'; // để dễ kiểm tra và xóa
+      error.style.color = 'red';
+      error.style.fontSize = '0.875rem';
+      error.textContent = 'Tên người dùng mới không được để trống';
+
+      // Thêm ngay dưới input
+      inputField.parentNode.appendChild(error);
+
+      	return; // không gửi form
+    }
+
+    // Nếu hợp lệ thì gửi form
+    	form.submit();
+  	});
+	});
+    
+    
     //HomeActive
     function homeActive(id){
 		const icons = document.querySelectorAll('.nav-icon');
@@ -378,6 +491,13 @@
 	function closemodal(){
 		$("#modalcomment").removeClass("show d-block");
 	}
+	window.addEventListener('click', function (e) {
+	    const modal = document.getElementById('modalcomment');
+	    const modalContent = modal.querySelector('.modal-content');
+	    if (e.target === modal && !modalContent.contains(e.target)) {
+	      closemodal(); // gọi hàm bạn đã định nghĩa để đóng modal
+	    }
+	  });
     // Hàm xử lý Like/Unlike
     function likePost(postId, userId) {
     	console.log("Post ID: " + postId + ", User ID: " + userId);

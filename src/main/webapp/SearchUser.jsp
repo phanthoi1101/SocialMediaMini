@@ -1,3 +1,4 @@
+<%@page import="FriendshipModal.FriendshipBo"%>
 <%@page import="SearchUserModal.SearchUser"%>
 <%@page import="UserModal.User"%>
 <%@page import="java.util.ArrayList"%>
@@ -45,9 +46,11 @@
                         <div id="friend" class="nav-icon" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
                     </div>
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <div class="profile-icon me-2">
+                        <a style="all:none;cursor: pointer; color: #333;" href="MessageController?message=1">
+                            <div class="profile-icon me-2">
                             <i class="bi bi-messenger"></i>
-                        </div>
+                        	</div>
+                        </a>
                         <div class="me-2">
                            
                         </div>
@@ -66,7 +69,10 @@
                 </div>
             </div> 
 <!-- Content -->
-<%int index = 0;
+<%String searchUser = (String)request.getAttribute("searchUser") ;
+FriendshipBo fbo = new FriendshipBo();
+User currentUser = (User)session.getAttribute("User");
+int index = 0;
 	ArrayList<SearchUser> dsUserById = (ArrayList<SearchUser>)session.getAttribute("UserBySeach");
 	if(session.getAttribute("UserBySeach")!=null){
 		index = dsUserById.size();
@@ -90,26 +96,65 @@
                 </div>
             </div>
             <div class="profile-actions">
-                <button class="fb-btn fb-btn-primary">Nhắn tin</button>
+            <a style="text-decoration: none;" href="MessageController?id=<%=dsUserById.get(i).getUserID()%>" class="fb-btn fb-btn-primary">Nhắn tin</a>
             </div>
         </div>
-        <%}else{ %>
+        <%}else if(fbo.userSent(currentUser.getUserID(), dsUserById.get(i).getUserID())){%>
         <!-- Profile 3 -->
-        <div class="profile-card">
-            <div class="profile-avatar">
-                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="Phan Cảnh Tâm">
-            </div>
-            <div class="profile-info">
-                <div class="profile-name"><%=dsUserById.get(i).getFullName() %></div>
-                <div class="profile-meta">
-                </div>
-            </div>
-            <div class="profile-actions">
-                <button class="fb-btn fb-btn-light">Thêm bạn bè</button>
-            </div>
-        </div>
-         
-        <%} 
+	        <div class="profile-card">
+	            <div class="profile-avatar">
+	                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="Phan Cảnh Tâm">
+	            </div>
+	            <div class="profile-info">
+	                <div class="profile-name"><%=dsUserById.get(i).getFullName() %></div>
+	                <div class="profile-meta">
+	                </div>
+	            </div>
+	            <div class="profile-actions">
+	                <form action="SearchController" method="get" style="all: unset;display: contents;">
+	                		<input type="hidden" name="searchUser" value="<%=searchUser%>">
+		                    <input type="hidden" name="userId" value="<%=dsUserById.get(i).getUserID()%>">
+		                    <button class="fb-btn fb-btn-light" name="huyyeucau">Huỷ yêu cầu</button>
+		            </form>
+	            </div>
+	        </div>
+        <%}else if(fbo.IsSent(currentUser.getUserID(), dsUserById.get(i).getUserID())){ %>
+        	<div class="profile-card">
+	            <div class="profile-avatar">
+	                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="">
+	            </div>
+	            <div class="profile-info">
+	                <div class="profile-name"><%=dsUserById.get(i).getFullName() %></div>
+	                <div class="profile-meta">
+	                </div>
+	            </div>
+	            <div class="profile-actions">
+	                <form action="SearchUser" method="get" style="all: unset;display: contents;">
+	                 		<input type="hidden" name="searchUser" value="<%=searchUser%>">
+		                    <input type="hidden" name="userId" value="<%=dsUserById.get(i).getUserID()%>">
+		                    <button class="fb-btn fb-btn-light" name="xacnhan">Xác nhận</button>
+		            </form>
+	            </div>
+	        </div>
+        <%} else{%>
+        	<div class="profile-card">
+	            <div class="profile-avatar">
+	                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="Phan Cảnh Tâm">
+	            </div>
+	            <div class="profile-info">
+	                <div class="profile-name"><%=dsUserById.get(i).getFullName() %></div>
+	                <div class="profile-meta">
+	                </div>
+	            </div>
+	            <div class="profile-actions">
+	                <form action="SearchUser" method="get" style="all: unset;display: contents;">
+		                    <input type="hidden" name="userId" value="<%=dsUserById.get(i).getUserID()%>">
+		                    <input type="hidden" name="searchUser" value="<%=searchUser%>">
+		                    <button class="fb-btn fb-btn-primary" name="thembanbe">Thêm bạn bè</button>
+		            </form>
+	            </div>
+	        </div>
+        <%}
         	}
         }%>
     </div>

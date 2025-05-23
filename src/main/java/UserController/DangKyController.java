@@ -36,6 +36,16 @@ public class DangKyController extends HttpServlet {
 		String fullname = request.getParameter("fullname");
 		String username = request.getParameter("username");
 		String email = request.getParameter("email");
+		System.out.println("email là" +email);
+		boolean checkE = userBo.checkEmail(email);
+		System.out.println("check boolean "+checkE);
+		if(checkE) {
+			System.out.println("Trung emaill mất rồi");
+			request.setAttribute("checkE", "Email đã tồn tại");
+			RequestDispatcher rd = request.getRequestDispatcher("DangKy.jsp");
+			rd.forward(request, response);
+			return;
+		}
 		String password = request.getParameter("passwordHash");
 		if(username!=null) {
 			boolean checkUser = userBo.checkUser(username);
