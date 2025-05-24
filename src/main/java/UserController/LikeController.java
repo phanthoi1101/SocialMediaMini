@@ -30,6 +30,7 @@ public class LikeController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		LikeBo likeBo = new LikeBo();
 		int postId = Integer.parseInt(request.getParameter("postId"));
         int userId = Integer.parseInt(request.getParameter("userId"));

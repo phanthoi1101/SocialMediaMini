@@ -37,6 +37,7 @@ public class ProfileNavigation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		PostsBo postBo = new PostsBo();
 		UserBo userBo  = new UserBo();

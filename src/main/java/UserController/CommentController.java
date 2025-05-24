@@ -39,7 +39,7 @@ public class CommentController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-
+		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {

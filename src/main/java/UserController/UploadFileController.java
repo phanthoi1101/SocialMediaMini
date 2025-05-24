@@ -41,6 +41,7 @@ public class UploadFileController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		UserBo userBo = new UserBo();
 		DiskFileItemFactory factory = new DiskFileItemFactory();

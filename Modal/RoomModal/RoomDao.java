@@ -1,5 +1,6 @@
 package RoomModal;
 
+import java.beans.Statement;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -84,6 +85,31 @@ public class RoomDao {
 			System.out.println("Get RoomId by User  "+e.getMessage());
 			e.printStackTrace();
 			return null;
+		}
+	}
+	public int CreateRoom(String RoomName,boolean IsGroup) {
+		try {
+			KetNoi kn = new KetNoi();
+			int idMoi = 0 ;
+			kn.KetNoi();
+			String sql = "insert into Rooms(RoomName,IsGroup)\r\n"
+					+ "values(?,?)";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+			cmd.setString(1, RoomName);
+			cmd.setBoolean(2, IsGroup);
+			cmd.executeUpdate();
+
+			ResultSet rs = cmd.getGeneratedKeys();
+			if (rs.next()) {
+			    idMoi = rs.getInt(1);
+			}
+			kn.cn.close();
+			rs.close();
+			return idMoi;
+		} catch (Exception e) {
+			System.out.println("Tạo Room Chat   "+e.getMessage());
+			e.printStackTrace();
+			return 0;
 		}
 	}
 }

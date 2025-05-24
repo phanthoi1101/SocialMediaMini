@@ -10,7 +10,6 @@ import KetNoiModal.KetNoi;
 public class MessageDao {
 	
 	public int CreateMessage(int SenderId, String content,int RoomId) {
-		System.out.println("create Message "+content);
 		try {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();

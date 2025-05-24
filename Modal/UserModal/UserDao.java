@@ -37,7 +37,38 @@ public class UserDao {
 			return null;
 		}
 	}
-	
+	public ArrayList<User> getUserByRoomId(int RoomId){
+		try {
+			ArrayList<User> dsuser = new ArrayList<User>();
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "select * from Users \r\n"
+					+ "where UserID in (select RoomDetail.UserID as userid from Rooms join RoomDetail on Rooms.RoomID=RoomDetail.RoomID\r\n"
+					+ "where rooms.RoomID = ?)";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(1, RoomId);
+			ResultSet rs = cmd.executeQuery();
+			while(rs.next()) {
+				int userid = rs.getInt("UserID");
+				String username = rs.getString("Username");
+				String Email = rs.getString("Email");
+				String password = rs.getString("PasswordHash");
+				String fullname = rs.getString("FullName");
+				String avater = rs.getString("Avatar");
+				java.util.Date createdat = rs.getDate("CreatedAt");
+				String photoCover = rs.getString("PhotoCover");
+				dsuser.add(new User(userid, username, Email, password, fullname, avater, photoCover, createdat));
+				
+			}
+			kn.cn.close();
+			rs.close();
+			return dsuser;
+		} catch (Exception e) {
+			System.out.println("Wrong Get User By RoomId"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
 	public User getUserById(int userId){
 		try {
 			User user = new User();

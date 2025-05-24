@@ -31,4 +31,29 @@ public class RoomDetailDao {
 			return null;
 		}
 	}
+	public int CreateRoomDetail(int RoomId,int userId) {
+		try {
+			KetNoi kn = new KetNoi();
+			int idMoi = 0 ;
+			kn.KetNoi();
+			String sql = "insert into RoomDetail(RoomID,UserID)\r\n"
+					+ "values(?,?)";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+			cmd.setInt(1, RoomId);
+			cmd.setInt(2, userId);
+			cmd.executeUpdate();
+
+			ResultSet rs = cmd.getGeneratedKeys();
+			if (rs.next()) {
+			    idMoi = rs.getInt(1);
+			}
+			kn.cn.close();
+			rs.close();
+			return idMoi;
+		} catch (Exception e) {
+			System.out.println("Tạo Room Detail Chat   "+e.getMessage());
+			e.printStackTrace();
+			return 0;
+		}
+	}
 }

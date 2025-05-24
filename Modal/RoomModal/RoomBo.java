@@ -13,4 +13,7 @@ public class RoomBo {
 	public Room getRoomByRoomID(int roomid) {
 		return roomDao.getRoomByRoomID(roomid);
 	}
+	public int CreateRoom(String roomName, boolean IsGroup) {
+		return roomDao.CreateRoom(roomName, IsGroup);
+	}
 }

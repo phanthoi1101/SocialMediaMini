@@ -8,6 +8,9 @@ public class UserBo {
 	public User getUserById(int id) {
 		return userDao.getUserById(id);
 	}
+	public ArrayList<User> getUserByRoomID(int roomID){
+		return userDao.getUserByRoomId(roomID);
+	}
 	public User getUserByDangNhap(String username, String password) {
 		return userDao.getUserByDangNhap(username, password);
 	}

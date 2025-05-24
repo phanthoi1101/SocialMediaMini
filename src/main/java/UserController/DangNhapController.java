@@ -32,6 +32,7 @@ public class DangNhapController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -55,7 +56,6 @@ public class DangNhapController extends HttpServlet {
 			rd.forward(request, response);
 			return;
 		}
-
 	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
