@@ -2,6 +2,8 @@ package UserModal;
 
 import java.util.ArrayList;
 
+import FriendshipModal.Friendship;
+
 public class UserBo {
 	ArrayList<User> ds = new ArrayList<User>();
 	UserDao userDao = new UserDao();
@@ -44,6 +46,31 @@ public class UserBo {
 		ArrayList<User> dsUser =  userDao.getAllUser();
 		for(User u : dsUser) {
 			if(u.getEmail().equals(email))
+				return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<User> UserIsFriendNotHasGroupChat(ArrayList<Friendship> dsf,ArrayList<User> dsu, int userid){
+		ArrayList<User> dsuser = new ArrayList<User>();
+		for(Friendship f:dsf) {
+			if(userid==f.getSenderID()) {
+				User x = getUserById(f.getReceiverID());
+				if(!checkUser(dsu, x.getUserID()))
+					dsuser.add(x);
+			}else {
+				User x = getUserById(f.getSenderID());
+				if(!checkUser(dsu, x.getUserID()))
+					dsuser.add(x);
+			}
+		}
+		return dsuser;
+	}
+	public boolean checkUser(ArrayList<User> dsu , int userid) {
+	
+		for(User x : dsu) {
+			System.out.println("Cặp value Key "+x.getUserID()+" và " +userid);
+			if(x.getUserID()==userid)
 				return true;
 		}
 		return false;

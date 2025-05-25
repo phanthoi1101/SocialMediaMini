@@ -1,3 +1,7 @@
+<%@page import="java.sql.Timestamp"%>
+<%@page import="java.util.Date"%>
+<%@ page import="java.text.SimpleDateFormat, java.util.Date" %>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="RoomModal.Room"%>
 <%@page import="RoomModal.RoomBo"%>
 <%@page import="RoomDetailModal.RoomDetail"%>
@@ -25,6 +29,21 @@
     	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
  
  <style >
+/*Hover vô để hiện thời gian*/
+.message.received p.time {
+  display: none; /* Ẩn mặc định */
+}
+
+.message.received:hover p.time {
+  display: block; /* Hiện khi hover vào div cha */
+}
+.message.sent p.time {
+  display: none; /* Ẩn mặc định */
+}
+
+.message.sent:hover p.time {
+  display: block; /* Hiện khi hover vào div cha */
+}
 /*Css button collapse*/
   .btn-no-border:focus,
   .btn-no-border:active {
@@ -101,8 +120,91 @@
 	if(session.getAttribute("dsFriendshipIsFriend")!=null){
 		indexUser = dsFriendshipIsFriend.size();
 }
+	ArrayList<User> dsUserIsFriendNotHasGroupChat = userbo.UserIsFriendNotHasGroupChat(dsFriendshipIsFriend, userbo.getUserByRoomID(room.getRoomId()), currentUser.getUserID());
 	%>
  	<%String homeActive = (String)session.getAttribute("homeActive"); %>
+ 	
+ 	
+ 	            
+	<!-- Modal tạo Group chat-->
+    <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="createGroupForm" method="post" multipart/form-data>
+            <div class="modal-header">
+              <h5 class="modal-title" id="createGroupModalLabel">Tạo Group Chat</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                  <label for="groupName" class="form-label">Tên Phòng Chat</label>
+                  <input type="text" class="form-control" id="groupName" name="groupName" placeholder="Nhập tên phòng" required />
+              </div>
+              <div class="mb-3">
+                  <label for="userSelect" class="form-label">Thêm Bạn Bè</label>
+                   <%if(indexUser==0){ %>
+                   	<select id="usersSelectCreate" name="userIds" multiple placeholder="Vui lòng kết bạn để tạo phòng chat">
+                  	</select>
+                      <%}else{ %>
+                  <select id="usersSelectCreate" name="userIds" multiple placeholder="Chọn bạn bè...">
+                     <%for(int i = 0 ; i < indexUser ; i++){
+                    	 User u = new User();
+                     	if(dsFriendshipIsFriend.get(i).getSenderID()==currentUser.getUserID()){
+                     		 u = userbo.getUserById(dsFriendshipIsFriend.get(i).getReceiverID());
+                     	}else{
+                     		 u = userbo.getUserById(dsFriendshipIsFriend.get(i).getSenderID());
+                     	}
+                     %>
+                     <option value="<%=u.getUserID()%>"><%=u.getFullName() %></option>
+                     <%} %>
+                  </select>
+                  <%} %>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Create Group</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+ 	
+ 	
+ 	
+ 	<!-- Modal thêm thành viên cho group -->
+ 	<div style=" margin-top: 100px; " class="modal fade custom-modal" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="AddMemberServlet" method="post" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addMemberModalLabel">Thêm thành viên</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+          <input type="hidden" name="RoomId" value="<%=room.getRoomId()%>"/>
+          <div class="modal-body">
+            <label for="userSelect" class="form-label">Chọn thành viên</label>
+            <select id="usersSelectAdd" name="userIds" multiple placeholder="Chọn bạn bè...">
+              <%if(!dsUserIsFriendNotHasGroupChat.isEmpty()||dsUserIsFriendNotHasGroupChat!=null){
+            	  for(int i = 0 ; i < dsUserIsFriendNotHasGroupChat.size();i++){%>
+            		  <option value="<%=dsUserIsFriendNotHasGroupChat.get(i).getUserID()%>"><%=dsUserIsFriendNotHasGroupChat.get(i).getFullName() %></option>
+            	  <%}
+
+              }            	  %>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Thêm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+    
+    
+    
+    
         <!-- Facebook Header -->
 		<div class="fb-header">
             <div class="container-fluid">
@@ -153,49 +255,14 @@
                     </div>
                 </div>
             </div>
-		    	<!-- Modal tạo Group chat-->
-    <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form id="createGroupForm" method="post" multipart/form-data>
-            <div class="modal-header">
-              <h5 class="modal-title" id="createGroupModalLabel">Tạo Group Chat</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                  <label for="groupName" class="form-label">Tên Phòng Chat</label>
-                  <input type="text" class="form-control" id="groupName" name="groupName" placeholder="Nhập tên phòng" required />
-              </div>
-              <div class="mb-3">
-                  <label for="usersSelect" class="form-label">Thêm Bạn Bè</label>
-                   <%if(indexUser==0){ %>
-                   	<select id="usersSelect" name="userIds" multiple placeholder="Vui lòng kết bạn để tạo phòng chat">
-                  	</select>
-                      <%}else{ %>
-                  <select id="usersSelect" name="userIds" multiple placeholder="Chọn bạn bè...">
-                     <%for(int i = 0 ; i < indexUser ; i++){
-                    	 User u = new User();
-                     	if(dsFriendshipIsFriend.get(i).getSenderID()==currentUser.getUserID()){
-                     		 u = userbo.getUserById(dsFriendshipIsFriend.get(i).getReceiverID());
-                     	}else{
-                     		 u = userbo.getUserById(dsFriendshipIsFriend.get(i).getSenderID());
-                     	}
-                     %>
-                     <option value="<%=u.getUserID()%>"><%=u.getFullName() %></option>
-                     <%} %>
-                  </select>
-                  <%} %>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Create Group</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+            
+            
+            
+            
+           
+    
+    
+    
 <div class="container py-4" >
   <div class="chat-container shadow" style="position: relative;"> 
     <!-- Sidebar - User List -->
@@ -231,7 +298,7 @@
     			}
     	%>
     	<%}
-    		} %>
+    		}%>
     	
     </div>
 
@@ -254,53 +321,87 @@
 		<button class="btn mb-3 btn-no-border" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMembers" aria-expanded="false" aria-controls="collapseMembers">
 		  👥 Xem thành viên
 		</button>
-		<button class="btn mb-3 btn-no-border" type="button">
-		  <i class="bi bi-person-plus-fill"></i>
-		  Thêm thành viên
-		</button>
-<!-- Collapse chứa nguyên thẻ ul không đổi -->
-<div class="collapse" id="collapseMembers">
-  <ul class="nav flex-column"> 
-    <% if (dsUserByRoomID.size() != 0) { 
-         for (int i = 0; i < dsUserByRoomID.size(); i++) { %>
-      <a href="ProfileController?id=<%= dsUserByRoomID.get(i).getUserID() %>" style="color: #333; text-decoration: none;">
-        <div class="contact-item d-flex align-items-center">
-          <img src="<%= dsUserByRoomID.get(i).getAvatar() %>?img=2" alt="User 2">
-          <div class="contact-name"><%= dsUserByRoomID.get(i).getFullName() %></div>
-        </div>		
-      </a> 
-    <% } 
-       } %>
-  </ul>
-</div>
+		<div class="collapse" id="collapseMembers">
+	  <ul class="nav flex-column"> 
+	    <% if (dsUserByRoomID.size() != 0) { 
+	         for (int i = 0; i < dsUserByRoomID.size(); i++) { %>
+	      <a href="ProfileController?id=<%= dsUserByRoomID.get(i).getUserID() %>" style="color: #333; text-decoration: none;">
+	        <div class="contact-item d-flex align-items-center">
+	          <img src="<%= dsUserByRoomID.get(i).getAvatar() %>?img=2" alt="User 2">
+	          <div class="contact-name"><%= dsUserByRoomID.get(i).getFullName() %></div>
+	        </div>		
+	      </a> 
+	    <% } 
+	       } %>
+	  </ul>
+	</div>
+		 <button class="btn mb-3 btn-no-border" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+		    <i class="bi bi-person-plus-fill"></i>
+		    Thêm thành viên
+		  </button>
+	 
+
 			</div>
 		</div>
+		
       <%}else if(check=="userFriend") {%>
       	<div class="chat-header">
         <img src="<%=user.getAvatar() %>?img=1" width="40" height="40" class="rounded-circle">
         <strong><%=user.getFullName() %></strong>
         <button id="toggleSidebarBtn" class="btn btn-light m-3 ms-auto d-none">
-  ☰
-</button>
+	  ☰
+	</button>
       </div>
       <%} %>
       <div class="chat-messages" id="mess">
         <%if(indexMess==0){ %>
         <%}else{ 
+        	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        	SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        	String lastDate = "";
         	for(int i = 0 ; i < indexMess ; i++){
+        		Timestamp currentDateObj = dsMessage.get(i).getSentAt();
+        	    String currentDate = dateFormat.format(currentDateObj);
+        	    String currentTime = timeFormat.format(currentDateObj);
+        	    if(!currentDate.equals(lastDate)) {
         	%>
-        	<div  style="display: flex; flex-direction: column;">
+        	<div class="chat-date-separator" style="text-align:center; color:#666; margin:10px 0;">
+		        <%= currentDate %>
+		     </div>
+		<%
+		      lastDate = currentDate;
+		    }
+		%>
+       <div  style="display: flex; flex-direction: column;">
         	<%	if(dsMessage.get(i).getSenderID()==currentUser.getUserID()){
+        		User y = userbo.getUserById(dsMessage.get(i).getSenderID());
         %>
-	        <div class="message sent" style="display:flex; justify-content: flex-end;">
-	      
-	      		<p class="mb-0" style="text-align: justify;"><%=dsMessage.get(i).getContent() %></p>
-	    
-	        </div>
-        <%}else{ %>
-	         <div class="message received" style="display:flex; justify-content: flex-start;">
-	           <p class="mb-0" style="text-align: justify;"> <%=dsMessage.get(i).getContent() %></p>
-	        </div>
+		<div class="message sent" style="display: flex; flex-direction: column; justify-content: flex-end;">
+		  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;" >
+		    <%= currentTime %>
+		  </p>
+		  <p class="mb-0" style="text-align: justify; margin: 0;">
+		    <%= dsMessage.get(i).getContent() %>
+		  </p>
+		</div>
+
+        <%}else{ 
+        	User y = userbo.getUserById(dsMessage.get(i).getSenderID());
+        %>
+        <p class="sender-name" style="text-align: left; margin: 0 0 4px 0;">
+		  <%=y.getFullName()%>
+		</p>
+	<div style="display: flex; align-items: center;">
+		  <img src="<%= y.getAvatar() %>" alt="Avatar" style="border-radius: 50%; width: 40px; height: 40px;">
+		  <div class="message received" style="display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;">
+		  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0;">
+		    <%= currentTime %>
+		  </p>
+		  <p class="mb-0" style="text-align: justify; margin: 0;">
+		    <%= dsMessage.get(i).getContent() %>
+		  </p>
+		</div>
+	</div>
         <%}%>
         </div>
         	<%	}
@@ -314,6 +415,7 @@
         <i class="bi bi-send-fill" onclick="sendMessage();" value="Send" ></i>
       </div>
       <%} %>
+      
     </div>
     
   </div>
@@ -325,11 +427,45 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 //Tom select
-new TomSelect('#usersSelect', {
+new TomSelect('#usersSelectCreate', {
+    plugins: ['remove_button'],
+    maxItems: null, 
+  });
+new TomSelect('#usersSelectAdd', {
     plugins: ['remove_button'],
     maxItems: null, 
   });
 
+//Gửi request cho thêm thành viên group
+$(document).ready(function () {
+	$('#AddMemberServlet').on('submit', function (e) {
+		  e.preventDefault();
+		  const formData = new FormData(this); // ✔️ Lấy đúng FormData
+		  // Lấy dữ liệu cụ thể nếu cần debug
+		  console.log('Group name:', formData.get('RoomId'));
+		  console.log('User IDs:', formData.getAll('userIds'));
+			if(formData.getAll('userIds').length === 0){
+				alert('Vui lòng chọn bạn bè để thêm vào nhóm!');
+				  return; // Dừng submit
+			}
+		  $.ajax({
+		    url: 'AddMemBerController',
+		    type: 'POST',
+		    data: formData, // ✔️ Gửi FormData
+		    processData: false, // ✔️ Không xử lý dữ liệu
+		    contentType: false, // ✔️ Không đặt Content-Type (để browser tự set multipart/form-data)
+			dataType: 'json',
+		    success: function (response) {
+		     
+		      alert('Thêm thành công!');
+		      $('#addMemberModal').modal('hide');
+		    },
+		    error: function (xhr, status, error) {
+		      alert('Lỗi tạo nhóm: ' + error);
+		    }
+		  });
+		});
+  });
 //Gửi request cho tạo group
 $(document).ready(function () {
 	$('#createGroupForm').on('submit', function (e) {
@@ -383,9 +519,33 @@ window.onload = function() {
       var jsonData = JSON.parse(message.data);
       if (jsonData.message != null)
         if(jsonData.userId===<%=currentUser.getUserID()%>){
-        	messElement.insertAdjacentHTML("beforeend", "<div  style=\"display: flex; flex-direction: column;\"> <div class=\"message sent\" style=\"display:flex; justify-content: flex-end;\"> <p class=\"mb-0\" style=\"text-align: justify;\">" + jsonData.message + "</p> </div> </div>");
-        }else{
-        	messElement.insertAdjacentHTML("beforeend", "<div  style=\"display: flex; flex-direction: column;\"><div class=\"message received\" style=\"display:flex; justify-content: flex-start;\"> <p class=\"mb-0\" style=\"text-align: justify;\">" + jsonData.message + "</p> </div> </div>");
+        	messElement.insertAdjacentHTML("beforeend",
+        			  "<div style=\"display: flex; flex-direction: column;\">" +
+        			    "<div class=\"message sent\" style=\"display: flex; flex-direction: column; justify-content: flex-end;\">" +
+        			      "<p style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;\">" + jsonData.SentAt + "</p>" +
+        			      "<p class=\"mb-0\" style=\"text-align: justify; margin: 0;\">" + jsonData.message + "</p>" +
+        			    "</div>" +
+        			  "</div>"
+        			);     
+        	}else{
+        		messElement.insertAdjacentHTML("beforeend",
+      				  "<div style=\"display: flex; flex-direction: column;\">" +
+      				    "<p class=\"sender-name\" style=\"text-align: left; margin: 0 0 4px 0;\">" +
+      				      jsonData.FullName +
+      				    "</p>" +
+      				    "<div style=\"display: flex; align-items: center;\">" +
+      				      "<img src=\"" + jsonData.avatar + "\" alt=\"\" style=\"border-radius: 50%; width: 40px; height: 40px;\">" +
+      				      "<div class=\"message received\" style=\"display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;\">" +
+      				        "<p class=\"time\" style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0;\">" +
+      				          jsonData.SentAt +
+      				        "</p>" +
+      				        "<p class=\"mb-0\" style=\"text-align: justify; margin: 0;\">" +
+      				          jsonData.message +
+      				        "</p>" +
+      				      "</div>" +
+      				    "</div>" +
+      				  "</div>"
+      				);
         }
       messElement.scrollTop = messElement.scrollHeight;
     };

@@ -1,6 +1,8 @@
 package Websocket;
 
 import java.io.StringWriter;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +21,8 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import MessageModal.MessageBo;
+import UserModal.User;
+import UserModal.UserBo;
 
 @ServerEndpoint(value="/chatroomServerEndpoint/{chatroom}",configurator = ChatroomServerConfigurator.class)
 public class ChatroomServerEndpoint {
@@ -44,14 +48,17 @@ public class ChatroomServerEndpoint {
 	
 	@OnMessage
 	public void handleMessage(String message, Session userSession) {
+		UserBo ubo = new UserBo();
 		int userId = (Integer) userSession.getUserProperties().get("userId");
+		User user = ubo.getUserById(userId);
+		Timestamp time = new Timestamp(System.currentTimeMillis());
 		int chatroomId = (Integer) userSession.getUserProperties().get("chatroom");
 		MessageBo messagebo = new MessageBo();
 		messagebo.CreateMessage(userId, message, chatroomId);
 		Set<Session> chatroomUsers = getChatroom(chatroomId);
 		chatroomUsers.stream().forEach(x->{
 			try {
-				x.getBasicRemote().sendText(buildJsonData(userId, message));
+				x.getBasicRemote().sendText(buildJsonData(userId, message,user.getAvatar(),time,user.getFullName()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -68,11 +75,17 @@ public class ChatroomServerEndpoint {
 	public void handleError(Throwable t) {
 		
 	}
-	private String buildJsonData(int userId, String message) {
+	private String buildJsonData(int userId, String message,String avatar,Timestamp time,String Fullname) {
 	    try {
+	    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+	        String timeString = sdf.format(time);
+	        
 	        JsonObject jsonObject = Json.createObjectBuilder()
 	            .add("userId", userId)
 	            .add("message", message)
+	            .add("avatar", avatar)
+	            .add("SentAt", timeString)
+	            .add("FullName", Fullname)
 	            .build();
 	        
 	        StringWriter stringWriter = new StringWriter();

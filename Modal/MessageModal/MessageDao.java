@@ -3,6 +3,7 @@ package MessageModal;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import KetNoiModal.KetNoi;
@@ -41,7 +42,7 @@ public class MessageDao {
 				int MessageId = rs.getInt("MessageID");
 				int senderId = rs.getInt("SenderID");
 				String content = rs.getString("Content");
-				Date SenAt = rs.getDate("SentAt");
+				Timestamp SenAt = rs.getTimestamp("SentAt");
 				ds.add(new Message(MessageId, senderId, roomId, content, SenAt));
 			}
 			kn.cn.close();

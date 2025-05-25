@@ -1,13 +1,13 @@
 package MessageModal;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Message {
 	private int MessageID ;
 	private int SenderID;
 	private int RoomId;
 	private String Content;
-	private Date SentAt;
+	private Timestamp SentAt;
 	public int getMessageID() {
 		return MessageID;
 	}
@@ -33,18 +33,19 @@ public class Message {
 	public void setContent(String content) {
 		Content = content;
 	}
-	public Date getSentAt() {
-		return SentAt;
-	}
-	public void setSentAt(Date sentAt) {
-		SentAt = sentAt;
-	}
-	public Message(int messageID, int senderID, int roomId, String content, Date sentAt) {
+
+	public Message(int messageID, int senderID, int roomId, String content, Timestamp sentAt) {
 		super();
 		MessageID = messageID;
 		SenderID = senderID;
 		RoomId = roomId;
 		Content = content;
+		SentAt = sentAt;
+	}
+	public Timestamp getSentAt() {
+		return SentAt;
+	}
+	public void setSentAt(Timestamp sentAt) {
 		SentAt = sentAt;
 	}
 	public Message() {
