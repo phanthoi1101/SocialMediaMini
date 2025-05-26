@@ -16,4 +16,10 @@ public class RoomBo {
 	public int CreateRoom(String roomName, boolean IsGroup) {
 		return roomDao.CreateRoom(roomName, IsGroup);
 	}
+	public boolean checkIsRoom(int userid1, int userid2) {
+		return roomDao.checkIsRoom(userid1, userid2);
+	}
+	public int selectRoomIdOf2User(int userid1, int userid2) {
+		return roomDao.selectRoomIdOf2User(userid1, userid2);
+	}
 }

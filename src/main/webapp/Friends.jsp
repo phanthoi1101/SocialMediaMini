@@ -91,14 +91,13 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
 	                	User user = userBo.getUserById(dsFriendshipSender.get(i).getSenderID());
 	                %>
 	                <div class="fb-request-card">
-	                    <img src="<%=user.getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
+	                    <a href="ProfileController?id=<%=user.getUserID()%>"><img src="<%=user.getAvatar()%>?height=200&width=200" alt="" class="fb-request-img"></a>
 	                    <div class="fb-request-info">
 	                        <div class="fb-request-name"><%=user.getFullName()%></div>
 	                        <div class="fb-request-mutual">
 	                            <div class="fb-request-mutual-icon">
 	                                <i class="bi bi-people-fill"></i>
 	                            </div>
-	                            4 bạn chung
 	                        </div>
 	                        <div class="fb-request-actions">
 	                            <form action="FriendController" method="get" style="all: unset;display: contents;">
@@ -120,13 +119,13 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
             
                 <!-- Friend Request 1 -->
                 <%if(sizeLstIsNotFriend==0){ %>
-                	<div class="text-center text-danger"><h5>Không có yêu cầu kết bạn</h6></div>
+                	<div class="text-center text-danger"><h5>Không có gợi ý kết bạn</h6></div>
                 <%}else{ %>
                 <div class="fb-requests-grid">
 	                <%for(int i = 0 ; i < sizeLstIsNotFriend ; i++){ 
 	                	if(frdshipBo.checkFriendShip(currentUser.getUserID(), lstIsNotFriend.get(i).getUserID())){%>
 	                		<div class="fb-request-card">
-	                    <img src="<%=lstIsNotFriend.get(i).getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
+	                    <a href="ProfileController?id=<%=lstIsNotFriend.get(i).getUserID()%>"><img src="<%=lstIsNotFriend.get(i).getAvatar()%>?height=200&width=200" alt="" class="fb-request-img"></a>
 	                    <div class="fb-request-info">
 	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getFullName()%></div>
 	                        <div class="fb-request-mutual">
@@ -144,7 +143,7 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
 	                </div>
 	                	<%}else{%>
 	                <div class="fb-request-card">
-	                    <img src="<%=lstIsNotFriend.get(i).getAvatar()%>?height=200&width=200" alt="" class="fb-request-img">
+	                    <a href="ProfileController?id=<%=lstIsNotFriend.get(i).getUserID()%>"><img src="<%=lstIsNotFriend.get(i).getAvatar()%>?height=200&width=200" alt="" class="fb-request-img"></a>
 	                    <div class="fb-request-info">
 	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getFullName()%></div>
 	                        <div class="fb-request-mutual">

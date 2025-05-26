@@ -55,16 +55,15 @@
 			    </form>
             </div>
             <div class="profile-name-info" style="display: ruby;">
-                <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
-				
-		<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changeUsernameModal">
+                <h1 class="profile-name"><%=currentUser.getFullName() %></h1>	
+		<button type="button" class="" style="all:unset;cursor: pointer;" data-bs-toggle="modal" data-bs-target="#changeUsernameModal">
 		  <i class="bi bi-pencil-fill fs-6 mx-2" style="cursor: pointer; color: #6c757d;"></i>
 		</button>
 		
 		<!-- Modal -->
-		<div id="changeUsernameModal" class="modal fade" tabindex="-1" aria-labelledby="changeUsernameLabel" aria-hidden="true">
+		<div id="changeUsernameModal" class="modal fade" tabindex="-1" aria-labelledby="changeUsernameLabel" aria-hidden="true" style="margin-top: 10%">
 		  <div class="modal-dialog">
-		    <div class="modal-content">
+		    <div class="modal-content" style="width:80%">
 		      <form action="ChangeUsernameController" method="post">
 		        <div class="modal-header">
 		          <h5 class="modal-title" id="changeUsernameLabel">Đổi tên người dùng</h5>

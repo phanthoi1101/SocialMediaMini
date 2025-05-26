@@ -1,3 +1,4 @@
+<%@page import="FriendshipModal.FriendshipBo"%>
 <%@page import="PostsModal.Posts"%>
 <%@page import="UserModal.User"%>
 <%@page import="Post_UserModal.Post_User"%>
@@ -23,6 +24,7 @@
 </head>
 <body> 
 	<%User currentUser = (User)session.getAttribute("User");
+	FriendshipBo fBo = new FriendshipBo();
 	ArrayList<Posts> dsPostByUserId = (ArrayList<Posts>)session.getAttribute("dsPostByUserId");
 	int index = 0;
 	if(session.getAttribute("dsPostByUserId")!=null){
@@ -144,7 +146,7 @@
         </div>
         <%if(index==0){ %>
         	<div class="photo-gird text-center text-danger">
-        		<h3>Không có ảnh trong ambum</h3>
+        		<h3>Không có ảnh trong album</h3>
         	</div>
         <%}else{ %>
         <div class="photo-grid">

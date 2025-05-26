@@ -1,3 +1,5 @@
+<%@page import="FriendshipModal.FriendshipBo"%>
+<%@page import="FriendshipModal.Friendship"%>
 <%@page import="PostsModal.Posts"%>
 <%@page import="UserModal.User"%>
 <%@page import="Post_UserModal.Post_User"%>
@@ -23,12 +25,15 @@
 </head>
 <body> 
 	<%User currentUser = (User)session.getAttribute("User");
+	FriendshipBo fBo = new FriendshipBo();
 	User userFriend = (User)request.getAttribute("userFriend");
 	ArrayList<Posts> dsPostByUserId = (ArrayList<Posts>)session.getAttribute("dsPostByUserId");
 	int index = 0;
 	if(session.getAttribute("dsPostByUserId")!=null){
 		index = dsPostByUserId.size();
 	}
+	String check="";
+	check = fBo.checkFriendship(userFriend.getUserID(), currentUser.getUserID());
 	%>
 	    <!-- Navbar -->
      <%String homeActive = (String)session.getAttribute("homeActive"); %>
@@ -96,14 +101,36 @@
             <div class="profile-name-info">
                 <h1 class="profile-name"><%=userFriend.getFullName() %></h1>
             </div>
-            <div class="profile-actions">
-                <button class="action-button secondary">
-                    <i class="bi bi-pencil"></i> Chỉnh sửa trang cá nhân
-                </button>
-                <button class="action-button secondary">
-                    <i class="bi bi-caret-down-fill"></i>
-                </button>
-            </div>
+            <%if(check.equals("xacnhan")){ %>
+            	<div class="profile-actions">
+	                <form action="FriendRequestController" method="get" style="all: unset;display: contents;">
+		                    <input type="hidden" name="userId" value="<%=userFriend.getUserID()%>">
+		                    <button class="btn btn-primary me-5" name="xacnhan">Xác nhận kết bạn</button>
+		            </form>
+	         	</div>
+            <%}else if(check.equals("huyyeucau")){ %>
+            	<div class="profile-actions">
+	                <form action="FriendRequestController" method="get" style="all: unset;display: contents;">
+		                    <input type="hidden" name="userId" value="<%=userFriend.getUserID()%>">
+		                    <button class="btn btn-light me-5" name="huyyeucau">Huỷ yêu cầu</button>
+		            </form>
+	         	</div>
+            <%}else if(check.equals("guiloimoi")){ %>
+            	<div class="profile-actions">
+	                <form action="FriendRequestController" method="get" style="all: unset;display: contents;">
+		                    <input type="hidden" name="userId" value="<%=userFriend.getUserID()%>">
+		                    <button class="btn btn-primary me-5" name="thembanbe">Thêm bạn bè</button>
+		            </form>
+	         	</div>
+            <%}else if(check.equals("huyketban")){ %>
+            	<div class="profile-actions">
+	                <form id="Unfriend" action="FriendRequestController" method="get" style="all: unset;display: contents;">
+		                    <input type="hidden" name="userId" value="<%=userFriend.getUserID()%>">
+		                    <button class="btn btn-danger" name="huyketban">Huỷ bạn bè</button>
+		            </form>
+		            <a href="MessageController?id=<%=userFriend.getUserID() %>" class="btn btn-primary me-5 ms-2">Nhắn tin</a>
+	         	</div>
+            <%} %>
         </div>
         <%String ProfileActive = "";
         if(session.getAttribute("ProfileActive")!=null){
@@ -117,9 +144,6 @@
             <button name="banBeFriend" style="all: unset;  cursor: pointer;"><div class="nav-item ">Bạn bè</div></button>
             <button name="anhFriend" style="all: unset;  cursor: pointer;"><div class="nav-item active" >Anh</div></button>
             </form>
-            <div class="nav-item nav-more">
-                <i class="bi bi-three-dots"></i>
-            </div>
         </div>
     </div>
     </div>
@@ -133,7 +157,7 @@
         </div>
         <%if(index==0){ %>
         	<div class="photo-gird text-center text-danger">
-        		<h3>Không có ảnh trong ambum</h3>
+        		<h3>Không có ảnh trong album</h3>
         	</div>
         <%}else{ %>
         <div class="photo-grid">

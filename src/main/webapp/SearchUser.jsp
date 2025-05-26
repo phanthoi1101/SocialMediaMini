@@ -85,40 +85,47 @@ int index = 0;
         <%}else{ 
         	for(int  i = 0 ; i < index ; i++){
         		if(dsUserById.get(i).isIsFriend()){
-        %>       
-        <div class="profile-card">
-            <div class="profile-avatar">
-                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="Phan Cảnh Luyện">
-            </div>
-            <div class="profile-info">
-                <div class="profile-name"><%=dsUserById.get(i).getFullName() %></div>
-                <div class="profile-meta">
-                </div>
-            </div>
-            <div class="profile-actions">
-            <a style="text-decoration: none;" href="MessageController?id=<%=dsUserById.get(i).getUserID()%>" class="fb-btn fb-btn-primary">Nhắn tin</a>
-            </div>
-        </div>
+        %>  
+        
+       <div class="profile-card" style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
+		  <a style="text-decoration: none; color: inherit; display: flex; align-items: center;" href="ProfileController?id=<%=dsUserById.get(i).getUserID()%>">
+		    <div class="profile-avatar" style="margin-right: 10px;">
+		      <img src="<%=dsUserById.get(i).getAvatar()%>?height=60&width=60" alt="" style="width: 60px; height: 60px; border-radius: 50%;">
+		    </div>
+		    <div class="profile-info">
+		      <div class="profile-name" style="font-weight: bold;"><%=dsUserById.get(i).getFullName()%></div>
+		      <div class="profile-meta"></div>
+		    </div>
+		  </a>
+		
+		  <div class="profile-actions">
+		    <a style="text-decoration: none;" href="MessageController?id=<%=dsUserById.get(i).getUserID()%>" class="fb-btn fb-btn-primary">Nhắn tin</a>
+		  </div>
+		</div>
+
         <%}else if(fbo.userSent(currentUser.getUserID(), dsUserById.get(i).getUserID())){%>
         <!-- Profile 3 -->
-	        <div class="profile-card">
+	        <a style="text-decoration: none;color: inherit;" href="ProfileController?id=<%=dsUserById.get(i).getUserID()%>">
+	        	<div class="profile-card">
 	            <div class="profile-avatar">
 	                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="Phan Cảnh Tâm">
 	            </div>
 	            <div class="profile-info">
 	                <div class="profile-name"><%=dsUserById.get(i).getFullName() %></div>
 	                <div class="profile-meta">
-	                </div>
+	            	</div>
 	            </div>
 	            <div class="profile-actions">
-	                <form action="SearchController" method="get" style="all: unset;display: contents;">
+	                <form action="SearchUser" method="get" style="all: unset;display: contents;">
 	                		<input type="hidden" name="searchUser" value="<%=searchUser%>">
 		                    <input type="hidden" name="userId" value="<%=dsUserById.get(i).getUserID()%>">
 		                    <button class="fb-btn fb-btn-light" name="huyyeucau">Huỷ yêu cầu</button>
 		            </form>
 	            </div>
 	        </div>
+	        </a>
         <%}else if(fbo.IsSent(currentUser.getUserID(), dsUserById.get(i).getUserID())){ %>
+        	<a style="text-decoration: none;color: inherit;" href="ProfileController?id=<%=dsUserById.get(i).getUserID()%>">
         	<div class="profile-card">
 	            <div class="profile-avatar">
 	                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="">
@@ -136,7 +143,9 @@ int index = 0;
 		            </form>
 	            </div>
 	        </div>
+	        </a>
         <%} else{%>
+        <a style="text-decoration: none;color: inherit;" href="ProfileController?id=<%=dsUserById.get(i).getUserID()%>">
         	<div class="profile-card">
 	            <div class="profile-avatar">
 	                <img src="<%=dsUserById.get(i).getAvatar() %>?height=60&width=60" alt="Phan Cảnh Tâm">
@@ -154,6 +163,7 @@ int index = 0;
 		            </form>
 	            </div>
 	        </div>
+	        </a>
         <%}
         	}
         }%>

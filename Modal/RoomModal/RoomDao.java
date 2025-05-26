@@ -1,6 +1,5 @@
 package RoomModal;
 
-import java.beans.Statement;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,7 +48,8 @@ public class RoomDao {
 				String roomname = rs.getString("RoomName");
 				boolean isgroup = rs.getBoolean("IsGroup");
 				Date CreatedAt = rs.getDate("CreatedAt");
-				room = new Room(roomid, roomname, isgroup, CreatedAt);
+				boolean Status = rs.getBoolean("Status");
+				room = new Room(roomid, roomname, isgroup, CreatedAt, Status);
 			}
 			kn.cn.close();
 			rs.close();
@@ -92,8 +92,8 @@ public class RoomDao {
 			KetNoi kn = new KetNoi();
 			int idMoi = 0 ;
 			kn.KetNoi();
-			String sql = "insert into Rooms(RoomName,IsGroup)\r\n"
-					+ "values(?,?)";
+			String sql = "insert into Rooms(RoomName,IsGroup,Status)\r\n"
+					+ "values(?,?,1)";
 			PreparedStatement cmd = kn.cn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
 			cmd.setString(1, RoomName);
 			cmd.setBoolean(2, IsGroup);
@@ -108,6 +108,65 @@ public class RoomDao {
 			return idMoi;
 		} catch (Exception e) {
 			System.out.println("Tạo Room Chat   "+e.getMessage());
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	public boolean checkIsRoom(int userid1, int userid2) {
+		try {
+			int x=0;
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "SELECT RoomDetail.RoomID\r\n"
+					+ "FROM RoomDetail\r\n"
+					+ "JOIN Rooms ON Rooms.RoomID = RoomDetail.RoomID\r\n"
+					+ "WHERE RoomDetail.UserID IN (?,?) AND Rooms.IsGroup = 0\r\n"
+					+ "GROUP BY RoomDetail.RoomID\r\n"
+					+ "HAVING COUNT(DISTINCT RoomDetail.UserID) = 2;";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(1, userid2);
+			cmd.setInt(2, userid1);
+			ResultSet rs = cmd.executeQuery();
+			while(rs.next()) {
+				x=rs.getInt("RoomID");
+			}
+			if(x!=0) {
+				kn.cn.close();
+				rs.close();
+				return true;
+			}
+			kn.cn.close();
+			rs.close();
+			return false;
+		} catch (Exception e) {
+			System.out.println("Kiểm tra đã có room hay chưa "+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	public int selectRoomIdOf2User(int userid1, int userid2) {
+		try {
+			int x=0;
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "SELECT RoomDetail.RoomID\r\n"
+					+ "FROM RoomDetail\r\n"
+					+ "JOIN Rooms ON Rooms.RoomID = RoomDetail.RoomID\r\n"
+					+ "WHERE RoomDetail.UserID IN (?,?) AND Rooms.IsGroup = 0\r\n"
+					+ "GROUP BY RoomDetail.RoomID\r\n"
+					+ "HAVING COUNT(DISTINCT RoomDetail.UserID) = 2;";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(1, userid2);
+			cmd.setInt(2, userid1);
+			ResultSet rs = cmd.executeQuery();
+			while(rs.next()) {
+				x=rs.getInt("RoomID");
+			}
+			kn.cn.close();
+			rs.close();
+			return x;
+		} catch (Exception e) {
+			System.out.println("Kiểm tra đã có room hay chưa "+e.getMessage());
 			e.printStackTrace();
 			return 0;
 		}

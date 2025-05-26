@@ -228,9 +228,9 @@
                         </div>
                     </div>
                     <div id="homeParent" class="col-6 d-flex justify-content-center">
-                        <div id="home" class="nav-icon <%= "home".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-house-door-fill"></i></div>
+                        <div id="home" class="nav-icon" onclick="homeActive(this.id)"><i class="bi bi-house-door-fill"></i></div>
                         <div class="nav-icon"></div>
-                        <div id="friend" class="nav-icon <%= "friend".equals(homeActive) ? "active" : "" %>" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
+                        <div id="friend" class="nav-icon" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
                     </div>
                     <div class="col-3 d-flex justify-content-end align-items-center">
                         <a style="all:none;cursor: pointer; color: #333;" href="MessageController?message=1">
@@ -292,14 +292,13 @@
     				<div class="contact-item d-flex align-items-center">
 				       <img src="<%=u.getAvatar() %>?img=2" alt="User 2">
 				       <div class="contact-name"><%=u.getFullName() %></div>
-		      	</div>
+		      		</div>
 		      	</a>
     			<%
     			}
     	%>
     	<%}
     		}%>
-    	
     </div>
 
     <!-- Chat Area -->
@@ -392,7 +391,7 @@
 		  <%=y.getFullName()%>
 		</p>
 	<div style="display: flex; align-items: center;">
-		  <img src="<%= y.getAvatar() %>" alt="Avatar" style="border-radius: 50%; width: 40px; height: 40px;">
+		  <img src="<%= y.getAvatar() %>" alt="Avatar" style="border-radius: 50%; width: 40px; height: 40px; margin-bottom: auto;">
 		  <div class="message received" style="display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;">
 		  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0;">
 		    <%= currentTime %>
@@ -409,12 +408,26 @@
       </div>
 
       <%if(check=="message"){ %>
-      <%}else{ %>
-      <div class="chat-input">
-        <input type="text" placeholder="Type a message..." id="messageText" autofocus="autofocus">
-        <i class="bi bi-send-fill" onclick="sendMessage();" value="Send" ></i>
-      </div>
-      <%} %>
+      <%}else{ 
+    	  Room z = new Room();
+    	  if(session.getAttribute("roomId")!=null){
+    		  int rz = (int)session.getAttribute("roomId");
+    		  z = rBo.getRoomByRoomID(rz);
+    	  }else if(session.getAttribute("userFriend")!=null){
+    		  User ux = (User)session.getAttribute("userFriend");
+    		  int m = rBo.selectRoomIdOf2User(ux.getUserID(), currentUser.getUserID());
+    		  z = rBo.getRoomByRoomID(m); 
+    	  }
+    	  
+    	  
+      if(z.isStatus()){
+      %>
+	      <div class="chat-input">
+	        <input type="text" placeholder="Type a message..." id="messageText" autofocus="autofocus">
+	        <i class="bi bi-send-fill" onclick="sendMessage();" value="Send" ></i>
+	      </div>
+      <%} 
+      }%>
       
     </div>
     
@@ -435,6 +448,26 @@ new TomSelect('#usersSelectAdd', {
     plugins: ['remove_button'],
     maxItems: null, 
   });
+
+
+//Home active
+function homeActive(id){
+	    		const icons = document.querySelectorAll('.nav-icon');
+	    		icons.forEach(function (icon) {
+					icon.classList.remove('active');
+				});
+	    		 // Thêm class 'active' vào thẻ có id được click
+	    	    const activeElement = document.getElementById(id);
+	    	    if (activeElement) {
+	    	      activeElement.classList.add('active');
+	    	    }
+	    	    if(id==="home"){
+	    	    	window.location.href = "HomePageController";
+	    	    }
+	    	    if(id==="friend"){
+	    	    	window.location.href = "FriendController";
+	    	    }
+	    	}
 
 //Gửi request cho thêm thành viên group
 $(document).ready(function () {

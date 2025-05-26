@@ -1,9 +1,6 @@
 package UserController;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,29 +8,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.ha.session.Constants;
-import org.apache.tomcat.util.bcel.classfile.Constant;
-
 import Constand.FriendshipStatus;
 import FriendshipModal.FriendshipBo;
 import RoomDetailModal.RoomDetailBo;
+import RoomModal.Room;
 import RoomModal.RoomBo;
-import SearchUserModal.SearchUser;
-import SearchUserModal.SearchUserBo;
 import UserModal.User;
-import UserModal.UserBo;
 
 /**
- * Servlet implementation class SearchUserController
+ * Servlet implementation class FriendRequestController
  */
-@WebServlet("/SearchUser")
-public class SearchUserController extends HttpServlet {
+@WebServlet("/FriendRequestController")
+public class FriendRequestController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchUserController() {
+    public FriendRequestController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,26 +34,22 @@ public class SearchUserController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
+		FriendshipStatus status = new FriendshipStatus();
 		RoomBo rBo = new RoomBo();
 		RoomDetailBo rdBo = new RoomDetailBo();
-		FriendshipStatus status = new FriendshipStatus();
-		FriendshipBo fBo = new FriendshipBo();
 		User currentUser = (User)session.getAttribute("User");
+		FriendshipBo fBo = new FriendshipBo();
 		int userId = currentUser.getUserID();
-		SearchUserBo userBo = new SearchUserBo();
-		ArrayList<SearchUser> ds_User = new ArrayList<SearchUser>();
+		int user = Integer.parseInt(request.getParameter("userId"));
+		System.out.println("UserId là"+request.getParameter("userId"));
 		if(request.getParameter("thembanbe")!=null) {
-			int user = Integer.parseInt(request.getParameter("userId"));
 			fBo.CreateFriendshipBySender_Receiver(userId, user,status.PENDING);
 			System.out.println("Thêm bạn thành công !");
 		}
 		if(request.getParameter("xacnhan")!=null) {
-			int user = Integer.parseInt(request.getParameter("userId"));
 			fBo.UpdateFriendshipBySender_Receiver(userId, user, status.ACCEPTED);
 			if(rBo.checkIsRoom(userId, user)) {
-				
 			}else {
 				int x =rBo.CreateRoom("", false);
 				rdBo.CreateRoomDetail(x, userId);
@@ -70,17 +58,14 @@ public class SearchUserController extends HttpServlet {
 			System.out.println("Thêm bạn thành công !");
 		}
 		if(request.getParameter("huyyeucau")!=null) {
-			int user = Integer.parseInt(request.getParameter("userId"));
 			fBo.DeleteFriendshipBySender_Receiver(userId, user);
 			System.out.println("Huỷ yêu cầu thành công");
 		}
-		String searchUser = request.getParameter("searchUser");
-		ds_User=userBo.getUserBySearch(userId, searchUser);
-		session.setAttribute("UserBySeach", ds_User);
-		request.setAttribute("searchUser", searchUser);
-		
-		RequestDispatcher rd = request.getRequestDispatcher("SearchUser.jsp");
-		rd.forward(request, response);
+		if(request.getParameter("huyketban")!=null) {
+			fBo.DeleteFriendshipBySender_Receiver(userId, user);
+			System.out.println("Huỷ kết bạn thành công");
+		}
+		response.sendRedirect("ProfileController?id="+user);
 	}
 
 	/**

@@ -7,6 +7,13 @@ public class Room {
 	private String RoomName;
 	private boolean IsGroup;
 	private Date CreatedAt;
+	private boolean Status;
+	public boolean isStatus() {
+		return Status;
+	}
+	public void setStatus(boolean status) {
+		Status = status;
+	}
 	public int getRoomId() {
 		return RoomId;
 	}
@@ -31,12 +38,14 @@ public class Room {
 	public void setCreatedAt(Date createdAt) {
 		CreatedAt = createdAt;
 	}
-	public Room(int roomId, String roomName, boolean isGroup, Date createdAt) {
+
+	public Room(int roomId, String roomName, boolean isGroup, Date createdAt, boolean status) {
 		super();
 		RoomId = roomId;
 		RoomName = roomName;
 		IsGroup = isGroup;
 		CreatedAt = createdAt;
+		Status = status;
 	}
 	public Room() {
 		super();

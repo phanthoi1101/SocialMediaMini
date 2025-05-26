@@ -31,9 +31,7 @@ public int CreateFriendshipBySender_Receiver(int userId1, int userId2, int statu
 }
 public boolean checkFriendShip(int currentUserId,int receiver) {
 	ArrayList<Friendship> lstFriendship = new ArrayList<Friendship>();
-	System.out.println("người gửi "+currentUserId+" Nguwowif nhận :"+receiver);
 	lstFriendship = friendshipDao.getFriendshipByStatusAndReceiveID(receiver, 0);
-	System.out.println("độ dài của nớ nớ nớ"+lstFriendship.size());
 	for(Friendship f : lstFriendship) {
 		if(f.getSenderID()==currentUserId)
 			return true;
@@ -58,5 +56,24 @@ public boolean IsSent(int senderId , int receiverId) {
 		}
 	}
 	return false;
+}
+
+public String checkFriendship(int userid,int currentdId) {
+	ArrayList<Friendship> dsfriend =getAllFriendship();
+	String check = "guiloimoi";
+	for(Friendship f : dsfriend) {
+		if((userid==f.getSenderID() && currentdId==f.getReceiverID() && f.getStatus()==1) || (userid==f.getReceiverID() && currentdId==f.getSenderID() && f.getStatus()==1)) {
+			check="huyketban";
+			return check;
+		}else if(f.getSenderID()==currentdId && f.getReceiverID()==userid && f.getStatus()==0) {
+			check = "huyyeucau";
+			return check;
+		}else if(f.getReceiverID()==currentdId && f.getSenderID()==userid && f.getStatus()==0) {
+			check = "xacnhan";
+			return check;
+		}
+	}
+	
+	return check;
 }
 }
