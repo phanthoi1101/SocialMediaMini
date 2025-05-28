@@ -405,8 +405,7 @@
 	    	                            '<p class="comment-text">' + comment.content + '</p>' +
 	    	                        '</div>' +
 	    	                        '<div class="comment-actions">' +
-	    	                            '<span class="comment-action">Phản hồi</span>' +
-	    	                            '<span class="comment-time">thời gian</span>' +	    	                           
+	    	                            '<span class="comment-action">Phản hồi</span>' +   	                           
 	    	                 '</div>';
 	    	            /*for (var i = comments.length - 1; i >= 0; i--) {
 	    	                var cmt = comments[i];

@@ -7,7 +7,7 @@ public class MessageBo {
 	public ArrayList<Message> getMessageByRoomId(int roomId){
 		return messageDao.GetMessageByRoomId(roomId);
 	}
-	public int CreateMessage(int senderid, String content , int roomid) {
-		return messageDao.CreateMessage(senderid, content, roomid);
+	public int CreateMessage(int senderid, String content , int roomid,String status) {
+		return messageDao.CreateMessage(senderid, content, roomid,status);
 	}
 }

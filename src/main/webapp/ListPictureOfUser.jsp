@@ -110,14 +110,7 @@
                 <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
                 <div class="profile-friends">239 người bạn</div>
             </div>
-            <div class="profile-actions">
-                <button class="action-button secondary">
-                    <i class="bi bi-pencil"></i> Chỉnh sửa trang cá nhân
-                </button>
-                <button class="action-button secondary">
-                    <i class="bi bi-caret-down-fill"></i>
-                </button>
-            </div>
+           
         </div>
         <%String ProfileActive = "";
         if(session.getAttribute("ProfileActive")!=null){

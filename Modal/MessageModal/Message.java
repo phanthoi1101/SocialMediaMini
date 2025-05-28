@@ -7,6 +7,13 @@ public class Message {
 	private int SenderID;
 	private int RoomId;
 	private String Content;
+	private String Status;
+	public String getStatus() {
+		return Status;
+	}
+	public void setStatus(String status) {
+		Status = status;
+	}
 	private Timestamp SentAt;
 	public int getMessageID() {
 		return MessageID;
@@ -34,12 +41,14 @@ public class Message {
 		Content = content;
 	}
 
-	public Message(int messageID, int senderID, int roomId, String content, Timestamp sentAt) {
+	
+	public Message(int messageID, int senderID, int roomId, String content, String status, Timestamp sentAt) {
 		super();
 		MessageID = messageID;
 		SenderID = senderID;
 		RoomId = roomId;
 		Content = content;
+		Status = status;
 		SentAt = sentAt;
 	}
 	public Timestamp getSentAt() {

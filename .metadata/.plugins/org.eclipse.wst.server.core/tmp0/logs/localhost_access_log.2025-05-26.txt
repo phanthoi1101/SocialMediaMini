@@ -1,0 +1,5 @@
+127.0.0.1 - - [26/May/2025:15:29:06 +0700] "GET / HTTP/1.1" 404 994
+0:0:0:0:0:0:0:1 - - [26/May/2025:15:29:07 +0700] "GET /FrmDangNhap/FrmDangNhap.jsp HTTP/1.1" 200 1693
+0:0:0:0:0:0:0:1 - - [26/May/2025:15:29:07 +0700] "GET /FrmDangNhap/Style.css HTTP/1.1" 200 311
+0:0:0:0:0:0:0:1 - - [26/May/2025:15:29:07 +0700] "GET /favicon.ico HTTP/1.1" 404 1016
+0:0:0:0:0:0:0:1 - - [26/May/2025:15:29:10 +0700] "GET /FrmDangNhap/FrmDangNhap.jsp?txtTenDn=123&txtMk=2&dangnhap= HTTP/1.1" 200 1693

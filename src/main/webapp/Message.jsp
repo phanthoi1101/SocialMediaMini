@@ -29,11 +29,66 @@
     	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
  
  <style >
+ .file-preview, .image-preview {
+      position: relative;
+      background: #f1f3f5;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 100%;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .file-preview i {
+      font-size: 20px;
+    }
+    .file-name {
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .remove-file {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    a.download-link {
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    a.download-link:hover {
+      text-decoration: underline;
+    }
+
+    .preview-image {
+      max-width: 100px;
+      max-height: 80px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
 /*Hover vô để hiện thời gian*/
 .message.received p.time {
   display: none; /* Ẩn mặc định */
 }
-
 .message.received:hover p.time {
   display: block; /* Hiện khi hover vào div cha */
 }
@@ -422,10 +477,20 @@
     	  
       if(z.isStatus()){
       %>
-	      <div class="chat-input">
-	        <input type="text" placeholder="Type a message..." id="messageText" autofocus="autofocus">
+      <div>
+       	<div id="fileAttachment"></div>
+  		<div class="chat-input">
+	        <div style="width: 100%">
+	        	<textarea  type="text" placeholder="Type a message..." id="messageText" style="width: 100%; border: 1px solid #ccc; " autofocus="autofocus"></textarea>
+	         	<div id="filePreview"></div>
+	        </div>
+	        <label for="fileInput">
+			  <i class="bi bi-paperclip file-icon" title="Đính kèm file"></i>
+			</label>
+			<input style="display: none;" type="file" id="fileInput" onchange="handleFile(event)">
 	        <i class="bi bi-send-fill" onclick="sendMessage();" value="Send" ></i>
-	      </div>
+	    </div>
+	   </div>
       <%} 
       }%>
       
@@ -439,6 +504,116 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+//handle file
+	let attachedFile = null;
+
+  function isImage(file) {
+    return file.type.startsWith("image/");
+  }
+
+  function handleFile(event) {
+    const fileInput = event.target;
+    const previewBox = document.getElementById('fileAttachment');
+    previewBox.innerHTML = '';
+    attachedFile = null;
+
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      attachedFile = file;
+
+      const fileURL = URL.createObjectURL(file);
+      console.log(fileURL);
+      const preview = document.createElement('div');
+      preview.className = isImage(file) ? 'image-preview' : 'file-preview'; // thêm class cho thẻ div show thumnail ảnh
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-file';
+      removeBtn.innerHTML = '&times;';
+      removeBtn.onclick = function () {
+        attachedFile = null;
+        previewBox.innerHTML = '';
+        fileInput.value = '';
+      };
+
+      if (isImage(file)) {
+        const img = document.createElement('img');
+        img.src = fileURL;
+        img.className = 'preview-image';
+        preview.appendChild(img);
+      } else {
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-file-earmark-text';
+        const name = document.createElement('span');
+        name.className = 'file-name';
+        name.textContent = file.name;
+
+        preview.appendChild(icon);
+        preview.appendChild(name);
+      }
+
+      preview.appendChild(removeBtn);
+      previewBox.appendChild(preview);
+    }
+  }
+
+  function sendMessage() {
+	  const textInput = document.getElementById('messageText');
+	  const previewBox = document.getElementById('fileAttachment');
+
+	  if (textInput.value.trim() === '' && !attachedFile) return;
+
+	  let messageData = {
+	    status: '',
+	    message: '',
+	    fileName: '',
+	    fileType: '',
+	    fileData: ''
+	  };
+
+	  // Nếu có text
+	  if (textInput.value.trim() !== '') {
+	    messageData.status = 'text';
+	    messageData.message = textInput.value;
+	  }
+	  // Nếu có file
+	  if (attachedFile) {
+		  const reader = new FileReader();
+		  reader.onload = function () {
+		    const base64Data = reader.result.split(',')[1]; // ✅ CHỈ LẤY phần base64 thuần
+			console.log("phần 1"+reader.result.split(',')[0]);
+		    let messageData = {
+		      status: isImage(attachedFile) ? 'image' : 'file',
+		      message: '',
+		      fileName: attachedFile.name,
+		      fileType: attachedFile.type,
+		      fileData: base64Data
+		    };
+		    console.log("base64 "+base64Data);
+		    console.log(messageData);
+		    websocket.send(JSON.stringify(messageData));
+			
+		    // Reset giao diện
+		    textInput.value = '';
+		    document.getElementById('fileInput').value = '';
+		    document.getElementById('fileAttachment').innerHTML = '';
+		    attachedFile = null;
+		  };
+
+		  reader.readAsDataURL(attachedFile);
+	  } else {
+	    // Chỉ gửi text
+	    websocket.send(JSON.stringify(messageData));
+	    // Reset UI
+	    textInput.value = '';
+	    document.getElementById('fileInput').value = '';
+	    document.getElementById('fileAttachment').innerHTML = '';
+	    attachedFile = null;
+	  }
+	  console.log(messageData);
+	}
+
+  
+  
 //Tom select
 new TomSelect('#usersSelectCreate', {
     plugins: ['remove_button'],
@@ -547,7 +722,6 @@ window.onload = function() {
     var roomId = "<%=roomId%>";
     var websocket = new WebSocket("ws://localhost:8080/SocialMedia/chatroomServerEndpoint/" + roomId);
     websocket.onmessage = function processMessage(message) {
-    	
     	const messElement = document.getElementById("mess");
       var jsonData = JSON.parse(message.data);
       if (jsonData.message != null)
@@ -582,12 +756,13 @@ window.onload = function() {
         }
       messElement.scrollTop = messElement.scrollHeight;
     };
-    function sendMessage() {
-    var messageText = document.getElementById("messageText");
-      console.log(messageText.value);
-      websocket.send(messageText.value);
-      messageText.value = "";
-    }
+    
+//     function sendMessage() {
+//     var messageText = document.getElementById("messageText");
+//       console.log(messageText.value);
+//       websocket.send(messageText.value);
+//       messageText.value = "";
+//     }
     
     
   //Thanh collapse
@@ -597,7 +772,7 @@ const toggleBtn = document.getElementById('toggleSidebarBtn');
   toggleBtn.addEventListener('click', () => {
     sidebar.classList.toggle('show');
     container.classList.toggle('shifted');
-  });
+});
   
   
 

@@ -1,0 +1,23 @@
+@charset "UTF-8";
+bordy{
+	
+}
+.slider{
+	width: 350px;
+	height: 600px;
+	padding-top: 1px;
+	}
+.from-slider{
+		box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+		width: 320px;
+		height:370px;
+		margin-top: 150px;
+	}
+.logo-img{
+	position:relative;
+	right:20px;
+	bottom:22px;
+	float: right;
+	}
+.tendn{
+}
