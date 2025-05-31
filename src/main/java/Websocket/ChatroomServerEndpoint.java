@@ -82,8 +82,7 @@ public class ChatroomServerEndpoint {
 			if(messageData.getStatus().equals("file")) {
 				System.out.println("file");
 				byte[] fileBytes = Base64.getDecoder().decode(messageData.getFileData());
-				String folderPath = "D:/CODE/JavaNangCao/SocialMedia/src/main/webapp/files/";
-		        
+				String folderPath = "D:\\CODE\\JavaNangCao\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\SocialMedia\\\\files\\";		        
 				String originalFileName = messageData.getFileName();
 		        String filePath = folderPath + originalFileName;
 		        File file = new File(filePath);
@@ -120,7 +119,7 @@ public class ChatroomServerEndpoint {
 			if(messageData.getStatus().equals("image")) {
 				System.out.println("image");
 			    byte[] imageBytes = Base64.getDecoder().decode(messageData.getFileData());
-			    String folderPath = "D:/CODE/JavaNangCao/SocialMedia/src/main/webapp/images/";
+			    String folderPath = "D:\\CODE\\JavaNangCao\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\SocialMedia\\\\images\\";
 			    String originalFileName = messageData.getFileName();
 			    
 			    String newFileName = originalFileName;

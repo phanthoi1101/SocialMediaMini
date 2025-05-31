@@ -23,26 +23,25 @@ if(session.getAttribute("postId")!=null){
                             <img src="" style="width: 40px;height: 40px" class="post-avatar avatar">
                         </div>
                         <div class="post-info">
-                            <div class="post-author username"> <span class="text-primary">· Theo dõi</span></div>
+                            <div class="post-author username"> <span class="text-primary"></span></div>
                             <div class="post-meta createdat">
-                                 <span class="dot">·</span> <i class="bi bi-globe"></i>
+                            
                             </div>
                         </div>
                         
                     </div>
                     
                     <!-- Post Content -->
-                    <div class="post-content">
+                    <div class="post-content model-content">
                         <p class="content"></p>
                     </div>
                     
                     <!-- Post Images -->
-                    <div class="post-images">
+                    <div class="post-images model-image">
                         <div class="post-image">
                             <img class="image" src="" style="width: 100%;height: 100%; object-fit: cover;">
                         </div>
                     </div>
-                    
                     <!-- Engagement Stats -->
                     
                     <div class="engagement">

@@ -82,7 +82,7 @@
                         </div>	
 						    <ul class="dropdown-menu">
 						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
-						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+						      <li><a class="dropdown-item" href="ChangePasswordController">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>
 						  </div>
@@ -176,8 +176,7 @@
                 
                 <div class="mx-4 px-4"></div>
             </div>
-        </div>
-        
+        </div>        
         <div class="friends-tabs">
         </div>
         <%if(index==0){ %>
@@ -193,21 +192,20 @@
          	}
          %>
          <div class="friend-item">
+         <a href="ProfileController?id=<%=user.getUserID() %>" class="sidebar-item" style="all:unset;cursor:pointer;" >
                 <div class="friend-avatar">
                     <img src="<%=user.getAvatar()%>?height=60&width=60" alt="<%=user.getFullName()%>">
                 </div>
+          </a>
+          <a href="ProfileController?id=<%=user.getUserID() %>" class="sidebar-item" style="all:unset;cursor:pointer;">
                 <div class="friend-info">
                     <div class="friend-name"><%=user.getFullName()%></div>
                 </div>
-                <div class="friend-actions">
-                    <button class="more-btn">
-                        <i class="bi bi-three-dots"></i>
-                    </button>
-                </div>
+				</a>
             </div>
          <%} %>
         <%} %>
-        
+   </div> 
     </div>
     
     

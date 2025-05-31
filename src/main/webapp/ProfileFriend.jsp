@@ -19,7 +19,7 @@
         <link rel="stylesheet" type="text/css" href="Layouts/Profile.css">
 </head>
 <body>
-
+	
 	<%FriendshipBo fbo = new FriendshipBo();
 	ArrayList<Post_User> dsPost_UserById = (ArrayList<Post_User>)session.getAttribute("dsPost_UserById"); 
 	ArrayList<Like> dsLike = (ArrayList<Like>)session.getAttribute("dsLike");
@@ -96,6 +96,7 @@
     <div class="content-container">
         <!-- List các bài post -->
                 <div class="">
+                    <%if(check.equals("huyketban")){ %>
                     <%if(index==0){ %>
                     <div class="text-center text-danger"><h4>Không có bài viết được hiển thị</h4></div>
                     <%}else{ %>
@@ -109,15 +110,15 @@
                                     <h6 class="post-author"><%=dsPost_UserById.get(i).getFullName() %></h6>
                                     <p class="post-time"><%=dsPost_UserById.get(i).getTimePost() %></p>
                                 </div>
-								<div class="dropdown">
-                                    <button class="btn" type="button" data-bs-toggle="dropdown">
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li>
-                                        <li><a class="dropdown-item" href="#">Báo cáo</a></li>
-                                    </ul>
-                                </div>
+<!-- 								<div class="dropdown"> -->
+<!--                                     <button class="btn" type="button" data-bs-toggle="dropdown"> -->
+<!--                                         <i class="bi bi-three-dots"></i> -->
+<!--                                     </button> -->
+<!--                                     <ul class="dropdown-menu"> -->
+<!--                                         <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li> -->
+<!--                                         <li><a class="dropdown-item" href="#">Báo cáo</a></li> -->
+<!--                                     </ul> -->
+<!--                                 </div> -->
                             </div>
                             <div class="post-content">
                                 <%if(dsPost_UserById.get(i).getContent()!=null){ %>
@@ -162,6 +163,9 @@
                         </div>
                         <%} %>
                     </div>
+                    <%} %>
+                    <%}else{ %>
+                    	<div class="text-center">Thêm bạn bè để biết thêm thông tin</div>
                     <%} %>
                 </div>
 

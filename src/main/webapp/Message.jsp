@@ -302,7 +302,7 @@
                         </div>	
 						    <ul class="dropdown-menu">
 						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
-						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+						      <li><a class="dropdown-item" href="ChangePasswordController">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>
 						  </div>
@@ -430,14 +430,32 @@
         	<%	if(dsMessage.get(i).getSenderID()==currentUser.getUserID()){
         		User y = userbo.getUserById(dsMessage.get(i).getSenderID());
         %>
-		<div class="message sent" style="display: flex; flex-direction: column; justify-content: flex-end;">
-		  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;" >
-		    <%= currentTime %>
-		  </p>
-		  <p class="mb-0" style="text-align: justify; margin: 0;">
-		    <%= dsMessage.get(i).getContent() %>
-		  </p>
-		</div>
+				<%if(dsMessage.get(i).getStatus().equals("text")){ %>
+					<div class="message sent" style="display: flex; flex-direction: column; justify-content: flex-end;">
+					  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;" >
+					    <%= currentTime %>
+					  </p>
+					  <p class="mb-0" style="text-align: justify; margin: 0;">
+					    <%= dsMessage.get(i).getContent() %>
+					  </p>
+					</div>
+				<%}else if(dsMessage.get(i).getStatus().equals("file")){ %>
+					<div class="message sent" style="display: flex; flex-direction: column; justify-content: flex-end;">
+					  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;" >
+					    <%= currentTime %>
+					  </p>
+					  <a style="text-decoration: none;color: #333" class="file-link" href="files/<%=dsMessage.get(i).getContent()%>" download>
+					      📄 <%=dsMessage.get(i).getContent() %>
+					   </a>
+					</div>
+				<%}else{ %>
+					<div class="message sent" style="display: inline-flex; flex-direction: column; align-items: flex-start;">
+					  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0;">
+					    <%= currentTime %>
+					  </p>
+					  <img src="images/<%= dsMessage.get(i).getContent() %>" style="max-width: 300px; height: auto;">
+					</div>
+				<%} %>
 
         <%}else{ 
         	User y = userbo.getUserById(dsMessage.get(i).getSenderID());
@@ -445,23 +463,40 @@
         <p class="sender-name" style="text-align: left; margin: 0 0 4px 0;">
 		  <%=y.getFullName()%>
 		</p>
-	<div style="display: flex; align-items: center;">
-		  <img src="<%= y.getAvatar() %>" alt="Avatar" style="border-radius: 50%; width: 40px; height: 40px; margin-bottom: auto;">
-		  <div class="message received" style="display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;">
-		  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0;">
-		    <%= currentTime %>
-		  </p>
-		  <p class="mb-0" style="text-align: justify; margin: 0;">
-		    <%= dsMessage.get(i).getContent() %>
-		  </p>
+			<div style="display: flex; align-items: center;">
+			  <img src="<%= y.getAvatar() %>" alt="Avatar" style="border-radius: 50%; width: 40px; height: 40px; margin-bottom: auto;">
+			  <%if(dsMessage.get(i).getStatus().equals("text")){ %>
+				 <div class="message received" style="display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;">
+				  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0;">
+				    <%= currentTime %>
+				  </p>
+				  <p class="mb-0" style="text-align: justify; margin: 0;">
+				    <%= dsMessage.get(i).getContent() %>
+				  </p>
+				</div>
+			  <%}else if(dsMessage.get(i).getStatus().equals("file")){ %>
+				 <div class="message received" style="display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;">
+				  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0;">
+				    <%= currentTime %>
+				  </p>
+				  <a style="text-decoration: none;color: #333" class="file-link" href="files/<%=dsMessage.get(i).getContent()%>" download>
+					      📄 <%=dsMessage.get(i).getContent() %>
+				</a>
+				</div>
+			  <%}else{ %>
+				  <div class="message received" style="display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;">
+					  <p class="time" style="font-size: 0.75rem; color: gray; margin: 0 0 4px 0;">
+					    <%= currentTime %>
+					  </p>
+					  <img src="images/<%= dsMessage.get(i).getContent() %>" style="max-width: 300px; height: auto;">
+				</div>
+			  <%} %>
 		</div>
-	</div>
         <%}%>
         </div>
         	<%	}
         	} %>
       </div>
-
       <%if(check=="message"){ %>
       <%}else{ 
     	  Room z = new Room();
@@ -473,8 +508,6 @@
     		  int m = rBo.selectRoomIdOf2User(ux.getUserID(), currentUser.getUserID());
     		  z = rBo.getRoomByRoomID(m); 
     	  }
-    	  
-    	  
       if(z.isStatus()){
       %>
       <div>
@@ -522,7 +555,6 @@
       attachedFile = file;
 
       const fileURL = URL.createObjectURL(file);
-      console.log(fileURL);
       const preview = document.createElement('div');
       preview.className = isImage(file) ? 'image-preview' : 'file-preview'; // thêm class cho thẻ div show thumnail ảnh
 
@@ -534,7 +566,6 @@
         previewBox.innerHTML = '';
         fileInput.value = '';
       };
-
       if (isImage(file)) {
         const img = document.createElement('img');
         img.src = fileURL;
@@ -588,8 +619,6 @@
 		      fileType: attachedFile.type,
 		      fileData: base64Data
 		    };
-		    console.log("base64 "+base64Data);
-		    console.log(messageData);
 		    websocket.send(JSON.stringify(messageData));
 			
 		    // Reset giao diện
@@ -726,33 +755,88 @@ window.onload = function() {
       var jsonData = JSON.parse(message.data);
       if (jsonData.message != null)
         if(jsonData.userId===<%=currentUser.getUserID()%>){
-        	messElement.insertAdjacentHTML("beforeend",
-        			  "<div style=\"display: flex; flex-direction: column;\">" +
-        			    "<div class=\"message sent\" style=\"display: flex; flex-direction: column; justify-content: flex-end;\">" +
-        			      "<p style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;\">" + jsonData.SentAt + "</p>" +
-        			      "<p class=\"mb-0\" style=\"text-align: justify; margin: 0;\">" + jsonData.message + "</p>" +
-        			    "</div>" +
-        			  "</div>"
-        			);     
+        	if(jsonData.Status==="text"){
+        		messElement.insertAdjacentHTML("beforeend",
+          			  "<div style=\"display: flex; flex-direction: column;\">" +
+          			    "<div class=\"message sent\" style=\"display: flex; flex-direction: column; justify-content: flex-end;\">" +
+          			      "<p style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;\">" + jsonData.SentAt + "</p>" +
+          			      "<p class=\"mb-0\" style=\"text-align: justify; margin: 0;\">" + jsonData.message + "</p>" +
+          			    "</div>" +
+          			  "</div>"
+          			); 
+        	}else if(jsonData.Status==="file"){
+        		console.log("Đây là file nha mn");
+        		messElement.insertAdjacentHTML("beforeend",
+        				  "<div style=\"display: flex; flex-direction: column;\">" +
+        				    "<div class=\"message sent\" style=\"display: flex; flex-direction: column; justify-content: flex-end;\">" +
+        				      "<p style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;\">" + jsonData.SentAt + "</p>" +
+        				      "<a href=\"files/" + jsonData.message + "\" download style=\"text-decoration: none; color: #333;\">" +
+        				        "📄 " + jsonData.message +
+        				      "</a>" +
+        				    "</div>" +
+        				  "</div>"
+        				);
         	}else{
         		messElement.insertAdjacentHTML("beforeend",
-      				  "<div style=\"display: flex; flex-direction: column;\">" +
-      				    "<p class=\"sender-name\" style=\"text-align: left; margin: 0 0 4px 0;\">" +
-      				      jsonData.FullName +
-      				    "</p>" +
-      				    "<div style=\"display: flex; align-items: center;\">" +
-      				      "<img src=\"" + jsonData.avatar + "\" alt=\"\" style=\"border-radius: 50%; width: 40px; height: 40px;\">" +
-      				      "<div class=\"message received\" style=\"display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;\">" +
-      				        "<p class=\"time\" style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0;\">" +
-      				          jsonData.SentAt +
-      				        "</p>" +
-      				        "<p class=\"mb-0\" style=\"text-align: justify; margin: 0;\">" +
-      				          jsonData.message +
-      				        "</p>" +
-      				      "</div>" +
-      				    "</div>" +
-      				  "</div>"
-      				);
+        				  "<div style=\"display: flex; flex-direction: column;\">" +
+        				    "<div class=\"message sent\" style=\"display: flex; flex-direction: column; justify-content: flex-end;\">" +
+        				      "<p style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0; align-self: flex-start;\">" + jsonData.SentAt + "</p>" +
+        				      "<img src=\"images/" + jsonData.message + "?v=" + new Date().getTime() + "\" style=\"max-width: 300px; height: auto;\">" +
+        				    "</div>" +
+        				  "</div>"
+        				);
+        	} 
+        	}else{
+        		if(jsonData.Status==="text"){
+        			messElement.insertAdjacentHTML("beforeend",
+            				  "<div style=\"display: flex; flex-direction: column;\">" +
+            				    "<p class=\"sender-name\" style=\"text-align: left; margin: 0 0 4px 0;\">" +
+            				      jsonData.FullName +
+            				    "</p>" +
+            				    "<div style=\"display: flex; align-items: center;\">" +
+            				      "<img src=\"" + jsonData.avatar + "\" alt=\"\" style=\"border-radius: 50%; width: 40px; height: 40px;\">" +
+            				      "<div class=\"message received\" style=\"display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;\">" +
+            				        "<p class=\"time\" style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0;\">" +
+            				          jsonData.SentAt +
+            				        "</p>" +
+            				        "<p class=\"mb-0\" style=\"text-align: justify; margin: 0;\">" +
+            				          jsonData.message +
+            				        "</p>" +
+            				      "</div>" +
+            				    "</div>" +
+            				  "</div>"
+            				);
+        		}else if(jsonData.Status==="file"){
+        			console.log("Đây là file");
+        			messElement.insertAdjacentHTML("beforeend",
+        				    "<div style=\"display: flex; flex-direction: column;\">" +
+        				      "<p class=\"sender-name\" style=\"text-align: left; margin: 0 0 4px 0;\">" + jsonData.FullName + "</p>" +
+        				      "<div style=\"display: flex; align-items: center;\">" +
+        				        "<img src=\"" + jsonData.avatar + "\" alt=\"\" style=\"border-radius: 50%; width: 40px; height: 40px;\">" +
+        				        "<div class=\"message received\" style=\"display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;\">" +
+        				          "<p class=\"time\" style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0;\">" + jsonData.SentAt + "</p>" +
+        				          "<a class=\"file-link\" href=\"files/" + jsonData.message + "\" download style=\"text-decoration: none; color: #333;\">" +
+        				            "📄 " + jsonData.message +
+        				          "</a>" +
+        				        "</div>" +
+        				      "</div>" +
+        				    "</div>"
+        				  );
+        		}else{
+        			messElement.insertAdjacentHTML("beforeend",
+        				    "<div style=\"display: flex; flex-direction: column;\">" +
+        				      "<p class=\"sender-name\" style=\"text-align: left; margin: 0 0 4px 0;\">" + jsonData.FullName + "</p>" +
+        				      "<div style=\"display: flex; align-items: center;\">" +
+        				        "<img src=\"" + jsonData.avatar + "\" alt=\"\" style=\"border-radius: 50%; width: 40px; height: 40px;\">" +
+        				        "<div class=\"message received\" style=\"display: flex; flex-direction: column; justify-content: flex-end; margin-left: 8px;\">" +
+        				          "<p class=\"time\" style=\"font-size: 0.75rem; color: gray; margin: 0 0 4px 0;\">" + jsonData.SentAt + "</p>" +
+        				          "<img src=\"images/" + jsonData.message  + "\" style=\"max-width: 300px; height: auto;\">" +
+        				        "</div>" +
+        				      "</div>" +
+        				    "</div>"
+        				  );
+        		}
+        		
         }
       messElement.scrollTop = messElement.scrollHeight;
     };

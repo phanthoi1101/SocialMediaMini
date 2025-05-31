@@ -14,5 +14,8 @@ public class Post_UserBo {
 	public ArrayList<Post_User> getPost_UserByUserId(int userID) {
 		return post_userDao.getPost_UserByUserID(userID);
 	}
+	public ArrayList<Post_User> getAllPost_UserIsFriendByUserId(int UserID){
+		return post_userDao.getAllPost_UserIsFriendByUserId(UserID);
+	}
 	
 }

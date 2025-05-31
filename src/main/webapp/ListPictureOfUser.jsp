@@ -74,7 +74,7 @@
                         </div>	
 						    <ul class="dropdown-menu">
 						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
-						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+						      <li><a class="dropdown-item" href="ChangePasswordController">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>
 						  </div>
@@ -108,7 +108,6 @@
             </div>
             <div class="profile-name-info">
                 <h1 class="profile-name"><%=currentUser.getFullName() %></h1>
-                <div class="profile-friends">239 người bạn</div>
             </div>
            
         </div>
@@ -123,9 +122,6 @@
             <button name="banBe" style="all: unset;  cursor: pointer;"><div class="nav-item <%= ProfileActive=="friend" ? "active" : ""%>">Bạn bè</div></button>
             <button name="anh" style="all: unset;  cursor: pointer;"><div class="nav-item <%= ProfileActive=="photo" ? "active" : ""%>">Anh</div></button>
             </form>
-            <div class="nav-item nav-more">
-                <i class="bi bi-three-dots"></i>
-            </div>
         </div>
     </div>
     </div>

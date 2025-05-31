@@ -22,6 +22,7 @@ import Post_UserModal.Post_UserBo;
 import PostsModal.Posts;
 import PostsModal.PostsBo;
 import UserModal.User;
+import UserModal.UserBo;
 
 /**
  * Servlet implementation class HomePageController
@@ -54,7 +55,7 @@ public class HomePageController extends HttpServlet {
 		session.setAttribute("dsLike", dsLike);
 		//Lấy danh sách post_User
 		Post_UserBo post_userBo = new Post_UserBo();
-		dsPost_User = post_userBo.getPost_User();
+		dsPost_User = post_userBo.getAllPost_UserIsFriendByUserId(currentUser.getUserID());
 		session.setAttribute("dsPost_User", dsPost_User);
 		session.setAttribute("homeActive", "home");
 		//ds bạn bè của user

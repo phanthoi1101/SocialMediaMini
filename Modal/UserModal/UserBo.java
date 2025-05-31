@@ -10,6 +10,12 @@ public class UserBo {
 	public User getUserById(int id) {
 		return userDao.getUserById(id);
 	}
+	public User getUserByEmail(String email) {
+		return userDao.getUserByEmail(email);
+	}
+	public User getUserByUsername(String username) {
+		return userDao.getUserByUsername(username);
+	}
 	public ArrayList<User> getUserByRoomID(int roomID){
 		return userDao.getUserByRoomId(roomID);
 	}
@@ -74,5 +80,8 @@ public class UserBo {
 				return true;
 		}
 		return false;
+	}
+	public int ChangePassword(int userid, String password) {
+		return userDao.ChangePassword(password, userid);
 	}
 }

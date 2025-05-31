@@ -26,7 +26,7 @@
         ArrayList<Post_User> dsPost_User = (ArrayList<Post_User>)session.getAttribute("dsPost_User"); 
         ArrayList<Like> dsLike = (ArrayList<Like>)session.getAttribute("dsLike");
         int index = 0;
-        if(session.getAttribute("dsLike")!=null){
+        if(session.getAttribute("dsPost_User")!=null){
         	index = dsPost_User.size();
         }
         %>
@@ -111,7 +111,7 @@
 		    </div>
 	  	</div>
                     <%if(index==0){ %>
-                    <div class="text-center text-danger"><h4>Không có bài viết được hiển thị</h4></div>
+                    <div class="text-center "><h4>Thêm bạn bè để xem được nhiều bài viết hơn từ bạn bè!</h4></div>
                     <%}else{ %>
                     	<div class="feed">
                         <!-- Post -->
@@ -125,15 +125,15 @@
 	                                   	<p class="post-time"><%=dsPost_User.get(i).getTimePost() %></p>
 	                                </a>
                                 </div>
-								<div class="dropdown">
-                                    <button class="btn" type="button" data-bs-toggle="dropdown">
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li>
-                                        <li><a class="dropdown-item" href="#">Báo cáo</a></li>
-                                    </ul>
-                                </div>
+<!-- 								<div class="dropdown"> -->
+<!--                                     <button class="btn" type="button" data-bs-toggle="dropdown"> -->
+<!--                                         <i class="bi bi-three-dots"></i> -->
+<!--                                     </button> -->
+<!--                                     <ul class="dropdown-menu"> -->
+<!--                                         <li><a class="dropdown-item" href="#">Ẩn bài viết</a></li> -->
+<!--                                         <li><a class="dropdown-item" href="#">Báo cáo</a></li> -->
+<!--                                     </ul> -->
+<!--                                 </div> -->
                             </div>
                             <div class="post-content">
                                 <%if(dsPost_User.get(i).getContent()!=null){ %>
@@ -221,7 +221,7 @@
                            <%} 
                         		}
                            }else{%>
-                           <div class="text-center text-danger mt-4">
+                           <div class="text-center mt-4">
                            		<h5>Không tìm thấy người dùng</h5>
                            </div>
                            <%} %>
@@ -326,9 +326,18 @@
 	    	            }
 	    	            console.log("Dữ liệu nhận từ server:", response);
 						$(".username").text(response.postUser.username);
-						$(".content").text(response.postUser.content);
+						if(response.postUser.content==null){
+							$(".model-content").hide();
+						}else{
+							$(".content").text(response.postUser.content);
+						}
 						$(".likecount").text(response.postUser.likeCount);
-						$(".image").attr("src", response.postUser.image);
+						if(response.postUser.image==null){
+							$(".model-image").hide();
+						}else{
+							$(".image").attr("src", response.postUser.image);
+						
+						}
 						$(".avatar").attr("src", response.postUser.avatar);
 						displayComment(response.comment);
 						$("#modalcomment").addClass("show d-block");

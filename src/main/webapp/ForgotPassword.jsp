@@ -19,110 +19,14 @@
             --fb-hover: #e4e6e9;
             --fb-border: #dddfe2;
         }
-        
         body {
             background-color: var(--fb-bg);
             font-family: Helvetica, Arial, sans-serif;
-        }
-        /* Facebook header */
-            .fb-header {
-                background-color: white;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-                position: sticky;
-                top: 0;
-                z-index: 1000;
-                padding: 8px 16px;
-            }
-            
-            .fb-logo {
-                color: var(--fb-blue);
-                font-size: 40px;
-            }
-            
-            .search-input {
-                background-color: var(--fb-bg);
-                border-radius: 50px;
-                padding: 8px 16px;
-                width: 240px;
-                border: none;
-            }
-            
-            .nav-icon {
-                color: #65676b;
-                font-size: 20px;
-                padding: 10px 40px;
-                border-bottom: 3px solid transparent;
-            }
-            
-            .nav-icon.active {
-                color: var(--fb-blue);
-                border-bottom: 3px solid var(--fb-blue);
-            }
-            
-            .profile-icon {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                background-color: #ddd;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }           
+        }      
 	</style>
 </head>
 <body class="bg-light">
-<!-- Header  -->
-<div class="fb-header">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-3 d-flex align-items-center">
-                       <img style="width: 50px; height: 50px" src="images/logo.avif" class="fs-1 me-2 text-primary">
-                        <div class="position-relative">
-                            <form action="SearchUser" method="get">
-                            <input type="text" class="search-input ps-4" placeholder="Tìm kiếm người dùng" name="searchUser">
-                            <button type="submit" style="position: absolute;top: 50%;right: 10px;
-																				  transform: translateY(-50%);
-																				  background: none;
-																				  border: none;
-																				  padding: 0;
-																				  margin: 0;
-																				  cursor: pointer;
-																				  color: #333; /* hoặc text-primary */">
-				                <i class="fas fa-search"></i> <!-- Font Awesome icon -->
-				            </button>
-                            </form>
-                        </div>
-                    </div>
-                    <div id="homeParent" class="col-6 d-flex justify-content-center">
-                        <div id="home" class="nav-icon" onclick="homeActive(this.id)"><i class="bi bi-house-door-fill"></i></div>
-                        <div class="nav-icon"></div>
-                        <div id="friend" class="nav-icon" onclick="homeActive(this.id)"><i class="bi bi-people"></i></div>
-                    </div>
-                    <div class="col-3 d-flex justify-content-end align-items-center">
-                        <a style="all:none;cursor: pointer; color: #333;" href="MessageController?message=1">
-                            <div class="profile-icon me-2">
-                            <i class="bi bi-messenger"></i>
-                        	</div>
-                        </a>
-                        <div class="me-2">
-                           
-                        </div>
-                        <div class="dropdown">						    
-						      <div class="profile-icon dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i>
-                        </div>	
-						    <ul class="dropdown-menu">
-						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
-						      <li><a class="dropdown-item" href="ChangePasswordController">Đổi mật khẩu</a></li>
-						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
-						    </ul>
-						  </div>
-						</div>
-                    </div>
-                </div>
-            </div>
-  
-  <%User currentUser = (User)session.getAttribute("User"); %>          
+        
             <!-- Main -->
 <div class="container py-5">
   <div class="row justify-content-center">
@@ -133,15 +37,20 @@
 
           <!-- STEP 1: Hiển thị email và gửi OTP -->
           <div id="step1">
-            <div class="mb-3">
-              <div class="text-center"><label class="form-label">Xác nhận gửi mã OTP để tiếp tục</label></div>
-              <input id="email" type="email" class="form-control" value="<%=currentUser.getEmail() %>" readonly>
+          <div class="mb-3">
+              <label for="email" class="form-label">Email của bạn</label>
+              <input type="email" class="form-control" id="email" placeholder="Nhập email đã đăng ký">
+              <div id="email-error" class="text-danger mt-1" style="display:none;">Email không hợp lệ.</div>
             </div>
             <div class="d-grid">
-              <button class="btn btn-primary" onclick="goToStep2()">Gửi mã OTP</button>
-            </div>
+              <button id="otpBtn" class="btn btn-primary" onclick="goToStep2()">Gửi mã OTP</button>
+           </div>
+           <div id="loadingSpinner" class="text-center my-2 d-none">
+				  <div class="spinner-border text-primary" role="status">
+				    <span class="visually-hidden">Loading...</span>
+				  </div>
+				</div>
           </div>
-
           <!-- STEP 2: Nhập OTP -->
           <div id="step2" class="d-none">
             <div class="mb-3">
@@ -152,7 +61,6 @@
               <button class="btn btn-success" onclick="goToStep3()">Xác nhận</button>
             </div>
           </div>
-
           <!-- STEP 3: Đổi mật khẩu -->
           <div id="step3" class="d-none">
             <div class="mb-3">
@@ -170,7 +78,6 @@
               <button class="btn btn-danger" onclick="ChangePassword()">Đổi mật khẩu</button>
             </div>
           </div>
-
           <!-- Status -->
           <div id="status" class="text-center text-danger mt-3"></div>
 
@@ -184,24 +91,63 @@
 <script>
 //Đổi mật khẩu
 function goToStep2() {
-	let email = document.getElementById("email").value;
-	$.ajax({
-	    url: "SendOtpService",
-	    method: "POST",
-	    data: {
-	        email: email // gửi dữ liệu email
-	    },
-	    success: function(response) {
-	        console.log("OTP sent successfully:", response);
-	    },
-	    error: function(xhr, status, error) {
-	        console.error("Error sending OTP:", error);
-	    }
-	});
-    document.getElementById("step1").classList.add("d-none");
-    document.getElementById("step2").classList.remove("d-none");
-    localStorage.setItem('changePassStep', '2');
+  const emailInput = document.getElementById("email");
+  const email = emailInput.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const errorDiv = document.getElementById("email-error");
+  const spinner = document.getElementById("loadingSpinner");
+  const otpBtn = document.getElementById("otpBtn");
+
+  // Reset trạng thái cũ
+  emailInput.classList.remove("is-invalid");
+  if (errorDiv) errorDiv.style.display = "none";
+
+  // Kiểm tra định dạng email
+  if (!emailRegex.test(email)) {
+    emailInput.classList.add("is-invalid");
+    if (errorDiv) {
+      errorDiv.innerText = "Email không hợp lệ. Vui lòng kiểm tra lại.";
+      errorDiv.style.display = "block";
+    }
+    return;
   }
+
+  // Hiện spinner và disable nút
+  spinner.classList.remove("d-none");
+  otpBtn.disabled = true;
+
+  // Gửi OTP qua AJAX
+  $.ajax({
+    url: "SendOtpService",
+    method: "POST",
+    data: { email: email },
+    success: function (response) {
+      console.log("OTP sent successfully:", response);
+
+      // Ẩn spinner, enable lại nút
+      spinner.classList.add("d-none");
+      otpBtn.disabled = false;
+
+      // Chuyển sang bước tiếp theo
+      document.getElementById("step1").classList.add("d-none");
+      document.getElementById("step2").classList.remove("d-none");
+      localStorage.setItem('changePassStep', '2');
+    },
+    error: function (xhr, status, error) {
+      console.error("Lỗi khi gửi OTP:", error);
+
+      // Ẩn spinner, enable lại nút
+      spinner.classList.add("d-none");
+      otpBtn.disabled = false;
+
+      if (errorDiv) {
+        emailInput.classList.add("is-invalid");
+        errorDiv.innerText = "Gửi OTP thất bại. Vui lòng thử lại.";
+        errorDiv.style.display = "block";
+      }
+    }
+  });
+}
 
   function goToStep3() {
     const otp = document.getElementById("otpCode").value;
@@ -220,12 +166,9 @@ function goToStep2() {
 	    		document.getElementById("status").textContent = "";
 		        document.getElementById("step2").classList.add("d-none");
 		        document.getElementById("step3").classList.remove("d-none");
-		        localStorage.setItem('changePassStep', '3');
 	    	}else {
 	    		alert(response.message);
 	    		document.getElementById("step2").classList.add("d-none");
-	    		document.getElementById("step1").classList.remove("d-none");
-	    		localStorage.setItem('changePassStep', '1');
 	    	}
 	    },
 	    error: function(xhr, status, error) {
@@ -275,14 +218,14 @@ function goToStep2() {
 
 	  // Nếu hợp lệ, gọi Ajax
 	  $.ajax({
-	    url: "ChangePasswordController",
+	    url: "ForgotPasswordController",
 	    method: "POST",
 	    data: {
 	      Password: newPassword,
 	    },
 	    success: function(response) {
 	      alert(response.message || "Đổi mật khẩu thành công!");
-	      window.location.href = "HomePageController";
+	      window.location.href = "DangNhapController";
 	    },
 	    error: function(xhr, status, error) {
 	      console.error("Lỗi:", error);
@@ -291,6 +234,9 @@ function goToStep2() {
 	    }
 	  });
 	}
+	  
+	 
+
   
   //Load lại trang
 //   function loadStep() {
@@ -307,27 +253,6 @@ function goToStep2() {
 // 	// Gọi hàm loadStep khi trang được load
 // 	window.onload = loadStep;
 
-
-
-//HomeActive
-function homeActive(id){
-	const icons = document.querySelectorAll('.nav-icon');
-	icons.forEach(function (icon) {
-		icon.classList.remove('active');
-	});
-	 // Thêm class 'active' vào thẻ có id được click
-    const activeElement = document.getElementById(id);
-    if (activeElement) {
-      activeElement.classList.add('active');
-    }
-    if(id==="home"){
-    	window.location.href = "HomePageController";
-    }
-    if(id==="friend"){
-    	window.location.href = "FriendController";
-    }
-    
-} 
 
 </script>
 

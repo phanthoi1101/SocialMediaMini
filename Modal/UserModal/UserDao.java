@@ -98,6 +98,64 @@ public class UserDao {
 			return null;
 		}
 	}
+	public User getUserByEmail(String email){
+		try {
+			User user = new User();
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "select * from Users where Email = ?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setString(1, email);
+			ResultSet rs = cmd.executeQuery();
+			while(rs.next()) {
+				int userid = rs.getInt("UserID");
+				String username = rs.getString("Username");
+				String Email = rs.getString("Email");
+				String password = rs.getString("PasswordHash");
+				String fullname = rs.getString("FullName");
+				String avater = rs.getString("Avatar");
+				java.util.Date createdat = rs.getDate("CreatedAt");
+				String photoCover = rs.getString("PhotoCover");
+				user = new User(userid, username, Email, password, fullname, avater, photoCover, createdat);
+			}
+			kn.cn.close();
+			rs.close();
+			return user;
+		} catch (Exception e) {
+			System.out.println("Wrong Get User By Email"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public User getUserByUsername(String username){
+		try {
+			User user = new User();
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "select * from Users where UserName = ?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setString(1, username);
+			ResultSet rs = cmd.executeQuery();
+			while(rs.next()) {
+				int userid = rs.getInt("UserID");
+				String Email = rs.getString("Email");
+				String password = rs.getString("PasswordHash");
+				String fullname = rs.getString("FullName");
+				String avater = rs.getString("Avatar");
+				java.util.Date createdat = rs.getDate("CreatedAt");
+				String photoCover = rs.getString("PhotoCover");
+				user = new User(userid, username, Email, password, fullname, avater, photoCover, createdat);
+			}
+			kn.cn.close();
+			rs.close();
+			return user;
+		} catch (Exception e) {
+			System.out.println("Wrong Get User By Username"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public User getUserByDangNhap(String username, String password){
 		try {
 			User user = new User();
@@ -235,6 +293,24 @@ public class UserDao {
 			System.out.println("Wrong Get User Is not Friend"+e.getMessage());
 			e.printStackTrace();
 			return null;
+		}
+	}
+	public int ChangePassword(String password , int userId) {
+		try {
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "update Users\r\n"
+					+ "set PasswordHash = ?\r\n"
+					+ "where UserID=?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(2, userId);
+			cmd.setString(1, password);
+			int x = cmd.executeUpdate();
+			return x;
+		} catch (Exception e) {
+			System.out.println("Update password is error   "+e.getMessage());
+			e.printStackTrace();
+			return 0;
 		}
 	}
 }

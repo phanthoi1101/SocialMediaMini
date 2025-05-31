@@ -78,7 +78,7 @@
                         </div>	
 						    <ul class="dropdown-menu">
 						      <li><a class="dropdown-item" href="ProfileController">Trang cá nhân</a></li>
-						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+						      <li><a class="dropdown-item" href="ChangePasswordController">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>
 						  </div>
@@ -155,9 +155,10 @@
             <div class="photo-tabs">
             </div>
         </div>
+        <%if(check.equals("huyketban")){ %>
         <%if(index==0){ %>
-        	<div class="photo-gird text-center text-danger">
-        		<h3>Không có ảnh trong album</h3>
+        	<div class="photo-gird text-center ">
+        		Không có ảnh trong album
         	</div>
         <%}else{ %>
         <div class="photo-grid">
@@ -170,6 +171,9 @@
             
             
         </div>
+        <%} %>
+        <%}else{ %>
+        <div class="text-center">Thêm bạn bè để có thể xem ảnh!</div>
         <%} %>
     </div>
 

@@ -37,7 +37,11 @@ public class PostsDao {
 		try {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
-			String sql = "select * from Posts where UserID = ? order by CreatedAt desc";
+			String sql = "SELECT *\r\n"
+					+ "FROM Posts\r\n"
+					+ "WHERE UserID = ?\r\n"
+					+ "  AND Image IS NOT NULL\r\n"
+					+ "ORDER BY CreatedAt DESC;";
 			PreparedStatement cmd = kn.cn.prepareStatement(sql);
 			cmd.setInt(1, userId);
 			ResultSet rs = cmd.executeQuery();

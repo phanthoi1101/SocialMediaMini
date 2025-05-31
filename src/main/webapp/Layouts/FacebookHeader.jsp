@@ -44,7 +44,7 @@
 				
 						    <ul class="dropdown-menu">
 						      <li><a class="dropdown-item" href="ProfileController?id=<%=currentUser.getUserID()%>">Trang cá nhân</a></li>
-						      <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+						      <li><a class="dropdown-item" href="ChangePasswordController">Đổi mật khẩu</a></li>
 						      <li><a class="dropdown-item" href="DangXuatController">Đăng xuất</a></li>
 						    </ul>
 						  </div>

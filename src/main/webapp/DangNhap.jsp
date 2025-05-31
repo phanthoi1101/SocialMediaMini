@@ -53,7 +53,10 @@
 		<%if(message!=null){%>
 			<div class="text-center text-danger mb-4" style="font-size: 14px"><%=message %></div>
 		<% }%>
-      <div class="d-grid">
+		<div class="forgot-link mt-3 text-center">
+        <a href="ForgotPasswordController" class="text-primary "> Quên mật khẩu?
+      </div>
+      <div class="d-grid mt-3">
         <button type="submit" class="btn btn-primary">Đăng nhập</button>
       </div>
 		

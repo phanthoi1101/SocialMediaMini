@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import DangNhapModal.DangNhapBo;
 import UserModal.User;
+import UserModal.UserBo;
+import dto.ConvertData;
 
 /**
  * Servlet implementation class DangNhapController
@@ -35,15 +37,19 @@ public class DangNhapController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		User user = new User();
 		DangNhapBo dnBo = new DangNhapBo();
-		user = dnBo.checkDn(username, password);
-		if(user == null || user.getUserID()==0) {
-			if(username==null && password==null) {
-				RequestDispatcher rd = request.getRequestDispatcher("DangNhap.jsp");
-				rd.forward(request, response);
-				return;
-			}
+		ConvertData cv = new ConvertData();
+		UserBo uBo = new UserBo();
+		boolean checkdn = false;
+		User user = uBo.getUserByUsername(username);
+		if(password == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("DangNhap.jsp");
+			rd.forward(request, response);
+			return;
+		}else {
+			checkdn = cv.checkMatKhau(password,user.getPasswordHash());
+		}
+		if(!checkdn) {
 			String req = "Tên đăng nhập hoặc mật khẩu không chính xác";
 			request.setAttribute("message", req);
 			RequestDispatcher rd = request.getRequestDispatcher("DangNhap.jsp");

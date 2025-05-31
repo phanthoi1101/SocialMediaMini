@@ -54,15 +54,15 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
             </div>
             
             <ul class="fb-sidebar-menu">
+            <a href="HomePageController" class="sidebar-item" style="text-decoration: none; /* Xoá gạch chân */      														color: inherit;">
                 <li class="fb-sidebar-item">
                     <div class="fb-sidebar-icon">
                         <i class="bi bi-house-door-fill"></i>
                     </div>
-                    <a href="HomePageController" class="sidebar-item" style="text-decoration: none; /* Xoá gạch chân */ 
-                    														color: inherit;">
                     	<div class="fb-sidebar-text">Trang chủ</div>
-                    </a>
+
                 </li>
+                </a>
                 <li class="fb-sidebar-item active">
                     <div class="fb-sidebar-icon gray">
                         <i class="bi bi-person-plus-fill"></i>
@@ -95,9 +95,6 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
 	                    <div class="fb-request-info">
 	                        <div class="fb-request-name"><%=user.getFullName()%></div>
 	                        <div class="fb-request-mutual">
-	                            <div class="fb-request-mutual-icon">
-	                                <i class="bi bi-people-fill"></i>
-	                            </div>
 	                        </div>
 	                        <div class="fb-request-actions">
 	                            <form action="FriendController" method="get" style="all: unset;display: contents;">
@@ -129,9 +126,6 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
 	                    <div class="fb-request-info">
 	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getFullName()%></div>
 	                        <div class="fb-request-mutual">
-	                            <div class="fb-request-mutual-icon">
-	                                <i class="bi bi-people-fill"></i>
-	                            </div>
 	                        </div>
 	                        <div class="fb-request-actions">
 	                            <form action="FriendController" method="get" style="all: unset;display: contents;">
@@ -147,9 +141,6 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
 	                    <div class="fb-request-info">
 	                        <div class="fb-request-name"><%=lstIsNotFriend.get(i).getFullName()%></div>
 	                        <div class="fb-request-mutual">
-	                            <div class="fb-request-mutual-icon">
-	                                <i class="bi bi-people-fill"></i>
-	                            </div>
 	                        </div>
 	                        <div class="fb-request-actions">
 	                            <form action="FriendController" method="get" style="all: unset;display: contents;">

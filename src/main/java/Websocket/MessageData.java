@@ -34,6 +34,4 @@ public class MessageData {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-    
-    
 }
