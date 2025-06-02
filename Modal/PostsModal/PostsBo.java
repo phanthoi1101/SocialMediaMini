@@ -14,4 +14,10 @@ public class PostsBo {
 	public int CreatePost(int userID , String Content , String Image) {
 		return pDao.CreatePost(Content, Image, userID);
 	}
+	public int UpdatePost(int postId, String content, String image) {
+		return pDao.UpdatePost(postId, content, image);
+	}
+	public int DeletePostByPostID(int postID) {
+		return pDao.DeletePostByPostID(postID);
+	}
 }

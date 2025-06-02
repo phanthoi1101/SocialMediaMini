@@ -9,6 +9,22 @@ import KetNoiModal.KetNoi;
 
 public class PostsDao {
 	ArrayList<Posts> ds = new ArrayList<Posts>();
+	public int DeletePostByPostID(int postId) {
+		try {
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "delete Posts where PostID=?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(1, postId);
+			int x = cmd.executeUpdate();	
+			kn.cn.close();
+			return x;
+		} catch (Exception e) {
+			System.out.println("Delete Post By PostID "+e.getMessage());
+			e.printStackTrace();
+			return 0;
+		}
+	}
 	public ArrayList<Posts> getPost(){
 		try {
 			KetNoi kn = new KetNoi();
@@ -60,6 +76,62 @@ public class PostsDao {
 			System.out.println("Wrong Get Posts by UserID"+e.getMessage());
 			e.printStackTrace();
 			return null;
+		}
+	}
+	public int UpdatePost(int postID, String contentString , String image) {
+		try {
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql;
+			if(contentString.trim()=="") {
+				if(image==null) {
+					sql = "update Posts\r\n"
+							+ "set Content=null\r\n"
+							+ "where PostID = ?";
+					PreparedStatement cmd = kn.cn.prepareStatement(sql);
+					cmd.setInt(1, postID);
+					int x = cmd.executeUpdate();
+					kn.cn.close();
+					return x;
+				}else {
+					sql = "update Posts\r\n"
+							+ "set Content=null,\r\n"
+							+ " Image = ?\r\n"
+							+ "where PostID = ?";
+					PreparedStatement cmd = kn.cn.prepareStatement(sql);
+					cmd.setString(1, image);
+					cmd.setInt(2, postID);
+					int x = cmd.executeUpdate();
+					kn.cn.close();
+					return x;
+				}
+			}else if(image==null) {
+				sql = "update Posts\r\n"
+						+ "set Content=?\r\n"
+						+ "where PostID = ?";
+				PreparedStatement cmd = kn.cn.prepareStatement(sql);
+				cmd.setString(1, contentString);
+				cmd.setInt(2, postID);
+				int x = cmd.executeUpdate();
+				kn.cn.close();
+				return x;
+			}else {
+				sql = "update Posts\r\n"
+						+ "set Content=?,\r\n"
+						+ "Image=?\r\n"
+						+ "where PostID = ?";
+				PreparedStatement cmd = kn.cn.prepareStatement(sql);
+				cmd.setString(1, contentString);
+				cmd.setString(2, image);
+				cmd.setInt(3, postID);
+				int x = cmd.executeUpdate();
+				kn.cn.close();
+				return x;
+			}
+		} catch (Exception e) {
+			System.out.println("update Bài Post : "+e.getMessage());
+			e.printStackTrace();
+			return 0;
 		}
 	}
 	public int CreatePost(String content, String image, int userId) {

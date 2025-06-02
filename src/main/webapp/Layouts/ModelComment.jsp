@@ -6,6 +6,7 @@
 if(session.getAttribute("postId")!=null){
 	postIdCurrent = (int)session.getAttribute("postId");
 }
+int parent = 0;
 %>
     	<div id="modalcomment" class="modal modal-backdrop " data-bs-backdrop="true" tabindex="-1" style="--bs-backdrop-opacity: 1;
                background-color: rgba(0, 0, 0, 0.5);">

@@ -233,7 +233,7 @@
 	    $.ajax({
 	        url: "CommentController",
 	        type: "POST",
-	        data: { postId: postId },
+	        data: { postId: postId},
 	        dataType: "json", // Xác định server trả về JSON
 	        success: function(response) {
 	            if (response.error) {
@@ -242,9 +242,18 @@
 	            }
 	            console.log("Dữ liệu nhận từ server:", response);
 				$(".username").text(response.postUser.username);
-				$(".content").text(response.postUser.content);
+				if(response.postUser.content==null){
+					$(".model-content").hide();
+				}else{
+					$(".content").text(response.postUser.content);
+				}
 				$(".likecount").text(response.postUser.likeCount);
-				$(".image").attr("src", response.postUser.image);
+				if(response.postUser.image==null){
+					$(".model-image").hide();
+				}else{
+					$(".image").attr("src", response.postUser.image);
+				
+				}
 				$(".avatar").attr("src", response.postUser.avatar);
 				displayComment(response.comment);
 	            $("#modalcomment").addClass("show d-block");
@@ -255,6 +264,7 @@
 	        }
 	    });}
   //Add thêm bình luận
+  //TODO: lúc nhấn vào phản hồi sẽ tiến hành lấy thằng id của thằng bình luận nhấn vào để làm parent
 	 function addcomment(postId, userId) {
 		postId = document.getElementById("postId").value;
 	    // Lấy nội dung trong textarea gần nhất với nút gửi
@@ -322,10 +332,7 @@
 	                            '<p class="comment-text">' + comment.content + '</p>' +
 	                        '</div>' +
 	                        '<div class="comment-actions">' +
-	                            '<span class="comment-action">Thích</span>' +
-	                            '<span class="comment-action">Phản hồi</span>' +
-	                            '<span class="comment-time">thời gian</span>' +
-	                            
+	                            '<span class="comment-action">Phản hồi</span>' +                
 	                        '</div>';
 	            for (var i = comments.length - 1; i >= 0; i--) {
 	                var cmt = comments[i];
@@ -345,9 +352,7 @@
 	                                        '<p class="reply-text">' + cmt.content + '</p>' +
 	                                    '</div>' +
 	                                    '<div class="reply-actions">' +
-	                                        '<span class="comment-action">Thích</span>' +
 	                                        '<span class="comment-action">Phản hồi</span>' +
-	                                        '<span class="comment-time">1 ngày</span>' +
 	                                    '</div>' +
 	                                '</div>' +
 	                            '</div>' +

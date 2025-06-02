@@ -20,6 +20,7 @@ import dto.ConvertData;
  * Servlet implementation class DangNhapController
  */
 @WebServlet("/DangNhapController")
+
 public class DangNhapController extends HttpServlet {
 	private static final long serialVersionUID = 1L; 
     /**
@@ -37,18 +38,20 @@ public class DangNhapController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		DangNhapBo dnBo = new DangNhapBo();
 		ConvertData cv = new ConvertData();
 		UserBo uBo = new UserBo();
-		boolean checkdn = false;
 		User user = uBo.getUserByUsername(username);
+		boolean checkdn = false;
 		if(password == null) {
 			RequestDispatcher rd = request.getRequestDispatcher("DangNhap.jsp");
 			rd.forward(request, response);
 			return;
 		}else {
-			checkdn = cv.checkMatKhau(password,user.getPasswordHash());
+			if(user.getUsername()!=null) {
+				checkdn = cv.checkMatKhau(password,user.getPasswordHash());
+			}
 		}
+		
 		if(!checkdn) {
 			String req = "Tên đăng nhập hoặc mật khẩu không chính xác";
 			request.setAttribute("message", req);

@@ -54,13 +54,13 @@
 			        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
 			    </form>
             </div>
-            <div class="profile-name-info" style="display: ruby;">
+        <div class="profile-name-info" style="display: ruby;">
                 <h1 class="profile-name"><%=currentUser.getFullName() %></h1>	
 		<button type="button" class="" style="all:unset;cursor: pointer;" data-bs-toggle="modal" data-bs-target="#changeUsernameModal">
 		  <i class="bi bi-pencil-fill fs-6 mx-2" style="cursor: pointer; color: #6c757d;"></i>
 		</button>
 		
-		<!-- Modal -->
+		<!-- Modal đổi tên người dùng-->
 		<div id="changeUsernameModal" class="modal fade" tabindex="-1" aria-labelledby="changeUsernameLabel" aria-hidden="true" style="margin-top: 10%">
 		  <div class="modal-dialog">
 		    <div class="modal-content" style="width:80%">
@@ -84,6 +84,58 @@
 		  </div>
 		</div>
 		<!-- Đóng modal -->
+		
+         <!-- Modal chỉnh sửa bài viết -->
+	   <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered modal-lg">
+	      <div class="modal-content rounded-4">
+	        <div class="modal-header border-0">
+	          <h5 class="modal-title mx-auto fw-bold" id="editPostModalLabel">Chỉnh sửa bài viết</h5>
+	          <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+	        </div>
+	
+	        <form id="editPostForm" enctype="multipart/form-data" method="post" action="/editPost">
+	          <div class="modal-body pt-0">
+	
+	            <!-- Avatar + tên người dùng -->
+	            <div class="d-flex align-items-center mb-3">
+	              <img src="<%=currentUser.getAvatar() %>" alt="avatar" class="rounded-circle me-2" width="40" height="40">
+	              <div><strong><%=currentUser.getFullName() %></strong></div>
+	            </div>
+	
+	            <!-- Nội dung -->
+	            <div class="mb-3">
+	              <textarea class="form-control border-0"
+	                        id="editPostContent"
+	                        name="content"
+	                        rows="4"
+	                        placeholder="Bạn đang nghĩ gì?"
+	                        style="resize: none; font-size: 1.2rem;"></textarea>
+	            </div>
+	            <!-- Ảnh hiện tại -->
+	            <div class="mb-3" id="currentImageContainer" style="display: none;">
+	              <img id="currentImage" src="" style="max-height: 200px;">
+	              <input type="hidden" id="oldImageUrl" name="oldImageUrl" value="">
+	            </div>
+	
+	            <!-- Chọn ảnh mới -->
+	            <div class="mb-3">
+	              <label for="editPostImage" class="form-label fw-bold">Chọn ảnh mới!</label>
+	              <input class="form-control" type="file" id="editPostImage" name="image" accept="image/*">
+	            </div>	
+	          </div>
+	
+	          <div class="modal-footer border-0">
+	            <button type="submit" class="btn btn-success w-100 fw-bold rounded-pill">Lưu thay đổi</button>
+	          </div>
+	        </form>
+	      </div>
+	    </div>
+	  </div>
+         
+         <!-- Đóng modal chỉnh sửa bài viết -->
+            
+            
             </div>
            
         </div>
@@ -114,7 +166,6 @@
 		          <h5 class="modal-title mx-auto fw-bold" id="fbPostModalLabel">Tạo bài viết</h5>
 		          <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
 		        </div>
-			
 		        <form id="fbPostForm" enctype="multipart/form-data">
 		          <div class="modal-body pt-0">
 		
@@ -131,7 +182,7 @@
 		            <div class="mb-3" id="content">
 		              <textarea class="form-control border-0" id="postContent" name="content" rows="5" placeholder="Bạn đang nghĩ gì?" style="resize: none; font-size: 1.2rem;"></textarea>
 		            </div>
-		
+		            
 		            <!-- Chọn ảnh -->
 		            <div class="mb-3">
 		              <label for="postImage" class="form-label fw-bold">Ảnh</label>
@@ -148,9 +199,7 @@
 		      </div>
 		    </div>
 	  	</div>
-            
-            
-            
+                    
             <div class="composer-actions">
                     <form action="ProfileNavigation" style="display: flex ;gap: 16px;">
                     	<button class="composer-action photo" name="anh" style="all: unset;  cursor: pointer;"><i class="bi bi-image"></i> Ảnh</button>
@@ -178,7 +227,8 @@
                                         <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Xoá bài viết</a></li>
+                                        <li><a class="dropdown-item" class="btn btn-warning px-4 py-2" onclick="openEditPostModal(<%=dsPost_UserById.get(i).getPostID()%>)">Chỉnh sửa bài viết</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="deletePost(<%= dsPost_UserById.get(i).getPostID() %>)">Gỡ bài viết</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -239,6 +289,115 @@
     
     <!-- Custom JavaScript for View Switching -->
     <script>
+    //deletePosst
+    function deletePost(postId) {
+    if (confirm("Bạn có chắc chắn muốn gỡ bài viết này không?")) {
+      window.location.href = "UpdatePostController?deleteId=" + postId;
+    }
+  }
+    
+    //Chỉnh sửa bài viết
+    function openEditPostModal(postId) {
+    window.currentPostId = postId;
+  $.ajax({
+    url:  '/SocialMedia/UpdatePostController',
+    type: 'GET',
+    data: {postId: postId},
+    dataType: 'json',
+    success: function(post_User) {
+      // Đổ dữ liệu vào modal
+      $('#editPostContent').val(post_User.Content || '');
+      if (post_User.Image) {
+        $('#currentImage').attr('src', post_User.Image);
+        $('#oldImageUrl').val(post_User.Image);
+        $('#currentImageContainer').show();
+      } else {
+        $('#currentImageContainer').hide();
+        $('#oldImageUrl').val('');
+      }
+       $('#editPostImage').val(''); // reset input file
+      // Hiển thị modal
+      const modal = new bootstrap.Modal(document.getElementById('editPostModal'));
+      modal.show();
+    },
+    error: function() {
+      alert('Lấy dữ liệu bài viết thất bại!');
+    }
+  });
+}
+    // Khi chọn ảnh mới
+    document.addEventListener("DOMContentLoaded", function () {
+  const fileInput = document.getElementById("editPostImage");
+  const currentImage = document.getElementById("currentImage");
+  const currentImageContainer = document.getElementById("currentImageContainer");
+
+  // Biến để lưu file đã chọn trước đó
+  let selectedFile = null;
+  fileInput.addEventListener("change", function () {
+    const file = this.files[0];
+
+    // Nếu có chọn file => cập nhật selectedFile
+    if (file) {
+      selectedFile = file; // lưu file vào biến tạm
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        currentImage.src = e.target.result;
+        currentImageContainer.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      console.log("Không có file được chọn. Giữ nguyên ảnh cũ.");
+    }
+  });
+
+  // Ví dụ khi submit form, bạn có thể truy cập selectedFile:
+  document.getElementById("editPostForm").addEventListener("submit", function (e) {
+    console.log("File cuối cùng sẽ gửi là:", selectedFile ? selectedFile.name : "Không có ảnh mới");
+      event.preventDefault();
+      const content = document.getElementById("editPostContent").value.trim();
+      const fileInput = document.getElementById("editPostImage");
+      const oldImageUrl = document.getElementById("oldImageUrl").value;	  
+      const postId = window.currentPostId || 0;
+      console.log("PostID là : "+ postId);
+      let image;
+      if (fileInput.files.length > 0) {
+    	  image = fileInput.files[0]; // file mới chọn
+    	} else {
+    	  if (selectedFile == null) {
+    	    image = null; // chưa chọn file nào mới
+    	  } else {
+    	    image = selectedFile; // giữ file đã chọn trước đó
+    	  }
+    	}
+      const formData = new FormData();
+      formData.append("postId", postId.toString());
+      formData.append("content", content);
+      formData.append("image", image);
+ 
+      $.ajax({
+        url: '/SocialMedia/UpdatePostController', // Đúng tên servlet hoặc đường dẫn bạn cấu hình
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          alert('Cập nhật thành công!');
+          // Reload hoặc cập nhật lại UI nếu cần
+        },
+        error: function () {
+          alert('Có lỗi xảy ra khi gửi dữ liệu!');
+        }
+      });
+	  
+      
+  });
+});
+    
+    
+    
+    //Submit dữ liệu chỉnh sửa bài viết
+
+    
     
  //Tạo bài đăng mới
  document.getElementById("fbPostForm").addEventListener("submit", function(e) {
@@ -366,9 +525,18 @@
 	            }
 	            console.log("Dữ liệu nhận từ server:", response);
 				$(".username").text(response.postUser.username);
-				$(".content").text(response.postUser.content);
+				if(response.postUser.content==null){
+					$(".model-content").hide();
+				}else{
+					$(".content").text(response.postUser.content);
+				}
 				$(".likecount").text(response.postUser.likeCount);
-				$(".image").attr("src", response.postUser.image);
+				if(response.postUser.image==null){
+					$(".model-image").hide();
+				}else{
+					$(".image").attr("src", response.postUser.image);
+				
+				}
 				$(".avatar").attr("src", response.postUser.avatar);
 				displayComment(response.comment);
 	            $("#modalcomment").addClass("show d-block");
@@ -446,17 +614,13 @@
 	                            '<p class="comment-text">' + comment.content + '</p>' +
 	                        '</div>' +
 	                        '<div class="comment-actions">' +
-	                            '<span class="comment-action">Thích</span>' +
-	                            '<span class="comment-action">Phản hồi</span>' +
-	                            '<span class="comment-time">thời gian</span>' +
-	                            
+	                            '<span class="comment-action">Phản hồi</span>' +                            
 	                        '</div>';
 	            for (var i = comments.length - 1; i >= 0; i--) {
 	                var cmt = comments[i];
 	                console.log("comment cha" + comment.commentID);
 	                console.log(cmt.parentID);
 	                if (cmt.parentID == comment.commentID) {
-	                	console.log("hello")
 	                    commentHTML += 
 	                        '<div class="reply-section">' +
 	                            '<div class="reply">' +
@@ -469,9 +633,7 @@
 	                                        '<p class="reply-text">' + cmt.content + '</p>' +
 	                                    '</div>' +
 	                                    '<div class="reply-actions">' +
-	                                        '<span class="comment-action">Thích</span>' +
 	                                        '<span class="comment-action">Phản hồi</span>' +
-	                                        '<span class="comment-time">1 ngày</span>' +
 	                                    '</div>' +
 	                                '</div>' +
 	                            '</div>' +
