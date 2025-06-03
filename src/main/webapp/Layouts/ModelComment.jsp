@@ -6,7 +6,6 @@
 if(session.getAttribute("postId")!=null){
 	postIdCurrent = (int)session.getAttribute("postId");
 }
-int parent = 0;
 %>
     	<div id="modalcomment" class="modal modal-backdrop " data-bs-backdrop="true" tabindex="-1" style="--bs-backdrop-opacity: 1;
                background-color: rgba(0, 0, 0, 0.5);">
@@ -63,12 +62,16 @@ int parent = 0;
                         
                     </div> 
                     <!-- Comment Input -->
-                    <div class="comment-input-section">
+                    <div class="comment-input-section" style="align-items: center;">
                         <div class="comment-input-avatar">
                         <!-- TODO: Add ảnh người đăng nhập -->
                             <img src="<%=currentUser.getAvatar() %>" alt="" style="width: 40px;height:40px">
                         </div>
                         <div class="comment-input-container">
+                        <div id="replying-to" style="display: none;" class="replying-bar">
+						  <span><strong id="replying-username"></strong></span>
+						  <button onclick="cancelReply()" style="border: none; background: none; color: red; margin-left: 10px;">Hủy</button>
+						</div>
                             <textarea class="comment-input" placeholder="Viết bình luận..." ></textarea>
                             <div class="comment-input-actions">
                              <button style="border: none;outline: none;background: none;" onclick="addcomment(<%=session.getAttribute("postId")%>,<%=currentUser.getUserID()%>)">

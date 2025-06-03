@@ -13,7 +13,7 @@ public class CommentContainDao {
 		try {
 			KetNoi kn = new KetNoi();
 			kn.KetNoi();
-			String sql = "select Comments.*,Users.Username,Users.Avatar\r\n"
+			String sql = "select Comments.*,Users.FullName,Users.Avatar\r\n"
 					+ "from Comments inner join Users on Comments.UserID=Users.UserID\r\n"
 					+ "where PostID = ?\r\n"
 					+ "order by CreatedAt desc";
@@ -26,10 +26,10 @@ public class CommentContainDao {
 				int userId = rs.getInt("UserID");
 				int parentId = rs.getInt("ParentID");
 				String content = rs.getString("Content");
-				String username = rs.getString("Username");
+				String fullname = rs.getString("FullName");
 				String avatar = rs.getString("Avatar");
 				java.sql.Date createdAt = rs.getDate("CreatedAt");
-				ds.add(new CommentContain(commentId, postId, userId, content, createdAt, parentId, username, avatar));
+				ds.add(new CommentContain(commentId, postId, userId, content, createdAt, parentId, fullname, avatar));
 			}
 			kn.cn.close();
 			rs.close();

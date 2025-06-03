@@ -63,7 +63,6 @@ public class CommentController extends HttpServlet {
             // Convert object Java thành JSON
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonResponse = objectMapper.writeValueAsString(postWithComment);
-
             // Gửi JSON về client
             response.getWriter().write(jsonResponse);
 

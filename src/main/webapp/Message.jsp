@@ -847,8 +847,6 @@ window.onload = function() {
 //       websocket.send(messageText.value);
 //       messageText.value = "";
 //     }
-    
-    
   //Thanh collapse
 const toggleBtn = document.getElementById('toggleSidebarBtn');
   const sidebar = document.getElementById('sidebar');
@@ -857,9 +855,6 @@ const toggleBtn = document.getElementById('toggleSidebarBtn');
     sidebar.classList.toggle('show');
     container.classList.toggle('shifted');
 });
-  
-  
-
   </script>
 </body>
 </html>

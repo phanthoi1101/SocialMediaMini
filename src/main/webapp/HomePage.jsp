@@ -1,5 +1,5 @@
-	<!-- <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%> -->
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
     <!DOCTYPE html>
     <%@page import="UserModal.UserBo"%>
 <%@page import="FriendshipModal.Friendship"%>
@@ -237,6 +237,19 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     	<script>
+    	let parentId = 0;
+    	
+    	//Lấy parentID
+    	function GuiPhanHoi(fullName,id){
+    		parentId = id;
+    		  document.getElementById("replying-to").style.display = "flex";
+    		  document.getElementById("replying-username").innerText = fullName;
+    		  // Tự động focus vào textarea khi nhấn phản hồi
+    	}
+    	function cancelReply() {
+    		  parentId = 0;
+    		  document.getElementById("replying-to").style.display = "none";
+    		}
     	//Tạo bài đăng mới
     document.getElementById("fbPostForm").addEventListener("submit", function(e) {
 	    e.preventDefault();
@@ -349,6 +362,7 @@
 	    	//Add thêm bình luận
 	    	 function addcomment(postId, userId) {
 	    		postId = document.getElementById("postId").value;
+	    		console.log("postId là "+postId);
 	    	    // Lấy nội dung trong textarea gần nhất với nút gửi
 	    	    const button = event.target.closest('button'); // Lấy button đang được bấm
 	    	    const container = button.closest('.comment-input-container'); // Lấy container cha
@@ -368,11 +382,12 @@
 	    	    // Ví dụ: Gửi bình luận đến server
 	    	    $.ajax({
 	    	        url: "AddCommentController",
-	    	        type: "POST",
+	    	        type: "GET",
 	    	        data: {
 	    	            postId: postId,
 	    	            userId: userId,
-	    	            content: content
+	    	            content: content,
+	    	            parentId: parentId
 	    	        },
 	    	        success: function(response) {
 	    	            textarea.value = ""; // Xóa nội dung sau khi gửi
@@ -380,8 +395,8 @@
 	    	                console.log("Lỗi: " + response.error);
 	    	                return;
 	    	            }
-	    	            console.log("Dữ liệu nhận từ server:", response);
-						$(".username").text(response.postUser.username);
+	    	            console.log("Dữ liệu nhận từ server:", response.comment);
+						$(".username").text(response.postUser.Username);
 						$(".content").text(response.postUser.content);
 						$(".likecount").text(response.postUser.likeCount);
 						$(".image").attr("src", response.postUser.image);
@@ -396,13 +411,13 @@
 	    	    });
 	    	} 
 	    	function displayComment(comments) {
+	    		console.log(comments);	
 	    	    var commentsContainer = $('#commentsContainer');
 	    	    commentsContainer.empty();
 	    	    var commentHTML = "";
 
 	    	    comments.forEach(function(comment) {
 	    	        if (comment.parentID === 0) {
-	    	            console.log(comment.username);
 	    	            commentHTML += 
 	    	                '<div class="comment">' +
 	    	                    '<div class="comment-avatar">' +
@@ -410,13 +425,13 @@
 	    	                    '</div>' +
 	    	                    '<div class="comment-content">' +
 	    	                        '<div class="comment-bubble">' +
-	    	                            '<div class="comment-author">' + comment.username + '</div>' +
+	    	                            '<div class="comment-author">' + comment.fullName + '</div>' +
 	    	                            '<p class="comment-text">' + comment.content + '</p>' +
 	    	                        '</div>' +
 	    	                        '<div class="comment-actions">' +
-	    	                            '<span class="comment-action">Phản hồi</span>' +   	                           
+	    	                        '<span class="comment-action" onclick="GuiPhanHoi(\'' + comment.fullName + '\',' + comment.commentID + ')">Phản hồi</span>' +   	                           
 	    	                 '</div>';
-	    	            /*for (var i = comments.length - 1; i >= 0; i--) {
+	    	            for (var i = comments.length - 1; i >= 0; i--) {
 	    	                var cmt = comments[i];
 	    	                console.log("comment cha" + comment.commentID);
 	    	                console.log(cmt.parentID);
@@ -426,27 +441,28 @@
 	    	                        '<div class="reply-section">' +
 	    	                            '<div class="reply">' +
 	    	                                '<div class="reply-avatar">' +
-	    	                                    '<img src="' + cmt.avatar + '" style="width: 40px;height: 40px" class="post-avatar">' +
+	    	                                '<img src="' + cmt.avatar + '" style="width: 40px;height: 40px" class="post-avatar">' +
 	    	                                '</div>' +
 	    	                                '<div class="reply-content">' +
 	    	                                    '<div class="reply-bubble">' +
-	    	                                        '<div class="reply-author">' + cmt.username + '</div>' +
+	    	                                        '<div class="reply-author">' + cmt.fullName + '</div>' +
 	    	                                        '<p class="reply-text">' + cmt.content + '</p>' +
 	    	                                    '</div>' +
 	    	                                    '<div class="reply-actions">' +
-	    	                                        '<span class="comment-action">Phản hồi</span>' +
 	    	                                        '<span class="comment-time">1 ngày</span>' +
 	    	                                    '</div>' +
 	    	                                '</div>' +
 	    	                            '</div>' +
 	    	                        '</div>';
 	    	                }
-	    	            }*/        
+	    	            }        
 	 		    	   commentHTML += '</div>' +
 	 	                '</div>';
 	    	        }
 	    	    });
+	    	    parentId=0;
 	    	    commentsContainer.append(commentHTML);
+	    	    
 	    	}
 		//Dóng modal
 	    	function closemodal(){

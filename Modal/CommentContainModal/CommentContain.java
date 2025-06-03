@@ -9,7 +9,7 @@ public class CommentContain {
 	private String Content;
 	private java.sql.Date CreatedAt;
 	private int ParentID;
-	private String Username;
+	private String FullName;
 	private String Avatar;
 	public int getCommentID() {
 		return CommentID;
@@ -47,11 +47,11 @@ public class CommentContain {
 	public void setParentID(int parentID) {
 		ParentID = parentID;
 	}
-	public String getUsername() {
-		return Username;
+	public String getFullName() {
+		return FullName;
 	}
-	public void setUsername(String username) {
-		Username = username;
+	public void setFullName(String FullName) {
+		this.FullName = FullName;
 	}
 	public String getAvatar() {
 		return Avatar;
@@ -60,7 +60,7 @@ public class CommentContain {
 		Avatar = avatar;
 	}
 	public CommentContain(int commentID, int postID, int userID, String content, java.sql.Date createdAt, int parentID,
-			String username, String avatar) {
+			String FullName, String avatar) {
 		super();
 		CommentID = commentID;
 		PostID = postID;
@@ -68,7 +68,7 @@ public class CommentContain {
 		Content = content;
 		CreatedAt = createdAt;
 		ParentID = parentID;
-		Username = username;
+		this.FullName = FullName;
 		Avatar = avatar;
 	}
 	public CommentContain() {
