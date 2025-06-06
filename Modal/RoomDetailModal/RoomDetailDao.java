@@ -56,4 +56,22 @@ public class RoomDetailDao {
 			return 0;
 		}
 	}
+	public int DeleteRoomDetail(int RoomId,int userId) {
+		try {
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "delete RoomDetail\r\n"
+					+ "where RoomID = ? and UserID=?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(1, RoomId);
+			cmd.setInt(2, userId);
+			int x = cmd.executeUpdate();
+			kn.cn.close();
+			return x;
+		} catch (Exception e) {
+			System.out.println("Tạo Room Detail Chat   "+e.getMessage());
+			e.printStackTrace();
+			return 0;
+		}
+	}
 }

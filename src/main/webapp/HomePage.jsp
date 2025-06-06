@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home Page</title>
+        <title>Trang chủ</title>
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
@@ -171,10 +171,19 @@
 								    <i class="bi bi-chat"></i>Bình luận
 								</button>
                                 </div>
+                                <%if(dsPost_User.get(i).getUserID()==currentUser.getUserID()){ %>
+                                <a href="MessageController?message=1" class="sidebar-item">
                                 <div class="post-action">
-                                    <i class="bi bi-share"></i>
-                                    Chia sẻ
+                                    <span style="color: black;">Nhắn tin</span>
                                 </div>
+                                </a>
+                                <%}else{ %>
+                                	<a href="MessageController?id=<%=dsPost_User.get(i).getUserID() %>" class="sidebar-item">
+	                                <div class="post-action">
+	                                    <span style="color: black;">Nhắn tin</span>
+	                                </div>
+	                                </a>
+                                <%} %>
                             </div>
                         </div>
                         <%} %>
@@ -368,8 +377,6 @@
 	    	    const container = button.closest('.comment-input-container'); // Lấy container cha
 	    	    const textarea = container.querySelector('.comment-input'); // Tìm textarea trong đó
 	    	    const content = textarea.value.trim(); // Lấy nội dung bình luận
-				console.log(button);
-	    	    console.log("contain cha "+ container);
 	    	    if (content === "") {
 	    	        alert("Vui lòng nhập bình luận.");
 	    	        return;
@@ -404,6 +411,7 @@
 						displayComment(response.comment);
 						console.log()
 	    	            $("#modalcomment").addClass("show d-block");
+						cancelReply();
 	    	        },
 	    	        error: function(xhr) {
 	    	            console.log("Lỗi khi gửi bình luận:", xhr.responseText);
@@ -449,7 +457,7 @@
 	    	                                        '<p class="reply-text">' + cmt.content + '</p>' +
 	    	                                    '</div>' +
 	    	                                    '<div class="reply-actions">' +
-	    	                                        '<span class="comment-time">1 ngày</span>' +
+// 	    	                                        '<span class="comment-time">1 ngày</span>' +
 	    	                                    '</div>' +
 	    	                                '</div>' +
 	    	                            '</div>' +

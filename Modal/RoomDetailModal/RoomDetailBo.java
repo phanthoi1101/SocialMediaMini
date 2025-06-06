@@ -8,4 +8,7 @@ public class RoomDetailBo {
 	public int CreateRoomDetail(int roomId, int userId) {
 		return rdDao.CreateRoomDetail(roomId, userId);
 	}
+	public int DeleteRoomDetail(int roomid , int userid) {
+		return rdDao.DeleteRoomDetail(roomid, userid);
+	}
 }

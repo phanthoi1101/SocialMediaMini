@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +16,7 @@ import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
 
+import LikeModal.LikeBo;
 import Post_UserModal.Post_User;
 import Post_UserModal.Post_UserBo;
 import PostsModal.Posts;
@@ -65,6 +67,9 @@ public class UpdatePostController extends HttpServlet {
 		}
 		if(request.getParameter("deleteId")!=null) {
 			int postId = Integer.parseInt(request.getParameter("deleteId"));
+			System.out.println(postId);		
+			LikeBo likeBo = new LikeBo();
+			likeBo.deleteLike(postId);
 			pBo.DeletePostByPostID(postId);
 			System.out.println("Xoá bài post thành công");
 			response.sendRedirect("ProfileController?id="+currentUser.getUserID());
@@ -135,7 +140,9 @@ public class UpdatePostController extends HttpServlet {
 	        System.out.println("Không có ảnh mới được gửi.");
 	    }
 	    // Gửi phản hồi về client
-	    response.setContentType("text/plain;charset=UTF-8");
-	    response.getWriter().write("Cập nhật thành công!");
+	    HttpSession session = request.getSession();
+	    User u = (User)session.getAttribute("User");
+	    response.sendRedirect("ProfileController?id="+u.getUserID());
+	    return;
 	}
 }

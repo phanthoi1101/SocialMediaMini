@@ -7,6 +7,9 @@ public class RoomBo {
 	public int getRoomId(int senderID , int ReceiverId) {
 		return roomDao.GetRoomID(senderID, ReceiverId);
 	}
+	public int UpdateStatus(int status , int roomId) {
+		return roomDao.UpdateStatus(status, roomId);
+	}
 	public ArrayList<Integer> getRoomIdByUserID(int userID){
 		return roomDao.GetRoomIDByUserId(userID);
 	}

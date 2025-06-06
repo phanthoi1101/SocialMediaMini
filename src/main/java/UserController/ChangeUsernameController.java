@@ -38,6 +38,8 @@ public class ChangeUsernameController extends HttpServlet {
 		User user = (User)session.getAttribute("User");
 		UserBo uBo = new UserBo();
 		uBo.updateFullname(user.getUserID(), newname);
+		User u = uBo.getUserById(user.getUserID());
+		session.setAttribute("User", u);
 		RequestDispatcher rd = request.getRequestDispatcher("Profile.jsp");
 		rd.forward(request, response);
 	}

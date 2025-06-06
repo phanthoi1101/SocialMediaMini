@@ -144,6 +144,24 @@ public class RoomDao {
 			return false;
 		}
 	}
+	public int UpdateStatus (int status , int roomid) {
+		try {
+			int x=0;
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "update Rooms set Status = ? where RoomID=?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(1, status);
+			cmd.setInt(2, roomid);
+			x = cmd.executeUpdate();
+			kn.cn.close();
+			return x;
+		} catch (Exception e) {
+			System.out.println("Update Status Room By roomId "+e.getMessage());
+			e.printStackTrace();
+			return 0;
+		}
+	}
 	public int selectRoomIdOf2User(int userid1, int userid2) {
 		try {
 			int x=0;

@@ -63,6 +63,8 @@ public class FriendRequestController extends HttpServlet {
 		}
 		if(request.getParameter("huyketban")!=null) {
 			fBo.DeleteFriendshipBySender_Receiver(userId, user);
+			int rId = rBo.getRoomId(userId, user);
+			rBo.UpdateStatus(0, rId);
 			System.out.println("Huỷ kết bạn thành công");
 		}
 		response.sendRedirect("ProfileController?id="+user);

@@ -14,4 +14,7 @@ public class LikeBo {
 	public ArrayList<Like> getLike(){
 		return likeDao.getLike();
 	}
+	public int deleteLike(int postId) {
+		return likeDao.deleteLike(postId);
+	}
 }

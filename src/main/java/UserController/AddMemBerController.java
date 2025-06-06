@@ -1,6 +1,8 @@
 package UserController;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -32,8 +34,17 @@ public class AddMemBerController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.setCharacterEncoding("UTF-8");
+		RoomDetailBo rdBo = new RoomDetailBo();
+		int userId = Integer.parseInt(request.getParameter("userId"));
+		int roomId = Integer.parseInt(request.getParameter("roomId"));
+		rdBo.DeleteRoomDetail(roomId, userId);
+		response.setContentType("application/json;charset=UTF-8");
+	    PrintWriter out = response.getWriter();
+	        out.print("{\"status\":\"success\", \"message\":\"Đã xoá thành viên.\"}");
+	        response.setStatus(HttpServletResponse.SC_OK); // 200
+	    out.flush();
+	    out.close();
 	}
 
 	/**

@@ -155,10 +155,12 @@
 								    <i class="bi bi-chat"></i>Bình luận
 								</button>
                                 </div>
-                                <div class="post-action">
-                                    <i class="bi bi-share"></i>
-                                    Chia sẻ
-                                </div>
+                                <a href="MessageController?id=<%=dsPost_UserById.get(i).getUserID() %>" class="sidebar-item" style="text-decoration: none;">
+	                                <div class="post-action">
+	                                    <span style="color: black;">Nhắn tin</span>
+	                                </div>
+	                                </a>
+
                             </div>
                         </div>
                         <%} %>
@@ -180,6 +182,20 @@
     
     <!-- Custom JavaScript for View Switching -->
     <script>
+    let parentId = 0;
+	
+	//Lấy parentID
+	function GuiPhanHoi(fullName,id){
+			parentId = id;
+		  document.getElementById("replying-to").style.display = "flex";
+		  document.getElementById("replying-username").innerText = fullName;
+		  // Tự động focus vào textarea khi nhấn phản hồi
+	}
+	function cancelReply() {
+		  parentId = 0;
+		  document.getElementById("replying-to").style.display = "none";
+		}
+    
     //Unfriend
     document.getElementById("Unfriend").addEventListener("submit", function(e) {
 	    const isConfirmed = confirm("Bạn có chắc chắn muốn huỷ kết bạn không?");
@@ -286,11 +302,12 @@
 	    // Ví dụ: Gửi bình luận đến server
 	    $.ajax({
 	        url: "AddCommentController",
-	        type: "POST",
+	        type: "GET",
 	        data: {
 	            postId: postId,
 	            userId: userId,
-	            content: content
+	            content: content,
+	            parentId: parentId
 	        },
 	        success: function(response) {
 	            textarea.value = ""; // Xóa nội dung sau khi gửi
@@ -299,7 +316,7 @@
 	                return;
 	            }
 	            console.log("Dữ liệu nhận từ server:", response);
-				$(".username").text(response.postUser.username);
+				$(".username").text(response.postUser.Username);
 				$(".content").text(response.postUser.content);
 				$(".likecount").text(response.postUser.likeCount);
 				$(".image").attr("src", response.postUser.image);
@@ -307,6 +324,7 @@
 				displayComment(response.comment);
 				console.log()
 	            $("#modalcomment").addClass("show d-block");
+				cancelReply();
 	        },
 	        error: function(xhr) {
 	            console.log("Lỗi khi gửi bình luận:", xhr.responseText);
@@ -320,7 +338,6 @@
 
 	    comments.forEach(function(comment) {
 	        if (comment.parentID === 0) {
-	            console.log(comment.username);
 	            commentHTML += 
 	                '<div class="comment">' +
 	                    '<div class="comment-avatar">' +
@@ -328,11 +345,11 @@
 	                    '</div>' +
 	                    '<div class="comment-content">' +
 	                        '<div class="comment-bubble">' +
-	                            '<div class="comment-author">' + comment.username + '</div>' +
+	                            '<div class="comment-author">' + comment.fullName + '</div>' +
 	                            '<p class="comment-text">' + comment.content + '</p>' +
 	                        '</div>' +
 	                        '<div class="comment-actions">' +
-	                            '<span class="comment-action">Phản hồi</span>' +                
+	                        '<span class="comment-action" onclick="GuiPhanHoi(\'' + comment.fullName + '\',' + comment.commentID + ')">Phản hồi</span>' +                
 	                        '</div>';
 	            for (var i = comments.length - 1; i >= 0; i--) {
 	                var cmt = comments[i];
@@ -348,11 +365,10 @@
 	                                '</div>' +
 	                                '<div class="reply-content">' +
 	                                    '<div class="reply-bubble">' +
-	                                        '<div class="reply-author">' + cmt.username + '</div>' +
+	                                        '<div class="reply-author">' + cmt.fullName + '</div>' +
 	                                        '<p class="reply-text">' + cmt.content + '</p>' +
 	                                    '</div>' +
 	                                    '<div class="reply-actions">' +
-	                                        '<span class="comment-action">Phản hồi</span>' +
 	                                    '</div>' +
 	                                '</div>' +
 	                            '</div>' +
@@ -364,6 +380,7 @@
 	        }
 
 	    });
+	    parentId=0;
 	    commentsContainer.append(commentHTML);
 	}
 

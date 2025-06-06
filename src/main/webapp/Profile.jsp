@@ -158,7 +158,7 @@
                 <div class="composer-input" data-bs-toggle="modal" data-bs-target="#fbPostModal">Thêm bài đăng mới?</div>
             </div>
             <!-- modal đăng bài viết mới -->
-            <div class="modal fade" id="fbPostModal" tabindex="-1" aria-labelledby="fbPostModalLabel" aria-hidden="true">
+            <div class="modal fade" id="fbPostModal" tabindex="-1" aria-labelledby="fbPostModalLabel" aria-hidden="false">
 		    <div class="modal-dialog modal-dialog-centered modal-lg">
 		      <div class="modal-content rounded-4">
 					
@@ -227,7 +227,7 @@
                                         <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" class="btn btn-warning px-4 py-2" onclick="openEditPostModal(<%=dsPost_UserById.get(i).getPostID()%>)">Chỉnh sửa bài viết</a></li>
+                                        <li><a class="dropdown-item" class="btn btn-warning px-4 py-2" onclick="openEditPostModal(<%=dsPost_UserById.get(i).getPostID()%>)" style="cursor: pointer;">Chỉnh sửa bài viết</a></li>
                                         <li><a class="dropdown-item" href="#" onclick="deletePost(<%= dsPost_UserById.get(i).getPostID() %>)">Gỡ bài viết</a></li>
                                     </ul>
                                 </div>
@@ -267,10 +267,11 @@
 								    <i class="bi bi-chat"></i>Bình luận
 								</button>
                                 </div>
+                                <a href="MessageController?message=1" class="sidebar-item" style="text-decoration: none;">
                                 <div class="post-action">
-                                    <i class="bi bi-share"></i>
-                                    Chia sẻ
+                                    <span style="color: black;">Nhắn tin</span>
                                 </div>
+                                </a>
                             </div>
                         </div>
                         <%} %>
@@ -289,6 +290,22 @@
     
     <!-- Custom JavaScript for View Switching -->
     <script>
+    
+    let parentId = 0;
+	
+	//Lấy parentID
+	function GuiPhanHoi(fullName,id){
+		parentId = id;
+		  document.getElementById("replying-to").style.display = "flex";
+		  document.getElementById("replying-username").innerText = fullName;
+		  // Tự động focus vào textarea khi nhấn phản hồi
+	}
+	function cancelReply() {
+		  parentId = 0;
+		  document.getElementById("replying-to").style.display = "none";
+		}
+	
+
     //deletePosst
     function deletePost(postId) {
     if (confirm("Bạn có chắc chắn muốn gỡ bài viết này không?")) {
@@ -375,14 +392,13 @@
       formData.append("image", image);
  
       $.ajax({
-        url: '/SocialMedia/UpdatePostController', // Đúng tên servlet hoặc đường dẫn bạn cấu hình
+        url: '/SocialMedia/UpdatePostController',
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function (response) {
           alert('Cập nhật thành công!');
-          // Reload hoặc cập nhật lại UI nếu cần
         },
         error: function () {
           alert('Có lỗi xảy ra khi gửi dữ liệu!');
@@ -420,7 +436,10 @@
 	      alert("Thêm bài viết thành công");
 	      const backdrops = document.querySelectorAll('.modal-backdrop.fade.show');
 	      backdrops.forEach(element => element.remove());
-	      
+	      document.body.classList.remove('modal-open');
+	      setTimeout(() => {
+	    	  location.reload();
+	    	}, 500);
 	    })
 	    .catch(err => {
 	    	const warning = document.createElement("div");
@@ -568,11 +587,12 @@
 	    // Ví dụ: Gửi bình luận đến server
 	    $.ajax({
 	        url: "AddCommentController",
-	        type: "POST",
+	        type: "GET",
 	        data: {
 	            postId: postId,
 	            userId: userId,
-	            content: content
+	            content: content,
+	            parentId: parentId
 	        },
 	        success: function(response) {
 	            textarea.value = ""; // Xóa nội dung sau khi gửi
@@ -581,14 +601,14 @@
 	                return;
 	            }
 	            console.log("Dữ liệu nhận từ server:", response);
-				$(".username").text(response.postUser.username);
+				$(".username").text(response.postUser.Username);
 				$(".content").text(response.postUser.content);
 				$(".likecount").text(response.postUser.likeCount);
 				$(".image").attr("src", response.postUser.image);
 				$(".avatar").attr("src", response.postUser.avatar);
 				displayComment(response.comment);
-				console.log()
 	            $("#modalcomment").addClass("show d-block");
+				cancelReply();
 	        },
 	        error: function(xhr) {
 	            console.log("Lỗi khi gửi bình luận:", xhr.responseText);
@@ -610,11 +630,11 @@
 	                    '</div>' +
 	                    '<div class="comment-content">' +
 	                        '<div class="comment-bubble">' +
-	                            '<div class="comment-author">' + comment.username + '</div>' +
+	                            '<div class="comment-author">' + comment.fullName + '</div>' +
 	                            '<p class="comment-text">' + comment.content + '</p>' +
 	                        '</div>' +
 	                        '<div class="comment-actions">' +
-	                            '<span class="comment-action">Phản hồi</span>' +                            
+	                        '<span class="comment-action" onclick="GuiPhanHoi(\'' + comment.fullName + '\',' + comment.commentID + ')">Phản hồi</span>' +                            
 	                        '</div>';
 	            for (var i = comments.length - 1; i >= 0; i--) {
 	                var cmt = comments[i];
@@ -629,11 +649,10 @@
 	                                '</div>' +
 	                                '<div class="reply-content">' +
 	                                    '<div class="reply-bubble">' +
-	                                        '<div class="reply-author">' + cmt.username + '</div>' +
+	                                        '<div class="reply-author">' + cmt.fullName + '</div>' +
 	                                        '<p class="reply-text">' + cmt.content + '</p>' +
 	                                    '</div>' +
 	                                    '<div class="reply-actions">' +
-	                                        '<span class="comment-action">Phản hồi</span>' +
 	                                    '</div>' +
 	                                '</div>' +
 	                            '</div>' +
@@ -645,6 +664,7 @@
 	        }
 
 	    });
+	    parentId=0;
 	    commentsContainer.append(commentHTML);
 	}
 

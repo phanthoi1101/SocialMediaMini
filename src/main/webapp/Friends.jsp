@@ -79,7 +79,6 @@ if(lstIsNotFriend!=null && !lstIsNotFriend.isEmpty()){
         <div class="fb-content">
             <div class="fb-content-header">
                 <h3 class="fb-content-title">Lời mời kết bạn</h3>
-                <a href="#" class="fb-content-link">Xem tất cả</a>
             </div>
             
                 <!-- Friend Request 1 -->

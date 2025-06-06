@@ -68,6 +68,22 @@ public class LikeDao {
 			return false;
 		}
 		}
+	
+	public int deleteLike(int postId) {
+		try {
+			KetNoi kn = new KetNoi();
+			kn.KetNoi();
+			String sql = "delete Likes where PostID = ?";
+			PreparedStatement cmd = kn.cn.prepareStatement(sql);
+			cmd.setInt(1, postId);
+			int x = cmd.executeUpdate();
+			return x;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return 0;
+		}
+	}
 	public int LikeCount(int postID) {
 		try {
 			KetNoi kn = new KetNoi();

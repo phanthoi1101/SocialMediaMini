@@ -29,6 +29,18 @@
     	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
  
  <style >
+ /*Hover vào icon xoá thành viên*/
+ .fa-times {
+  font-size: 18px;
+  color: #dc3545;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.fa-times:hover {
+  transform: scale(1.4);
+  color: #a71d2a; /* Màu đậm hơn khi hover (tùy chọn) */
+}
  .file-preview, .image-preview {
       position: relative;
       background: #f1f3f5;
@@ -196,7 +208,7 @@
                   <input type="text" class="form-control" id="groupName" name="groupName" placeholder="Nhập tên phòng" required />
               </div>
               <div class="mb-3">
-                  <label for="userSelect" class="form-label">Thêm Bạn Bè</label>
+                  <label class="form-label">Thêm Bạn Bè</label>
                    <%if(indexUser==0){ %>
                    	<select id="usersSelectCreate" name="userIds" multiple placeholder="Vui lòng kết bạn để tạo phòng chat">
                   	</select>
@@ -210,7 +222,7 @@
                      		 u = userbo.getUserById(dsFriendshipIsFriend.get(i).getSenderID());
                      	}
                      %>
-                     <option value="<%=u.getUserID()%>"><%=u.getFullName() %></option>
+                     <option value="<%=u.getUserID()%>" data-image="<%=u.getAvatar()%>"><%=u.getFullName() %></i></option>
                      <%} %>
                   </select>
                   <%} %>
@@ -238,14 +250,13 @@
           </div>
           <input type="hidden" name="RoomId" value="<%=room.getRoomId()%>"/>
           <div class="modal-body">
-            <label for="userSelect" class="form-label">Chọn thành viên</label>
+            <label class="form-label">Chọn thành viên</label>
             <select id="usersSelectAdd" name="userIds" multiple placeholder="Chọn bạn bè...">
               <%if(!dsUserIsFriendNotHasGroupChat.isEmpty()||dsUserIsFriendNotHasGroupChat!=null){
             	  for(int i = 0 ; i < dsUserIsFriendNotHasGroupChat.size();i++){%>
-            		  <option value="<%=dsUserIsFriendNotHasGroupChat.get(i).getUserID()%>"><%=dsUserIsFriendNotHasGroupChat.get(i).getFullName() %></option>
+            		  <option value="<%=dsUserIsFriendNotHasGroupChat.get(i).getUserID()%>" data-image="<%=dsUserIsFriendNotHasGroupChat.get(i).getAvatar()%>"> <%=dsUserIsFriendNotHasGroupChat.get(i).getFullName() %></option>
             	  <%}
-
-              }            	  %>
+              }%>
             </select>
           </div>
           <div class="modal-footer">
@@ -379,12 +390,16 @@
 	  <ul class="nav flex-column"> 
 	    <% if (dsUserByRoomID.size() != 0) { 
 	         for (int i = 0; i < dsUserByRoomID.size(); i++) { %>
-	      <a href="ProfileController?id=<%= dsUserByRoomID.get(i).getUserID() %>" style="color: #333; text-decoration: none;">
-	        <div class="contact-item d-flex align-items-center">
-	          <img src="<%= dsUserByRoomID.get(i).getAvatar() %>?img=2" alt="User 2">
-	          <div class="contact-name"><%= dsUserByRoomID.get(i).getFullName() %></div>
-	        </div>		
-	      </a> 
+	     <div class="contact-item d-flex align-items-center justify-content-between" style="width: 100%;">
+		  <a href="ProfileController?id=<%= dsUserByRoomID.get(i).getUserID() %>" 
+		     style="color: #333; text-decoration: none;" 
+		     class="d-flex align-items-center">
+		    <img src="<%= dsUserByRoomID.get(i).getAvatar() %>?img=2" alt="User 2">
+		    <div class="contact-name" style="margin-left: 10px;"><%= dsUserByRoomID.get(i).getFullName() %></div>
+		  </a>
+		
+		  <i class="fa fa-times text-danger" aria-hidden="true" style="cursor: pointer;" onclick="DeleteMenber(<%=dsUserByRoomID.get(i).getUserID()%>,<%=room.getRoomId()%>,<%=currentUser.getUserID()%>)"></i>
+		</div>
 	    <% } 
 	       } %>
 	  </ul>
@@ -503,12 +518,15 @@
     	  if(session.getAttribute("roomId")!=null){
     		  int rz = (int)session.getAttribute("roomId");
     		  z = rBo.getRoomByRoomID(rz);
+    		  %>
+    		  <%
     	  }else if(session.getAttribute("userFriend")!=null){
     		  User ux = (User)session.getAttribute("userFriend");
-    		  int m = rBo.selectRoomIdOf2User(ux.getUserID(), currentUser.getUserID());
+    		  int m = rBo.selectRoomIdOf2User(ux.getUserID(), currentUser.getUserID());%>
+    		  <%
     		  z = rBo.getRoomByRoomID(m); 
-    	  }
-      if(z.isStatus()){
+    	  }%>
+     <% if(z.isStatus()){
       %>
       <div>
        	<div id="fileAttachment"></div>
@@ -537,13 +555,58 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+//Delete member
+function DeleteMenber(userId, roomId,currentUserId) {
+  if(currentUserId===userId){
+	  if (confirm('Bạn có chắc chắn muốn rời khỏi nhóm?')) {
+		    console.log("Xoá userID:", userId, " khỏi phòng:", roomId);
+		    $.ajax({
+		    	  url: '/SocialMedia/AddMemBerController',
+		    	  method: 'GET',
+		    	  data: {
+		    	    userId: userId,
+		    	    roomId: roomId
+		    	  },
+		    	  success: function(response) {
+		    	    alert('Đã rời khỏi nhóm');
+		    	    location.href = 'MessageController?message=1'; 
+		    	  },
+		    	  error: function(xhr, status, error) {
+		    	    alert('Không thể xoá thành viên');
+		    	    console.error(error);
+		    	  }
+		    	});
+		  }
+  }else{
+	  if (confirm('Bạn có chắc chắn muốn xoá thành viên này không?')) {
+		    console.log("Xoá userID:", userId, " khỏi phòng:", roomId);
+		    $.ajax({
+		    	  url: '/SocialMedia/AddMemBerController',
+		    	  method: 'GET',
+		    	  data: {
+		    	    userId: userId,
+		    	    roomId: roomId
+		    	  },
+		    	  success: function(response) {
+		    	    alert('Xoá thành viên thành công');
+		    	    location.reload(); 
+		    	  },
+		    	  error: function(xhr, status, error) {
+		    	    alert('Không thể xoá thành viên');
+		    	    console.error(error);
+		    	  }
+		    	});
+		  }
+  }
+}
+
 //handle file
 	let attachedFile = null;
 
   function isImage(file) {
     return file.type.startsWith("image/");
   }
-
   function handleFile(event) {
     const fileInput = event.target;
     const previewBox = document.getElementById('fileAttachment');
@@ -646,11 +709,69 @@
 //Tom select
 new TomSelect('#usersSelectCreate', {
     plugins: ['remove_button'],
-    maxItems: null, 
+    maxItems: null,
+    
+    render: {
+        option: function(data, escape) {
+          return '<div class="option-item">' +
+                   '<img src="' + escape(data.image) + '" alt="" style="width:30px;height:30px;border-radius:50%;margin-right:8px;">' +
+                   '<span>' + escape(data.text) + '</span>' +
+                 '</div>';
+        },
+        item: function(data, escape) {
+          return '<div class="selected-item">' +
+                   '<img src="' + escape(data.image) + '" alt="" style="width:20px;height:20px;border-radius:50%;margin-right:5px;">' +
+                   '<span>' + escape(data.text) + '</span>' +
+                 '</div>';
+        }
+      },
+      onInitialize: function() {
+        var self = this;
+        self.options = {};
+
+        var options = this.input.querySelectorAll('option');
+        for (var i = 0; i < options.length; i++) {
+          var opt = options[i];
+          self.options[opt.value] = {
+            value: opt.value,
+            text: opt.text,
+            image: opt.getAttribute('data-image')
+          };
+        }
+      }
   });
 new TomSelect('#usersSelectAdd', {
     plugins: ['remove_button'],
     maxItems: null, 
+    
+    render: {
+        option: function(data, escape) {
+          return '<div class="option-item">' +
+                   '<img src="' + escape(data.image) + '" alt="" style="width:30px;height:30px;border-radius:50%;margin-right:8px;">' +
+                   '<span>' + escape(data.text) + '</span>' +
+                 '</div>';
+        },
+        item: function(data, escape) {
+          return '<div class="selected-item">' +
+                   '<img src="' + escape(data.image) + '" alt="" style="width:20px;height:20px;border-radius:50%;margin-right:5px;">' +
+                   '<span>' + escape(data.text) + '</span>' +
+                 '</div>';
+        }
+      },
+      onInitialize: function() {
+        var self = this;
+        self.options = {};
+
+        var options = this.input.querySelectorAll('option');
+        for (var i = 0; i < options.length; i++) {
+          var opt = options[i];
+          self.options[opt.value] = {
+            value: opt.value,
+            text: opt.text,
+            image: opt.getAttribute('data-image')
+          };
+        }
+      }
   });
 
 
@@ -677,7 +798,7 @@ function homeActive(id){
 $(document).ready(function () {
 	$('#AddMemberServlet').on('submit', function (e) {
 		  e.preventDefault();
-		  const formData = new FormData(this); // ✔️ Lấy đúng FormData
+		  const formData = new FormData(this); //  Lấy đúng FormData
 		  // Lấy dữ liệu cụ thể nếu cần debug
 		  console.log('Group name:', formData.get('RoomId'));
 		  console.log('User IDs:', formData.getAll('userIds'));
@@ -688,14 +809,15 @@ $(document).ready(function () {
 		  $.ajax({
 		    url: 'AddMemBerController',
 		    type: 'POST',
-		    data: formData, // ✔️ Gửi FormData
-		    processData: false, // ✔️ Không xử lý dữ liệu
-		    contentType: false, // ✔️ Không đặt Content-Type (để browser tự set multipart/form-data)
+		    data: formData, //  Gửi FormData
+		    processData: false, //  Không xử lý dữ liệu
+		    contentType: false, //  Không đặt Content-Type (để browser tự set multipart/form-data)
 			dataType: 'json',
 		    success: function (response) {
 		     
 		      alert('Thêm thành công!');
 		      $('#addMemberModal').modal('hide');
+		      location.reload();
 		    },
 		    error: function (xhr, status, error) {
 		      alert('Lỗi tạo nhóm: ' + error);
@@ -707,7 +829,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	$('#createGroupForm').on('submit', function (e) {
 		  e.preventDefault();
-		  const formData = new FormData(this); // ✔️ Lấy đúng FormData
+		  const formData = new FormData(this); //  Lấy đúng FormData
 		  // Lấy dữ liệu cụ thể nếu cần debug
 		  console.log('Group name:', formData.get('groupName'));
 		  console.log('User IDs:', formData.getAll('userIds'));
@@ -718,9 +840,9 @@ $(document).ready(function () {
 		  $.ajax({
 		    url: 'MessageController',
 		    type: 'POST',
-		    data: formData, // ✔️ Gửi FormData
-		    processData: false, // ✔️ Không xử lý dữ liệu
-		    contentType: false, // ✔️ Không đặt Content-Type (để browser tự set multipart/form-data)
+		    data: formData, //  Gửi FormData
+		    processData: false, //  Không xử lý dữ liệu
+		    contentType: false, //  Không đặt Content-Type (để browser tự set multipart/form-data)
 			dataType: 'json',
 		    success: function (response) {
 		     
